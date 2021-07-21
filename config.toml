@@ -1,4 +1,4 @@
-baseURL = "http://frazierlei.github.io/"
+baseURL = ""
 publishDir = "docs"
 
 title = "霏霏" # Site title.
