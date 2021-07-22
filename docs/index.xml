@@ -6,14 +6,17 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 21 Jul 2021 23:17:35 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 22 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>My First Post</title>
-      <link>/posts/my-first-post/</link>
-      <pubDate>Wed, 21 Jul 2021 23:17:35 +0800</pubDate>
+      <title>用 SSH 远程访问 Jupyter Lab 并用 Kite 实现自动补全</title>
+      <link>/posts/ssh-jupyter/</link>
+      <pubDate>Thu, 22 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/my-first-post/</guid>
-      <description></description>
+      <guid>/posts/ssh-jupyter/</guid>
+      <description>要跑深度学习代码，只用本地电脑肯定是不够用的，必然需要远程使用服务器的计算资源。我观察到实验室很多人用的是 PyCharm , 但是我觉得PyCharm 用着挺费劲的。呆呆象师兄用的是 VScode，我比较习惯用 Jupyter Notebook 。但是Jupyter Notebook有着各种各样的问题，于是有了他的加强版—— Jupyter Lab。
+安装 Jupyter Lab 如果之前安装过 Jupyter Notebook 或者使用的是 Anaconda 的话，环境中很可能还保留着旧版本的 Jupyter Lab，所以要先安装最新版的 Jupyter Lab。
+pip install jupyterlab --upgrade 如果遇到类似 ERROR: Cannot uninstall &#39;terminado&#39;. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. 这样的报错信息，可以执行下方命令，然后重新 pip 安装 Jupyter Lab。
+pip install terminado --ignore-installed 我看到有的教程写的要安装 npm 和 nodejs ，但是我试了一下不装也不影响，如果遇到报错的话可以用 pip 或者 conda 安装一下。</description>
     </item>
     
   </channel>
