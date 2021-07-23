@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  解决 Chrome 无法打开博客中的图片（七牛云图床） - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/chrome-qiniu/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/chrome-qiniu/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/chrome-qiniu/">
+    <title>
+  解决 Chrome 无法打开博客中的图片（七牛云图床） - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/chrome-qiniu/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">解决 Chrome 无法打开博客中的图片（七牛云图床）</h1>
+      <h2 class="date">July 23, 2021</h2>
+
+      
+    </header>
+
+    <p>把博客迁移到 <code>Hugo</code> 上以后，用 Chrome 打开，无法加载出来图片，而用 Firefox、Safari、手机的浏览器都可以看到图片。打开 Console</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210723161543096.png" alt="image-20210723161543096"></p>
+<p>把图片的 url 手动复制到浏览器中依然无法打开，需要把 https 换成 http 才行。这是因为 Chrome 浏览器不再允许 https 页面加载 http 内容了，之前的网站本身就只支持 http，所以不会遇到这个问题。</p>
+<p>打开七牛云的控制台中的域名管理，现在需要把协议升级到支持 HTTPS</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210723162040400.png" alt="image-20210723162040400"></p>
+<p>弹出提示：HTTPS 域名产生的用量不计入免费额度，价格如下：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210723162424498.png" alt="image-20210723162424498"></p>
+<h2 id="获取-ssl-证书这步白忙活了">获取 SSL 证书（这步白忙活了）</h2>
+<p>现在这个域名（feifeizaici.xyz）是在腾讯云购买的，所以打开腾讯云的控制台。在「SSL 证书」，「我的证书」中点击「免费申请证书」，随着提示2分钟就能完成操作。</p>
+<p>审核通过后可以下载证书，解压后得到这些文件：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210723163145218.png" alt="image-20210723163145218"></p>
+<h2 id="升级-https">升级 HTTPS</h2>
+<p>回到七牛云，上传刚才下载下来的证书，但是一直提示域名不符，无奈只好在七牛申请免费证书。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210723164335267.png" alt="image-20210723164335267"></p>
+<p>升级完成后的样子：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210723164612446.png" alt="image-20210723164612446"></p>
+<h2 id="修改-upic-配置">修改 uPic 配置</h2>
+<p>我一直用 <code>Typora</code> 作为写作的工具，图片上传的工具用的是 <code>uPic</code>，升级为 HTTPS 以后要在 <code>uPic</code> 的配置中修改域名</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210723165053823.png" alt="image-20210723165053823"></p>
+<p>参考：</p>
+<ul>
+<li><a href="https://security.googleblog.com/2019/10/no-more-mixed-messages-about-https_3.html">No More Mixed Messages About HTTPS</a></li>
+<li><a href="https://jiapeng.me/markdown-picbed/">七牛云 + 备案域名 + 免费 SSL + PicGo 搭建 Typora 图床</a></li>
+</ul>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

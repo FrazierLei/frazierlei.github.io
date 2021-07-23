@@ -99,12 +99,12 @@
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">jupyter lab --no-browser --port<span class="o">=</span><span class="m">8889</span>
 </code></pre></div><p>第一个参数<code> no-browser</code> 表示不弹出浏览器，如果没有装图形界面又不加这个参数可能会报错。</p>
 <p>第二个参数是指定端口，这个可以自己设置。</p>
-<p><img src="http://qiniusave.feifeizaici.xyz/uPic/image-20210412233038904.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210412233038904.png" alt=""></p>
 <h3 id="在本地命令行中">在本地命令行中</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">ssh -N -L 8080:localhost:8080 username@ip
 </code></pre></div><p>然后输入 username 对应的密码，如果没有报错提示就说明连接成功了。</p>
 <p>此时点击红框中的 url 即可打开服务器中运行的 <code>Jupyter Lab</code>。</p>
-<p><img src="http://qiniusave.feifeizaici.xyz/uPic/image-20210412224651111.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210412224651111.png" alt=""></p>
 <h2 id="在-jupyter-lab-中使用特定的-conda-环境">在 Jupyter Lab 中使用特定的 conda 环境</h2>
 <p>这里和使用 <code>Notebook</code> 时的操作相同（事实上，<code>Lab</code> 可以随时切换到 <code>Notebook</code>）</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">conda create -n 环境名称
@@ -114,20 +114,20 @@ python -m ipykernel install --user --name 环境名称 --display-name <span clas
 </code></pre></div><h2 id="用-kite-实现自动补全">用 Kite 实现自动补全</h2>
 <p>远程使用 <code>Jupyter</code> 的时候，如果打开的是 <code>.ipynb</code> 文件，那么按下 <code>Tab</code> 键是可以出现自动补全的。但是对于 <code>.py</code>文件却不行。</p>
 <p><code>Kite</code>(官网：https://www.kite.com/) 是一个基于人工智能的代码自动补全工具，支持各种系统下的各种编辑器。</p>
-<p><img src="http://qiniusave.feifeizaici.xyz/uPic/image-20210412230437103.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210412230437103.png" alt=""></p>
 <h3 id="在-linux-下安装-kite">在 Linux 下安装 Kite</h3>
 <p>在 Linux 下安装不需要图形界面，运行如下代码就可以自动安装。</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">bash -c <span class="s2">&#34;</span><span class="k">$(</span>wget -q -O - https://linux.kite.com/dls/linux/current<span class="k">)</span><span class="s2">&#34;</span>
 </code></pre></div><p>安装完成后，脚本会自动启动 <code>Kite</code> 并删除安装程序。</p>
-<p><img src="http://qiniusave.feifeizaici.xyz/uPic/image-20210412230725756.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210412230725756.png" alt=""></p>
 <p>想要关闭的时候直接在 <code>htop</code> 面板中找到 <code>pid</code> 然后将进程 kill 掉即可。</p>
 <h3 id="为-jupyter-lab-安装-kite-扩展">为 Jupyter Lab 安装 Kite 扩展</h3>
 <p>对于 3.0 版本以上的 <code>JupyterLab</code>，运行</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">pip install <span class="s2">&#34;jupyterlab-kite&gt;=2.0.2&#34;</span>
 </code></pre></div><p>完成以上两步以后重启 <code>JupyterLab</code>，会自动弹出一个 <code>Kite</code> 的教程。</p>
-<p><img src="http://qiniusave.feifeizaici.xyz/uPic/image-20210412231719033.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210412231719033.png" alt=""></p>
 <p>这时便可以使用自动补全功能了：</p>
-<p><img src="http://qiniusave.feifeizaici.xyz/uPic/image-20210412232407019.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210412232407019.png" alt=""></p>
 
   </article>
 

@@ -6,7 +6,26 @@
     <description>Recent content in Posts on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 22 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>解决 Chrome 无法打开博客中的图片（七牛云图床）</title>
+      <link>/posts/chrome-qiniu/</link>
+      <pubDate>Fri, 23 Jul 2021 13:18:55 +0800</pubDate>
+      
+      <guid>/posts/chrome-qiniu/</guid>
+      <description>把博客迁移到 Hugo 上以后，用 Chrome 打开，无法加载出来图片，而用 Firefox、Safari、手机的浏览器都可以看到图片。打开 Console
+把图片的 url 手动复制到浏览器中依然无法打开，需要把 https 换成 http 才行。这是因为 Chrome 浏览器不再允许 https 页面加载 http 内容了，之前的网站本身就只支持 http，所以不会遇到这个问题。
+打开七牛云的控制台中的域名管理，现在需要把协议升级到支持 HTTPS
+弹出提示：HTTPS 域名产生的用量不计入免费额度，价格如下：
+获取 SSL 证书（这步白忙活了） 现在这个域名（feifeizaici.xyz）是在腾讯云购买的，所以打开腾讯云的控制台。在「SSL 证书」，「我的证书」中点击「免费申请证书」，随着提示2分钟就能完成操作。
+审核通过后可以下载证书，解压后得到这些文件：
+升级 HTTPS 回到七牛云，上传刚才下载下来的证书，但是一直提示域名不符，无奈只好在七牛申请免费证书。
+升级完成后的样子：
+修改 uPic 配置 我一直用 Typora 作为写作的工具，图片上传的工具用的是 uPic，升级为 HTTPS 以后要在 uPic 的配置中修改域名
+参考：
+ No More Mixed Messages About HTTPS 七牛云 + 备案域名 + 免费 SSL + PicGo 搭建 Typora 图床  </description>
+    </item>
+    
     <item>
       <title>用 SSH 远程访问 Jupyter Lab 并用 Kite 实现自动补全</title>
       <link>/posts/ssh-jupyter/</link>
