@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【爬虫实战】如何把抓取到的数据储存下来 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/store-data/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/store-data/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/store-data/">
+    <title>
+  【爬虫实战】如何把抓取到的数据储存下来 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/store-data/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【爬虫实战】如何把抓取到的数据储存下来</h1>
+      <h2 class="date">December 6, 2020</h2>
+
+      
+    </header>
+
+    <p>如果只是把爬虫程序抓取到的数据用print打印在命令行中或者保存在内存中，那么如果下次还要获取这些数据，就得把这个程序重新跑一遍。浪费时间是其次的，如果网页结构发生了变化，或者API失效了，那么你肯定会后悔当初没有把抓到的数据保存在本地。</p>
+<p>下午时候在98看到这么一个帖子，试了一下不是很复杂，当作例子讲解一下。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206212302567.png" alt="98原帖"></p>
+<h2 id="了解网站结构">了解网站结构</h2>
+<p>网址：http://nappserv.app.yuchai.com/weixin-pages/stations/filter</p>
+<p>界面如下：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206212416419.png" alt="网页界面"></p>
+<p>F12打开开发者工具，将省选择为“山西省”，此时出现这样一条请求：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206212644376.png" alt=""></p>
+<p>点击<code>Preview</code>查看响应的预览，可以看出这里的响应为山西省内可查询的市。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206212718401.png" alt=""></p>
+<p>类似地，选择市后，响应为该市内可查询的行政区名称，例如：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206212850516.png" alt=""></p>
+<p>选中县/区后，点击查询，得到该地的数据：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206212949593.png" alt=""></p>
+<h2 id="明确需求">明确需求</h2>
+<p>一番攀谈交心了解到，楼主的需求为获取每一个区/县中服务点的个数：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206213108072.png" alt="需求是王道"></p>
+<h2 id="抓取数据">抓取数据</h2>
+<p>刚才看到的<code>Preview</code>是浏览器渲染完成后的结果，查看响应还得看<code>Response</code>一栏：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206213225436.png" alt="返回的HTML"></p>
+<p>可以看出，数据是直接写在html中的，没有加密、混淆等乱七八糟的东西。每个class为station的<code>div</code>中包含了一个服务点的信息。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="n">provinces</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;云南省&#39;</span><span class="p">,</span> <span class="s1">&#39;内蒙区&#39;</span><span class="p">,</span> <span class="s1">&#39;北京市&#39;</span><span class="p">,</span> <span class="s1">&#39;吉林省&#39;</span><span class="p">,</span> <span class="s1">&#39;四川省&#39;</span><span class="p">,</span> <span class="s1">&#39;天津市&#39;</span><span class="p">,</span> <span class="s1">&#39;宁夏省&#39;</span><span class="p">,</span> <span class="s1">&#39;安徽省&#39;</span><span class="p">,</span> <span class="s1">&#39;山东省&#39;</span><span class="p">,</span> <span class="s1">&#39;山西省&#39;</span><span class="p">,</span> <span class="s1">&#39;广西省&#39;</span><span class="p">,</span> <span class="s1">&#39;广东省&#39;</span><span class="p">,</span> <span class="s1">&#39;新疆省&#39;</span><span class="p">,</span> <span class="s1">&#39;江苏省&#39;</span><span class="p">,</span> <span class="s1">&#39;江西省&#39;</span><span class="p">,</span> <span class="s1">&#39;河北省&#39;</span><span class="p">,</span> <span class="s1">&#39;河南省&#39;</span><span class="p">,</span> <span class="s1">&#39;浙江省&#39;</span><span class="p">,</span> <span class="s1">&#39;海南省&#39;</span><span class="p">,</span> <span class="s1">&#39;湖北省&#39;</span><span class="p">,</span> <span class="s1">&#39;湖南省&#39;</span><span class="p">,</span> <span class="s1">&#39;甘肃省&#39;</span><span class="p">,</span> <span class="s1">&#39;福建省&#39;</span><span class="p">,</span> <span class="s1">&#39;西藏省&#39;</span><span class="p">,</span> <span class="s1">&#39;贵州省&#39;</span><span class="p">,</span> <span class="s1">&#39;辽宁省&#39;</span><span class="p">,</span> <span class="s1">&#39;重庆市&#39;</span><span class="p">,</span> <span class="s1">&#39;陕西省&#39;</span><span class="p">,</span> <span class="s1">&#39;青海省&#39;</span><span class="p">,</span> <span class="s1">&#39;黑龙江省&#39;</span><span class="p">]</span>
+
+
+<span class="k">for</span> <span class="n">province</span> <span class="ow">in</span> <span class="n">provinces</span><span class="p">:</span>
+  <span class="c1"># 选择省</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://nappserv.app.yuchai.com/weixin-pages/stations/city-list/?province=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">province</span><span class="p">))</span>
+  <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;cities&#39;</span><span class="p">]:</span>
+    <span class="c1"># 选择市</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://nappserv.app.yuchai.com/weixin-pages/stations/county-list/?city=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">city</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">county</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;counties&#39;</span><span class="p">]:</span>
+      <span class="c1"># 选择区/县</span>
+      <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://nappserv.app.yuchai.com/weixin-pages/stations/results/?county=</span><span class="si">{}</span><span class="s1">&amp;city=</span><span class="si">{}</span><span class="s1">&amp;province=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">county</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">province</span><span class="p">))</span>
+      <span class="n">bs</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="n">province</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">county</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bs</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;stations&#34;</span><span class="p">)))</span>
+</code></pre></div><p>运行程序，打印出来的结果为：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206213625349.png" alt=""></p>
+<h2 id="保存数据">保存数据</h2>
+<h3 id="保存为txt">保存为txt</h3>
+<p>因为一般用Python读写的数据都是txt格式和json格式，我脑子一热就保存为data.txt了。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="c1"># 省略爬虫代码</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">province</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">city</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">county</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bs</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;stations&#34;</span><span class="p">)))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div><p>但是txt文件想批量处理的话还是得用程序来完成，对小白不是很友好。果不其然：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206214655231.png" alt=""></p>
+<h3 id="保存为csv">保存为csv</h3>
+<p>楼主要求保存为excel可以打开的格式，我的第一反应是保存为csv格式。可能是因为很多比赛的数据集都是json和csv格式，很少有xlsx格式的。</p>
+<p>CSV（comma-separated value，逗号分隔值）是储存表格数据的常用文件格式。CSV文件列与列之间用逗号隔开，行与行之间用一个换行符分割。</p>
+<p>Python的<code>csv库</code>可以很方便的读写csv文件：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">csv</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;data.csv&#34;</span><span class="p">,</span> <span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cf</span><span class="p">:</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">cf</span><span class="p">)</span>
+    <span class="c1"># 省略爬虫代码 </span>
+    <span class="n">w</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">province</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">city</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">county</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bs</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;stations&#34;</span><span class="p">)))])</span>
+</code></pre></div><p>保存下来的csv文件如果用mac自带的Numbers表格打开是可以正常显示的，虽然数据那一列有点问题：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206215405209.png" alt=""></p>
+<p>但是如果用excel打开就会出现乱码。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206215440428.png" alt="乱码"></p>
+<p>猜测是编码形式的原因，快该吃饭了就没有细究，我决定还是直接保存为xls格式的文件。</p>
+<h3 id="保存为xls">保存为xls</h3>
+<p>Python读写<code>xls/xlsx</code>文件需要用到两个第三方库：<code>xlrd</code>和<code>xlwt</code>，因为这次的目的是写入文件，所以这里用的是<code>xlwt</code>。</p>
+<p>因为我是看文档现学的，就不照着抄了到笔记里了，需要的可以直接去看文档，官方文档肯定是最准确的。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">xlwt</span>
+ 
+<span class="c1">#创建一个Workbook对象，相当于创建了一个Excel文件</span>
+<span class="n">book</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Workbook</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&#34;utf-8&#34;</span><span class="p">,</span><span class="n">style_compression</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+ 
+<span class="n">sheet</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s1">&#39;sheet&#39;</span><span class="p">,</span> <span class="n">cell_overwrite_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;地区&#39;</span><span class="p">)</span>  <span class="c1"># 其中的&#39;0-行, 0-列&#39;指定表中的单元，&#39;各省市&#39;是向该单元写入的内容</span>
+<span class="n">sheet</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;数量&#39;</span><span class="p">)</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">province</span> <span class="ow">in</span> <span class="n">provinces</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://nappserv.app.yuchai.com/weixin-pages/stations/city-list/?province=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">province</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;cities&#39;</span><span class="p">]:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://nappserv.app.yuchai.com/weixin-pages/stations/county-list/?city=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">city</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">county</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;counties&#39;</span><span class="p">]:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://nappserv.app.yuchai.com/weixin-pages/stations/results/?county=</span><span class="si">{}</span><span class="s1">&amp;city=</span><span class="si">{}</span><span class="s1">&amp;province=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">county</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">province</span><span class="p">))</span>
+            <span class="n">bs</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">province</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">county</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bs</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;stations&#34;</span><span class="p">)))</span>
+            <span class="n">sheet</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">province</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">city</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">county</span><span class="p">))</span>
+            <span class="n">sheet</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bs</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&#34;stations&#34;</span><span class="p">)))</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+<span class="n">book</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;data.xls&#39;</span><span class="p">)</span> 
+</code></pre></div><p>终于交差了：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201206215825027.png" alt=""></p>
+<h3 id="保存到数据库中">保存到数据库中</h3>
+<p>一般是用MySQL，《Web Scraping with Python, 2nd Edition》中有一整章都在讲这个，有机会用到了再仔细学。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/250w.jpeg" alt="O&rsquo;reilly动物书，永远的神"></p>
+<p>不要看国内的爬虫入门书，基本都是翻译旧版本的文档，翻译的差，代码维护也差。基础知识掌握以后，有新的需求还是要去看文档。</p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

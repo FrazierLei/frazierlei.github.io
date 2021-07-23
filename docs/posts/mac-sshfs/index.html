@@ -11,22 +11,22 @@
 
     <meta property="og:site_name" content="霏霏">
     <meta property="og:title" content="
-  用SSH远程使用Jupyter - 霏霏
+  在macOS上用sshfs远程访问linux服务器的文件 - 霏霏
 ">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="/posts/ssh-jupyter/">
+    <meta property="og:url" content="/posts/mac-sshfs/">
     <meta property="og:image" content="images/tn.png">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="/posts/ssh-jupyter/">
+    <meta name="twitter:site" content="/posts/mac-sshfs/">
     <meta name="twitter:image" content="images/tn.png">
 
-    <base href="../../posts/ssh-jupyter/">
+    <base href="../../posts/mac-sshfs/">
     <title>
-  用SSH远程使用Jupyter - 霏霏
+  在macOS上用sshfs远程访问linux服务器的文件 - 霏霏
 </title>
 
-    <link rel="canonical" href="../../posts/ssh-jupyter/">
+    <link rel="canonical" href="../../posts/mac-sshfs/">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     
@@ -119,25 +119,32 @@ code.has-jax {
   <section class="container post">
   <article>
     <header>
-      <h1 class="title">用SSH远程使用Jupyter</h1>
-      <h2 class="date">February 1, 2020</h2>
+      <h1 class="title">在macOS上用sshfs远程访问linux服务器的文件</h1>
+      <h2 class="date">October 12, 2020</h2>
 
       
     </header>
 
-    <p>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。</p>
-<h2 id="1在linux命令行中">1.在Linux命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">conda install ipykernel
-<span class="nb">source</span> activate 环境名称
-python -m ipykernel install --user --name 环境名称 --display-name <span class="s2">&#34;Python (环境名称)&#34;</span>
-jupyter notebook --no-browser --port<span class="o">=</span><span class="m">8080</span>
-</code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/Fsy38OavxaJFhTBuBrQ9gSznTy5N" alt=""></p>
-<h2 id="2在windows命令行中">2.在Windows命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">ssh -N -L 8080:localhost:8080 usr@ip
-</code></pre></div><p>端口默认是22，需要修改：
-<img src="https://qiniusave.feifeizaici.xyz/FoNlph-SiH3TzFmr6YX701PThueP" alt=""></p>
-<p>然后将Linux命令行中的地址复制到浏览器中即可：
-<img src="https://qiniusave.feifeizaici.xyz/FndV9kc_Kn4TFTdI_KeE8qyzv5ni" alt=""></p>
+    <p>之前用windows的时候，用的是zzq师兄推荐的samba，换成mac以后不知为为什么怎么都连不上</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201022162501287.png" alt="image-20201022162501287"></p>
+<p>问了一下zt师兄，他说可以用sshfs，就试了一下，很快就成功了。</p>
+<h2 id="安装sshfs">安装sshfs</h2>
+<h4 id="需要先安装fuse">需要先安装fuse</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">brew install Caskroom/cask/osxfuse
+</code></pre></div><h4 id="然后安装sshfs">然后安装sshfs</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">brew install sshfs
+</code></pre></div><h4 id="然后就可以挂载了">然后就可以挂载了</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">sshfs -C -o reconnect user@hostname:remote_dir local_dir
+</code></pre></div><p>例如：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">sshfs -C -o reconnect leizongfei@10.212.43.26:/home/leizongfei/code /Users/leizongfei/code/codeshare 
+<span class="c1"># 需要输入密码</span>
+leizongfei@10.212.43.26<span class="err">&#39;</span>s password: 
+</code></pre></div><h4 id="取消挂载">取消挂载</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">sudo diskutil umount force /Users/leizongfei/code/codeshare
+</code></pre></div><h2 id="装的太慢咋办让命令行走代理">装的太慢咋办——让命令行走代理</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">export</span> <span class="nv">all_proxy</span><span class="o">=</span>socks5://127.0.0.1:7891
+</code></pre></div><p>注意要把clash设置为全局模式，为了方便一点可以在<code>~/.zshrc</code>里设一个alias</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201022164211730.png" alt="image-20201022164211730"></p>
 
   </article>
 

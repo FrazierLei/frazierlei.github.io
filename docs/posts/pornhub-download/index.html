@@ -11,22 +11,22 @@
 
     <meta property="og:site_name" content="霏霏">
     <meta property="og:title" content="
-  用SSH远程使用Jupyter - 霏霏
+  【爬虫实战】如何下载PornHub上的学习资料 - 霏霏
 ">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="/posts/ssh-jupyter/">
+    <meta property="og:url" content="/posts/pornhub-download/">
     <meta property="og:image" content="images/tn.png">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="/posts/ssh-jupyter/">
+    <meta name="twitter:site" content="/posts/pornhub-download/">
     <meta name="twitter:image" content="images/tn.png">
 
-    <base href="../../posts/ssh-jupyter/">
+    <base href="../../posts/pornhub-download/">
     <title>
-  用SSH远程使用Jupyter - 霏霏
+  【爬虫实战】如何下载PornHub上的学习资料 - 霏霏
 </title>
 
-    <link rel="canonical" href="../../posts/ssh-jupyter/">
+    <link rel="canonical" href="../../posts/pornhub-download/">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     
@@ -119,25 +119,31 @@ code.has-jax {
   <section class="container post">
   <article>
     <header>
-      <h1 class="title">用SSH远程使用Jupyter</h1>
-      <h2 class="date">February 1, 2020</h2>
+      <h1 class="title">【爬虫实战】如何下载PornHub上的学习资料</h1>
+      <h2 class="date">December 15, 2020</h2>
 
       
     </header>
 
-    <p>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。</p>
-<h2 id="1在linux命令行中">1.在Linux命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">conda install ipykernel
-<span class="nb">source</span> activate 环境名称
-python -m ipykernel install --user --name 环境名称 --display-name <span class="s2">&#34;Python (环境名称)&#34;</span>
-jupyter notebook --no-browser --port<span class="o">=</span><span class="m">8080</span>
-</code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/Fsy38OavxaJFhTBuBrQ9gSznTy5N" alt=""></p>
-<h2 id="2在windows命令行中">2.在Windows命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">ssh -N -L 8080:localhost:8080 usr@ip
-</code></pre></div><p>端口默认是22，需要修改：
-<img src="https://qiniusave.feifeizaici.xyz/FoNlph-SiH3TzFmr6YX701PThueP" alt=""></p>
-<p>然后将Linux命令行中的地址复制到浏览器中即可：
-<img src="https://qiniusave.feifeizaici.xyz/FndV9kc_Kn4TFTdI_KeE8qyzv5ni" alt=""></p>
+    <p>众所周知，P站（PxxxHub）是一个综合性视频网站，包罗万象，经常有小伙伴会在上面上传自己喜欢的学习资料。但是因为某些原因，很多资料被下架了。这就教给我们一个道理，重要的学习资料应该「下载」，而不仅仅「收藏」。下面我以李永乐老师的视频为例，讨论一下如何下载P站上的学习资料。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201215005515471.png" alt="很喜欢在youtube上听李永乐老师讲的课"></p>
+<h2 id="定位加密">定位加密</h2>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201215012208770.png" alt=""></p>
+<p>可以看出，视频的地址<code>media_1</code>是由一系列字符串拼接而成的，然后再赋给<code>flashvars_212700282['mediaDefinitions'][1]['videoUrl']</code></p>
+<p>在控制台里看一下这个变量，果不其然，不同分辨率的视频地址都包含在内。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/wmzfzclq.png" alt=""></p>
+<h2 id="思路">思路</h2>
+<p>这次的代码就不放了，大致的思路如下：</p>
+<ol>
+<li>获取视频页面的HTML</li>
+<li>定位到包含这段JavaScript代码的script标签</li>
+<li>运行这段JavaScript代码</li>
+<li>用正则表达式找到<code>flashvars</code>开头的变量名</li>
+<li>输出视频个数和视频地址。</li>
+</ol>
+<p>这次的爬虫没用Python写，参考着一些教程用NodeJS写了个爬虫。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/cjptj51r.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/WX20201215-012922@2x.png" alt=""></p>
 
   </article>
 

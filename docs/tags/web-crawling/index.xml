@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>web-crawling on 霏霏</title>
+    <link>/tags/web-crawling/</link>
+    <description>Recent content in web-crawling on 霏霏</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 17 Jun 2021 15:00:00 +0800</lastBuildDate><atom:link href="/tags/web-crawling/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在线视频抓取神器：CoCoCut——可见皆可得</title>
+      <link>/posts/cococut/</link>
+      <pubDate>Thu, 17 Jun 2021 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/cococut/</guid>
+      <description>今天上午见证了杜兰特 49+17+10 的死神表现，就想着把全场录像保存下来。上次这样做还是14年还在上高中时候的事情了，当时有一场火箭对阵开拓者的季后赛，豪哥打得贼牛逼，我从不知道哪个地方找到高清录像，存下来看了好几遍。
+上周脑袋一热花25块钱开了一个腾讯NBA会员，这也就省去了一些找资源的时间，这次就直接下载腾讯视频上的英文原声录像。
+下载完我也就自己看，一不传播，二不盈利，何况我还开了会员。
+获取视频下载地址 如果要自己抓包，一点一点分析视频的真实地址，就算真能弄出来也是要浪费很多时间的，况且这种VIP专属的视频肯定加密手段会更复杂一些。因此首先想到的是用第三方提供的在线视频解析网站。
+之前用过这个叫做 VideoFK 的网站，虽然支持的视频平台很多，但是可惜不支持腾讯视频。
+之后找到这个叫做 分享网 的视频解析平台，能用，但是只能得到720p的视频，显然无法满足我的需求。
+CoCoCut 使用介绍 嗅探视频地址 这个功能和 IDM 的插件类似，都是可以嗅探到在线视频的真实地址。不过一般这种页面都是比较简单的，愿意花一点时间打开浏览器开发者工具的 Network，也是可以抓到的。
+录制模式 这个是 CoCoCut 最厉害的地方。
+有时候在线视频的真实地址很难找到，又或者得到的是 m3u8 文件，抓取只能抓到一堆ts格式的视频片段。这个时候 CoCoCut 的录制模式就派上用场了。
+第一步：在想要抓取的视频页面点击插件栏中的 CoCoCut
+第二部：打开录制模式
+第三部：回到视频页面，拖动进度条以快速完成全部视频的缓存
+小插曲——用 FFmpeg 合并视频 因为这场的全场录像不知道为什么播放一直有问题，我只能分别下载四节的视频然后合并起来。
+本来想用 Mac 自带的 iMovie，但是每次拼接完输出的时候都都会报错，而且生成的这部分也是没有声音的。
+在网上找到了这个方法，试了一下不仅快而且效果很好。思路是先把 mp4 转化成 ts 格式，之后拼接 ts 文件，最后再转化为 mp4。
+代码如下：
+#! /bin/bash # 将 mp4 文件封装为 ts 格式 ffmpeg -i a1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb 1.ts ffmpeg -i a2.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【JS逆向】破解知乎登录加密策略 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/zhihu-login/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/zhihu-login/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/zhihu-login/">
+    <title>
+  【JS逆向】破解知乎登录加密策略 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/zhihu-login/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【JS逆向】破解知乎登录加密策略</h1>
+      <h2 class="date">December 2, 2020</h2>
+
+      
+    </header>
+
+    <p>如果礼拜天那场球赛不算的话，应该是本周最后一次摸鱼🥺。</p>
+<h2 id="为什么需要登录">为什么需要登录</h2>
+<p>原因很简单，登录以后可以获得更多的权限，比如发帖、收藏等功能，此外有些内容只有登录以后才能访问。</p>
+<h2 id="如何用python模拟登录">如何用Python模拟登录</h2>
+<p>一般地，用Python模拟登录就是用Requests库对目标网站的登录API发起一个POST请求，请求中要包含网站需要的所有数据。</p>
+<p>市面上十本爬虫书，九个都会以豆瓣当例子，但是爬取的都是静态的页面，而涉及加密的页面（比如豆瓣读书的索引页）都不会提到。所以看书基本没什么用，尤其是中文的爬虫书，上来就是100页的安装教程，本质上是在水字数，这些东西在网上有大把现成的教程。入门书籍只推荐O&rsquo;Reilly的那本《Web Scraping with Python (2nd Edition))》，我对API最初的认识就是来自这本书。</p>
+<p>在豆瓣的登录页面打开开发者工具，然后提交一个包含用户名、信息的表单。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202155242773.png" alt="豆瓣登录页面"></p>
+<p>点击登录后，可以在开发者工具的Network标签页中看到这样一条请求：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202155350637.png" alt="豆瓣登录API"></p>
+<p>这样，我们就得到了豆瓣登录时需要发送请求的API，以及提交的信息。可以看出除了我们输入的用户名和密码，前端还生成了两个参数。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202153209933.png" alt="登录豆瓣时的Form Data"></p>
+<h2 id="登录都有哪些坑">登录都有哪些坑</h2>
+<p>接着刚才豆瓣登录的例子，如果输入的正确的账号和密码，浏览器会自动跳转到登录前你在浏览的页面。但是如果短时间内多次输入错误的账号密码，浏览器就会跳出一个滑动验证码，通过后才能继续登录。使用Python模拟登录的时候也会遇到这个问题，通常是用<code>Selenium</code>来模拟滑动的过程。验证码的问题，有机会再说（说人话——我也不太会😅）。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202161745912.png" alt="Python模拟登录豆瓣"></p>
+<p>豆瓣的登录并没有涉及到加密参数，这在常用网站中是比较少见的。一个请求可以包含很多加密的参数，我们看一下<code>requests</code>库的文档：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202154754648.png" alt="requests文档"></p>
+<p>众多参数中，常用的只有这么几个：</p>
+<ul>
+<li><code>data</code>/<code>json</code>：提交的数据，选择哪个和<code>headers</code>中的<code>content-type</code>有关。</li>
+<li><code>headers</code>：请求头，包含了很多重要信息。很多反爬措施都会通过headers判断是人类用户还是爬虫程序。</li>
+<li><code>cookies</code>：请求时携带的cookie，很多时候可以用cookie跳过登录，直接访问登录后才可以访问的页面。cookie也可以写在headers中。</li>
+</ul>
+<h2 id="知乎登录">知乎登录</h2>
+<h3 id="抓包">抓包</h3>
+<p>在登录页面输入<strong>错误的</strong>账号和密码后可以在Network中看到如下POST请求，相比登录页面的GET请求，<code>headers</code>中多了三个身份验证字段：<code>x-xsrftoken</code>、<code>x-ab-param</code>、<code>x-ab-pb</code>，经过测试，只有<code>x-xsrftoken</code>是必需的。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202184423690.png" alt="知乎登录headers"></p>
+<p>还可以观察到Form Data中的信息是加密的：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202184747215.png" alt="知乎登录 Form Data"></p>
+<h3 id="定位加密">定位加密</h3>
+<p>打开全局搜索：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202185541167.png" alt="打开全局搜索的步骤"></p>
+<p>搜索<code>sign_in</code></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202185630268.png" alt="全局搜索结果"></p>
+<p>打开搜索到的这个js文件，点击左下角的<code>{}</code>进行格式化，之后会出现美化后的js代码：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202185813081.png" alt="格式化JS代码"></p>
+<p>进入格式化后的文件，在文件内再次搜索<code>sign_in</code>，定位到如下位置，打上断点。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202190012798.png" alt="当前文件搜索关键词"></p>
+<p>再次点击登录，页面会停在刚才打的断点的位置：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202190221127.png" alt="在断点分析局部变量"></p>
+<p>可以看出，这里的局部变量<code>e</code>包含了我们提交的用户名和密码。</p>
+<p>现在的任务还剩两个：</p>
+<ul>
+<li>
+<p>凑齐这个表单中的其他变量，</p>
+</li>
+<li>
+<p>找到加密函数</p>
+</li>
+</ul>
+<h3 id="补全变量">补全变量</h3>
+<ul>
+<li>
+<p><code>clientId</code>、<code>grantType</code>、<code>lang</code>、<code>refSource</code>、<code>source</code> 都是固定参数</p>
+</li>
+<li>
+<p><code>captcha</code>：验证码，这里因为没有触发验证码机制，为空。</p>
+</li>
+<li>
+<p><code>username</code>、<code>password</code>：用户名和原始密码</p>
+</li>
+<li>
+<p><code>timestamp</code>：当前时间的时间戳，JavaScript中<code>new Date().getTime()</code>等价于Python中<code>int(time.time()*1000)</code></p>
+</li>
+<li>
+<p><code>signature</code>：签名认证，一个加密参数。</p>
+</li>
+</ul>
+<p>全局搜索<code>signature</code>，结果如下：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202200841565.png" alt="全局搜索signature"></p>
+<p>在第二个文件中定位到<code>signature</code>生成的地方：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202201051574.png" alt="定位到signature"></p>
+<p>是对几个字符串拼接后进行<code>HMAC</code>加密</p>
+<h3 id="验证码">验证码</h3>
+<p>和豆瓣一样，短时间内重复提交登录，页面就会出现一个验证码，有时是英文字母识别，有时是倒立汉字识别，我对验证码的东西知之甚少，这部分参考了知乎上的这篇文章。</p>
+<blockquote>
+<p><code>captcha</code> 验证码，是通过 GET 请求单独的 API 接口返回是否需要验证码（无论是否需要，都要请求一次），如果是 True 则需要再次 PUT 请求获取图片的 base64 编码。</p>
+<p>实际上有两个 API，一个是识别倒立汉字，一个是常见的英文验证码，任选其一即可，代码中我将两个都实现了，汉字是通过 plt 点击坐标，然后转为 JSON 格式。</p>
+<p>最后还有一点要注意，如果有验证码，需要将验证码的参数先 POST 到验证码 API，再随其他参数一起 POST 到登录 API。</p>
+</blockquote>
+<h3 id="找到加密函数">找到加密函数</h3>
+<p>因为在body上面有一个<code>ZsEncrypt</code>字样，我就在当前文件搜索了一下<code>encrypt</code>关键字，“啪”就找到了，很快啊，省的一项一项看调用栈（<code>call stack</code>）了。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202194506758.png" alt="加密函数"></p>
+<p>于是把<code>__g</code>相关的代码全部找到，就得到加密函数了。</p>
+<p>有几个要注意的地方：</p>
+<ul>
+<li>
+<p>原JS代码中<code>__g._encrypt()</code>包含在一个匿名函数中，要把它拿出来。</p>
+</li>
+<li>
+<p>NodeJS中没有<code>window</code>这个对象，所以要定义一个：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="nb">window</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">navigator</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">userAgent</span><span class="o">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36&#34;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></li>
+<li>
+<p>如果报错找不到<code>atob</code>函数，可以在当前文件夹中用<code>npm install atob</code>安装，或者自己定义一个：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">atob</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="s1">&#39;base64&#39;</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;binary&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></li>
+</ul>
+<h2 id="一些技巧">一些技巧</h2>
+<ul>
+<li>
+<p>用错误账号密码多次登录，这样有两个好处：</p>
+<ul>
+<li>防止浏览器跳转，方便下一次登录测试。</li>
+<li>可以方便的看出哪些参数是固定参数，哪些是加密参数。</li>
+</ul>
+</li>
+<li>
+<p>抓包时选中<code>Preserve log</code>选项，防止跳转后丢失请求信息。</p>
+<p><img src="http://qiniusave.feifeizaici.xyz/uPic/image-20201202163307895.png" alt="image-20201202163307895"></p>
+</li>
+<li>
+<p>开一个没有缓存的浏览器。方法有很多，比如开启浏览器的无痕模式，或者用webdriver开一个界面。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202163551906.png" alt="webdriver"></p>
+</li>
+<li>
+<p>用https://curl.trillworks.com/把浏览器的cURL请求转化为Python代码，可以防止缺少必要信息。</p>
+</li>
+</ul>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202163825463.png" alt="cURL to Python"></p>
+<h2 id="一些碎碎念">一些碎碎念</h2>
+<p>最近看B站看的太多了，本来想写B站登录的，加密部分复现出来了，就是一个RSA+Base64，但是下面两个MD5加密的参数一时半会儿没搞出来，其实是JS会的太少，只会一些基础的语法。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201201160846155.png" alt="B站登录 Form Data"></p>
+<p>本来还打算知乎登录的整个流程都实现一遍，但是最近实在没时间了，GitHub上找到两个实现，都跑得通，就没有具体再去写。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201202203448648.png" alt="Push"></p>
+<p><a href="https://zhuanlan.zhihu.com/p/34073256">2020年最新 Python 模拟登录知乎 支持验证码</a></p>
+<p><a href="https://github.com/zkqiang/zhihu-login/blob/master/zhihu_login.py">GitHub1</a></p>
+<p><a href="https://github.com/CharlesPikachu/DecryptLogin/blob/master/DecryptLogin/core/zhihu.py">GitHub2</a></p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【爬虫实战】爬两次 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/crawl-twice/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/crawl-twice/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/crawl-twice/">
+    <title>
+  【爬虫实战】爬两次 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/crawl-twice/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【爬虫实战】爬两次</h1>
+      <h2 class="date">May 13, 2020</h2>
+
+      
+    </header>
+
+    <h2 id="定义">定义</h2>
+<p>「爬两次」这个词是我自己随便编的，意思就是要对相同的API发送两次请求。学过小学奥数的人应该知道「算两次」，就是用不同的两种方法来计算同一个东西，因为结果必然是一样的，所以可以得到两个式子间一些关系。「爬两次」和「算两次」没什么关系，扯这么多是因为我闲的蛋疼。</p>
+<h2 id="问题">问题</h2>
+<p>这个问题是下午在闲鱼大佬的爬虫交流群里看到的：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211193635466.png" alt=""></p>
+<p>网站：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">http://hd.chinatax.gov.cn/nszx/InitCredit.html
+</code></pre></div><p>打开开发者模式，随便点击一个省份，在Network中看一下抓到的请求：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211195435369.png" alt=""></p>
+<p>可以看出，数据确实都直接写出来了，没有什么加密措施。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Referer&#39;</span><span class="p">:</span> <span class="s1">&#39;http://hd.chinatax.gov.cn/nszx/InitCredit.html&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;page&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;140000&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;evalyear&#39;</span><span class="p">:</span> <span class="s1">&#39;2019&#39;</span>
+<span class="p">}</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://hd.chinatax.gov.cn/service/findCredit.do&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</code></pre></div><p>运行一下，收到的响应为一堆html代码，并没有我们想要的数据。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211195654694.png" alt=""></p>
+<h2 id="解决">解决</h2>
+<p>这种情况一般都是带的参数少了，既然form data是全的，那么很可能少的是cookie，翻回去再看一下Network：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211195910253.png" alt=""></p>
+<p>可以看到浏览器对这个API发送了两次相同的POST请求，第一次的状态码为307，也就是临时重定向，我们需要的数据包含在第二次POST请求的响应中。</p>
+<p>在Cookies一栏中可以看到第一次POST请求的响应中包含了第二次POST请求所需的cookie：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211200134766.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211200151276.png" alt=""></p>
+<p>我们并不需要先用reuqests发送一次请求，然后第二次请求时携带保存下来的cookie，这样太麻烦了。requests库中的session就能帮我们自动完成cookie保存的工作。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Referer&#39;</span><span class="p">:</span> <span class="s1">&#39;http://hd.chinatax.gov.cn/nszx/InitCredit.html&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;page&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;140000&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;evalyear&#39;</span><span class="p">:</span> <span class="s1">&#39;2019&#39;</span>
+<span class="p">}</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://hd.chinatax.gov.cn/service/findCredit.do&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://hd.chinatax.gov.cn/service/findCredit.do&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">r</span><span class="o">.</span><span class="n">text</span>
+</code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211200449783.png" alt=""></p>
+<h2 id="联想">联想</h2>
+<p>想一想之前写过的代码，这样的情况遇到很多次了。比如登录知乎，获取验证码时要先发送GET请求，收到响应以后再发送PUT请求，才能得到验证码的图片，直接发送PUT请求收到的响应是这样的：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211200818858.png" alt=""></p>
+<p>事实上，这里说的“验证码票据”就是第一次GET请求时返回的一个cookie：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211200918579.png" alt=""></p>
+<p>再比如之前写的B站视频下载，第一次请求的响应时第二次请求的参数，只不过这种比较好发现。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/03svl3ht.png" alt=""></p>
+<p>如果有很明显的爬虫行为，比如不带headers，或者高频访问，很容易就被对方的反爬虫系统封掉IP了，比如这样。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211201501861.png" alt=""></p>
+<h2 id="叨叨">叨叨</h2>
+<p>这种政府的网站我平时是不会去爬的，这次爬也是抱着学习的目的，害怕网警顺着网线过来把我抓住。几乎每本爬虫书里都有一章在讲法律红线的，大都放在最后，但是我觉得应该放在最前面。众所周知，写爬虫就是在面向监狱编程，总能听说某个大佬写爬虫被抓进去了，也不知道是真是假。写爬虫纯粹是我的兴趣，毕业以后我也不可能靠爬虫吃饭，能写个抽卡机，下载个B站视频也就足够了，最多爬点图片回98发「自由贴图」。这里吐槽一下「妹子图」这个网站，封IP封的也太厉害了，爬几个帖就直接封IP，还是以后有机会搞个代理池再爬它好了。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211194041805.png" alt="动物书，永远的神"></p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

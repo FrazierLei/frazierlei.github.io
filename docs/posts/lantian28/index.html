@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【JS逆向】获取「魔鬼蓝天」西瓜视频全部视频链接 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/lantian28/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/lantian28/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/lantian28/">
+    <title>
+  【JS逆向】获取「魔鬼蓝天」西瓜视频全部视频链接 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/lantian28/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【JS逆向】获取「魔鬼蓝天」西瓜视频全部视频链接</h1>
+      <h2 class="date">January 7, 2021</h2>
+
+      
+    </header>
+
+    <p>9月份开始弃坑王者以后，就一直没有看关于游戏的视频。10月底时候在B站看到几个关于红警的视频，但是都是打的战役或者魔改版本，不如真人对战有意思。偶然在推荐区看到了「蓝天28」这个up主的视频，完全打破了我对红警这个游戏的认识。各种花式套路，什么路径偷、拉基地躲炸弹、一个三级多功能步兵车灭一个国家、锅盖藏尤里。谷歌搜了一下「红警蓝天」，在知乎的一个回答里了解到，这个蓝天28是魔鬼战队的蓝天，他是很多法国战术的发明人，也当过红警历史第一人——月亮3的陪练。除了1v1和混战，蓝天最拿手的强项其实是是2v2，他曾经在一个2v2比赛中大比分战胜月亮3所在的队伍。</p>
+<p>红警是我小时候玩的第一款“大型游戏”，当时是院里小伙伴拷给我的。我玩的版本是尤里的复仇，蓝天玩的是原版红警2。当时我全靠自己打人机时候摸索出了一些套路，比如选法国时候，工程师占敌人一个房子，然后在敌人家里造巨炮。再比如选韩国的时候，黑鹰战机手动操作绕个圈子去炸基地。看来自己还是有一点点游戏天赋的，要不然去年也不能把程咬金打到国服。</p>
+<p>10月份刚开始看蓝天的视频的时候，他在B站不过1万多个粉丝，两个多月过去已经涨到5万多了。而且每个月都有几百个人充电，还有老板动不动就几万几万地充电。也难怪，有实力、套路多、一口逗人的川普，想不火都难。可惜的是蓝天每天在B站只发2-3个视频，但是每天在西瓜视频都会发4个或者更多的视频，原因是头条财大气粗，西瓜视频给的收益多一点。弄得我这个从来不看西瓜视频的人都去注册了一个账号。</p>
+<p>今天分析一下如何获取蓝天在西瓜视频的全部视频链接，并且批量下载。</p>
+<h2 id="抓包">抓包</h2>
+<p>打开开发者模式，容易发现视频信息包含在这一条请求的响应中：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">https://www.ixigua.com/api/videov2/author/video?author_id=75436727443&amp;type=video&amp;max_time=0&amp;_signature=_02B4Z6wo00f01Fr7PIwAAIBAvQB2YrHe9Jxa-jgAAElQd0
+</code></pre></div><p>这个GET请求包含4个参数：</p>
+<ul>
+<li><code>author_id</code>：视频作者的id</li>
+<li><code>type</code>：video，为固定参数</li>
+<li><code>max_time</code>：视频的最新时间，默认为0，表示最新的视频</li>
+<li><code>_signature</code>：加密参数</li>
+</ul>
+<h2 id="补全headers">补全headers</h2>
+<p>经过测试，headers中必须包括<code>user-agent</code>、<code>referer</code>和一个名为<code>tt-anti-token</code>的参数，这个参数一看就是反爬虫用的。</p>
+<p>一个好的习惯是先搜值，再搜变量名，全局搜索<code>tt-anti-token</code>的值，马上就能发现它是包含在页面的HTML源码中的，只需要用正则表达式把它抠出来即可。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210106213855290.png" alt=""></p>
+<p>现在的问题是，用Requests模拟访问西瓜视频的页面，如果不携带cookies，会被判断为爬虫因而拒绝访问。</p>
+<h2 id="获取cookies">获取cookies</h2>
+<p>首先在Network的cookies标签栏中看一下需要的cookies</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210106215237894.png" alt=""></p>
+<p>这两个cookie分别包含在两个请求的响应的set-cookie中</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210106234149817.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210106234043473.png" alt=""></p>
+<p>所以，只要让我们的session分别发送这两个请求就可以得到cookies了，代码如下。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="c1"># 初始化 session</span>
+<span class="n">sess</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="s1">&#39;user-agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;referer&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.ixigua.com/home/75436727443/&#39;</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="c1"># 获取 cookies</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://i.snssdk.com/slardar/sdk.js?bid=xigua_video_web_pc&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;{&#34;region&#34;:&#34;cn&#34;,&#34;aid&#34;:1768,&#34;needFid&#34;:false,&#34;service&#34;:&#34;www.ixigua.com&#34;,&#34;migrate_info&#34;:{&#34;ticket&#34;:&#34;&#34;,&#34;source&#34;:&#34;node&#34;},&#34;cbUrlProtocol&#34;:&#34;https&#34;,&#34;union&#34;:true}&#39;</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://ttwid.bytedance.com/ttwid/union/register/&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://www.ixigua.com/ttwid/union/register/callback/?aid=1768&amp;ticket=1L9sEpLg5btXOIUkHqGQARW9Y34v8EEWhb1XjOhBBGWX9Z7A-KcojXXMBC5_MpIxJ&#39;</span><span class="p">)</span>
+</code></pre></div><h2 id="获取_signature">获取_signature</h2>
+<p>现在只剩下这一个未知的参数了，全局搜索一下，只搜到一个位置：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210106235108276.png" alt=""></p>
+<p>在文件内再次搜索<code>_signature</code>，在找到的位置上打上一个断点，刷新页面：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210106235322968.png" alt=""></p>
+<p>在console中运行一下，可以看出，<code>_signature</code>的值就是从这里赋予的。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210106235509081.png" alt=""></p>
+<p>按F11（而不是更常用的F10）可以进入函数内部，如果对Chrome的调试方法不熟悉的朋友，可以查看下面的几个教程：</p>
+<ul>
+<li><a href="https://zh.javascript.info/debugging-chrome">在 Chrome 中调试</a></li>
+<li><a href="https://developers.google.com/web/tools/chrome-devtools/javascript?hl=zh-cn">在 Chrome DevTools 中调试 JavaScript 入门</a></li>
+<li><a href="https://developers.google.com/web/tools/chrome-devtools/javascript/step-code?hl=zh-cn">如何单步调试代码</a></li>
+</ul>
+<p>在函数内部按F10，一直到最后一行，可以看出，关键的函数是这个<code>window.byted_acrawler.sign</code>函数</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210106235934206.png" alt=""></p>
+<p>再次按F11进入函数内部，可以发现这个函数是在一个名为<code>acrawler.js</code>的文件中定义的。把这个文件全部扣下来，用nodeJS运行即可。</p>
+<p>但是这里我遇到一些麻烦，那就是会报类似这样的错误：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">TypeError: Cannot read property &#39;referrer&#39; of undefined
+TypeError: Cannot read property &#39;href&#39; of undefined
+</code></pre></div><p>我在谷歌上以<code>byted_acrawler_sign</code>为关键词进行搜索，搜到了「吾爱破解网」上的这篇文章：<a href="https://www.52pojie.cn/thread-1293936-1-2.html">js逆向：某瓜_signature、__ac_signature参数分析</a></p>
+<p>作者在到这一步的时候也遇到了这个问题，原因是NodeJS和浏览器的运行环境有很大的差异，要想在NodeJS中模拟浏览器中JS程序的运行，需要补充一系列参数：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nb">window</span> <span class="o">=</span> <span class="nx">global</span><span class="p">;</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">href</span><span class="o">:</span> <span class="s2">&#34;https://www.toutiao.com&#34;</span><span class="p">,</span>
+    <span class="nx">protocol</span><span class="o">:</span> <span class="s2">&#34;https&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1">// 这里必须是userAgent的大小写不能错
+</span><span class="c1"></span><span class="nb">window</span><span class="p">.</span><span class="nx">navigator</span> <span class="o">=</span> <span class="p">{</span><span class="nx">userAgent</span><span class="o">:</span><span class="s2">&#34;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&#34;</span><span class="p">}</span>
+<span class="nb">window</span><span class="p">.</span><span class="nb">document</span> <span class="o">=</span> <span class="p">{</span><span class="nx">referrer</span><span class="o">:</span> <span class="s2">&#34;https://www.ixigua.com/&#34;</span><span class="p">}</span>
+</code></pre></div><p>找到了<code>_signature</code>，也就补全了全部参数，就可以获取视频信息了：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;author_id&#39;</span><span class="p">:</span> <span class="s1">&#39;75436727443&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;video&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;max_time&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;_signature&#39;</span><span class="p">:</span> <span class="n">get_signature</span><span class="p">(</span><span class="s2">&#34;/api/videov2/author/video&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">resp</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://www.ixigua.com/api/videov2/author/video&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+</code></pre></div><h2 id="获取全部视频地址">获取全部视频地址</h2>
+<p>每次请求只能获取30个视频，这就需要我们修改一下<code>max_time</code>这个参数，将它修改为最后一个视频的发布时间即可。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210107001523430.png" alt=""></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_video_list</span><span class="p">(</span><span class="n">max_time</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">main_url</span> <span class="o">=</span> <span class="s1">&#39;https://www.ixigua.com/home/75436727443/&#39;</span>
+   <span class="c1"># 初始化 session</span>
+    <span class="n">sess</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+        <span class="s1">&#39;user-agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;referer&#39;</span><span class="p">:</span> <span class="s1">&#39;https://www.ixigua.com/home/75436727443/&#39;</span><span class="p">,</span>
+    <span class="p">})</span>
+
+    <span class="c1"># 获取 cookies</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://i.snssdk.com/slardar/sdk.js?bid=xigua_video_web_pc&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;{&#34;region&#34;:&#34;cn&#34;,&#34;aid&#34;:1768,&#34;needFid&#34;:false,&#34;service&#34;:&#34;www.ixigua.com&#34;,&#34;migrate_info&#34;:{&#34;ticket&#34;:&#34;&#34;,&#34;source&#34;:&#34;node&#34;},&#34;cbUrlProtocol&#34;:&#34;https&#34;,&#34;union&#34;:true}&#39;</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://ttwid.bytedance.com/ttwid/union/register/&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://www.ixigua.com/ttwid/union/register/callback/?aid=1768&amp;ticket=1L9sEpLg5btXOIUkHqGQARW9Y34v8EEWhb1XjOhBBGWX9Z7A-KcojXXMBC5_MpIxJ&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># 从html中获取token，并更新headers</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">main_url</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;&#34;csrfToken&#34;:&#34;(.*?)&#34;,&#34;isLogin&#34;&#39;</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;tt-anti-token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">})</span>
+
+    <span class="c1"># 获取视频信息</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;author_id&#39;</span><span class="p">:</span> <span class="s1">&#39;75436727443&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;video&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;max_time&#39;</span><span class="p">:</span> <span class="n">max_time</span><span class="p">,</span>
+        <span class="s1">&#39;_signature&#39;</span><span class="p">:</span> <span class="n">get_signature</span><span class="p">(</span><span class="s2">&#34;/api/videov2/author/video&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://www.ixigua.com/api/videov2/author/video&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+    
+    <span class="c1"># 返回解析后的数据</span>
+    
+    <span class="n">resp_json</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">resp_json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&#34;success&#34;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">resp_json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;视频获取失败。&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">all_video_urls</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">max_time</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">get_video_list</span><span class="p">(</span><span class="n">max_time</span><span class="o">=</span><span class="n">max_time</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">max_time</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="c1">#         video_urls = [&#39;https://www.ixigua.com&#39;+i[&#39;article_url&#39;].split(&#39;group&#39;)[1] for i in data]</span>
+        <span class="n">video_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;article_url&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="n">all_video_urls</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">video_urls</span><span class="p">)</span>
+        <span class="c1"># 更新 max_time</span>
+        <span class="n">max_time</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;publish_time&#39;</span><span class="p">]</span>
+    <span class="c1"># 若 data 为空列表，退出死循环</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">break</span>
+</code></pre></div><p>获取得到859个视频URL，与主页上显示的一致。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210107005150658.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210107003604466.png" alt=""></p>
+<h2 id="获取下载地址视频真实链接">获取下载地址（视频真实链接）</h2>
+<p>在任意一个视频的页面，打开开发者工具，可以看到一连串不断刷新的请求，只需要把这里的range参数去掉，就可以获取完整的视频了：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210107003854489.png" alt=""></p>
+<p>但是如何进行批量下载呢？这就要求我们输入视频页面的URL，输出视频的真实地址。这里我偷了个懒，用了一个第三方的视频解析工具：<a href="https://www.videofk.com/">VideoFk视频在线解析下载</a>。当然，这也建立在破解它API的基础上。因为没有加密，就不展开分析了，代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">all_video_urls</span><span class="p">:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> 
+        <span class="s1">&#39;select&#39;</span><span class="p">:</span> <span class="s1">&#39;ixigua&#39;</span>
+    <span class="p">}</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://www.videofk.com/ixigua-video-download/search&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="c1"># 获取视频地址</span>
+    <span class="n">video_url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;data-video=&#34;(.*?)&#34;&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">video_url</span> <span class="o">=</span> <span class="n">video_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;amp;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># 获取视频题目</span>
+    <span class="n">video_title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;data-title=&#34;(.*?)&#34;/&gt;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;开始下载「</span><span class="si">{</span><span class="n">video_title</span><span class="si">}</span><span class="s1">」......&#39;</span><span class="p">)</span>
+    <span class="n">download_from_url</span><span class="p">(</span><span class="n">video_url</span><span class="p">,</span> <span class="s1">&#39;./videos/&#39;</span><span class="o">+</span><span class="n">video_title</span><span class="o">+</span><span class="s1">&#39;.mp4&#39;</span><span class="p">)</span>
+</code></pre></div>
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

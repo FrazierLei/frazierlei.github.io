@@ -11,22 +11,22 @@
 
     <meta property="og:site_name" content="霏霏">
     <meta property="og:title" content="
-  用SSH远程使用Jupyter - 霏霏
+  【JS逆向】破解第三方Bilibili视频下载加密策略（2） - 霏霏
 ">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="/posts/ssh-jupyter/">
+    <meta property="og:url" content="/posts/bilibili-download-2/">
     <meta property="og:image" content="images/tn.png">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="/posts/ssh-jupyter/">
+    <meta name="twitter:site" content="/posts/bilibili-download-2/">
     <meta name="twitter:image" content="images/tn.png">
 
-    <base href="../../posts/ssh-jupyter/">
+    <base href="../../posts/bilibili-download-2/">
     <title>
-  用SSH远程使用Jupyter - 霏霏
+  【JS逆向】破解第三方Bilibili视频下载加密策略（2） - 霏霏
 </title>
 
-    <link rel="canonical" href="../../posts/ssh-jupyter/">
+    <link rel="canonical" href="../../posts/bilibili-download-2/">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     
@@ -119,25 +119,46 @@ code.has-jax {
   <section class="container post">
   <article>
     <header>
-      <h1 class="title">用SSH远程使用Jupyter</h1>
-      <h2 class="date">February 1, 2020</h2>
+      <h1 class="title">【JS逆向】破解第三方Bilibili视频下载加密策略（2）</h1>
+      <h2 class="date">December 4, 2020</h2>
 
       
     </header>
 
-    <p>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。</p>
-<h2 id="1在linux命令行中">1.在Linux命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">conda install ipykernel
-<span class="nb">source</span> activate 环境名称
-python -m ipykernel install --user --name 环境名称 --display-name <span class="s2">&#34;Python (环境名称)&#34;</span>
-jupyter notebook --no-browser --port<span class="o">=</span><span class="m">8080</span>
-</code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/Fsy38OavxaJFhTBuBrQ9gSznTy5N" alt=""></p>
-<h2 id="2在windows命令行中">2.在Windows命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">ssh -N -L 8080:localhost:8080 usr@ip
-</code></pre></div><p>端口默认是22，需要修改：
-<img src="https://qiniusave.feifeizaici.xyz/FoNlph-SiH3TzFmr6YX701PThueP" alt=""></p>
-<p>然后将Linux命令行中的地址复制到浏览器中即可：
-<img src="https://qiniusave.feifeizaici.xyz/FndV9kc_Kn4TFTdI_KeE8qyzv5ni" alt=""></p>
+    <p>之前写过一篇，这篇写的是另一个网站功能类似的网站。这次的网站和上次那个相比，免费API只能生成清晰度为360P的视频，但是加密策略还挺好玩的，所以还是整理出来发一下。</p>
+<p>网址：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">aHR0cHM6Ly9hcGkuc3BhcGkuY24=
+</code></pre></div><h3 id="两次post请求">两次POST请求</h3>
+<p>在Network标签页中查看请求，可以看到有连续的两次POST请求</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/03svl3ht.png" alt=""></p>
+<p>第一次POST请求的form-data：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/2flkygq4.png" alt=""></p>
+<p>参数为B站视频链接、时间戳、一个加密参数<code>sign</code></p>
+<p>响应为一个url，应该是指加密后的B站视频链接：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/fbe5uemb.png" alt=""></p>
+<p>第二次POST请求的form-data：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/c5kmo2sv.png" alt=""></p>
+<p>参数为第一次请求的响应url、时间戳、和第一次不同的加密参数<code>sign</code>，<code>username</code>和<code>otype</code>不用管，都是固定的。</p>
+<p>响应为加密的<code>image</code>和<code>video</code>地址</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/vh5j5nh5.png" alt=""></p>
+<h3 id="xhr断点">XHR断点</h3>
+<p>在sources中没有查找到<code>sign</code>的信息，在源码中也没有查找到，于是选择加一个<code>XHR断点</code>。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/bw3lzcwb.png" alt=""></p>
+<p>然后就找到这个<code>jiexi</code>函数了：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/hdyurtmh.png" alt=""></p>
+<p>第一个<code>sign</code>是这样生成的：<code>var sign = captcha(timestamp + url + strings);</code></p>
+<p>第二个<code>sign</code>是这样生成的：<code>var sign = captcha(timestamp + key + url);</code></p>
+<p><code>captcha</code>函数在另一个JS文件中定义，但是这个JS文件也加了混淆，打不动，但是我注意到<code>sign</code>恒为32位，就猜它是一个<code>md5加密</code>。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/acmpqnhw.png" alt=""></p>
+<p>随便找了一个在线加密的网站验证了一下，果然没错，这就叫化劲，四两拨千斤。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/oeewvavl.png" alt=""></p>
+<h3 id="解密">解密</h3>
+<p>解密得到视频地址：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/5krc42hm.png" alt=""></p>
+<p><code>hex2bin</code>是将十六进制字符串转换为二进制字符的函数，也很好实现。</p>
+<h2 id="坑">坑</h2>
+<p>这个网站有一个坑，就是jiexi函数中的key是写死在js文件中的，但是过一段时间后，这个值又会发生变化，所以用起来是不太方便的。而且这个网站生成的视频质量比较低，我也就没有兴趣继续搞他了。而且这个网站有点不友好，源码中能看到这么一个函数：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/t4hajylb.png" alt=""></p>
 
   </article>
 

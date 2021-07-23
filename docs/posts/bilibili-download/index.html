@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【JS逆向】破解第三方Bilibili视频下载加密策略 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/bilibili-download/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/bilibili-download/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/bilibili-download/">
+    <title>
+  【JS逆向】破解第三方Bilibili视频下载加密策略 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/bilibili-download/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【JS逆向】破解第三方Bilibili视频下载加密策略</h1>
+      <h2 class="date">December 3, 2020</h2>
+
+      
+    </header>
+
+    <p>最近一段时间老板管的比较松，就跟着咸鱼大佬的公众号自学了一些JS逆向的知识，再加上自己的摸索得比较勤快，感觉还是有一些进步的，这篇文章算是一点点学以致用吧。</p>
+<p><strong>目标网站</strong>：aHR0cHM6Ly94YmVpYmVpeC5jb20vYXBpL2JpbGliaWxpLw==</p>
+<p>（看到最后的==，你应该知道这是什么编码了吧😆）</p>
+<p>前段时间对B站视频的下载方法比较感兴趣，一路顺着谷歌→GitHub→微信公众号找到了这篇文章，文章写的特别详细，可惜的就是那个下载的接口失效了，于是我就想自己动手试一试。</p>
+<h2 id="抓包和定位">抓包和定位</h2>
+<p>找到提交的表单信息：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201128004602913.png" alt="表单信息"></p>
+<p>很明显，第一个参数是待解析的B站链接，第二个为是否增强解析的参数，设置为True。</p>
+<p>预览一下响应内容，可以看到MP4地址这一栏是空着的，那说明肯定就是动态加载的了。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201128004848537.png" alt="预览响应"></p>
+<p>打开开发者模式，映入眼帘的就是一个草泥马，说明这个网站不想让人爬它，但是可惜我还年轻，不讲武德。
+<img src="https://qiniusave.feifeizaici.xyz/uPic/lh3ehcay.png" alt="一只草泥马🦙"></p>
+<h3 id="破解无限debugger">破解无限debugger</h3>
+<p>其实打开开发者模式，第一眼看到的不是草泥马，是一个<code>debugger</code>，滑到最上面才看得到草泥马。这个<code>debugger</code>会让我们卡在这里，陷入死循环。但是这个其实很好破，右键添加条件断点<code>Add Conditional breakpoint</code>，然后条件设为<code>false</code>，这个时候无限<code>debbuger</code>的反爬就被我们绕过了。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201128005046066.png" alt="debugger"></p>
+<p>刷新页面，将待解析的b站链接输入文本框并点击“解析视频”，又出现一个<code>debugger</code>，用同样的方法解决。
+<img src="https://qiniusave.feifeizaici.xyz/uPic/u0srd135.png" alt="又一个debugger"></p>
+<h3 id="定位加密点">定位加密点</h3>
+<p>在<code>hahaha</code>这里添加一个断点，刷新页面
+<img src="https://qiniusave.feifeizaici.xyz/uPic/3ivydl3f.png" alt="设置断点"></p>
+<p>这时发现MP4地址这里空了，说明这一步是关键的一步。
+<img src="https://qiniusave.feifeizaici.xyz/uPic/g54ulupq.png" alt="地址栏空了"></p>
+<p>按<code>F11</code>进行下一步，发现加密的地方
+<img src="https://qiniusave.feifeizaici.xyz/uPic/evwwpqvw.png" alt="定位到解密函数"></p>
+<p>然后在控制台测试一下，发现这就是我们想要找的MP4下载地址
+<img src="https://qiniusave.feifeizaici.xyz/uPic/szr2vugc.png" alt="控制台测试"></p>
+<p>于是现在我们需要分析一下这个<code>decrypt</code>函数。</p>
+<h2 id="破解加密策略">破解加密策略</h2>
+<p>点击<code>decrypt</code>函数进入他的内部，可以看到所有JS代码都是加了混淆的，代码的可读性变的特别差，例如这样：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">decrypt</span><span class="p">(</span><span class="mi">_0</span><span class="nx">x55cd15</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="mi">_0</span><span class="nx">x2b29a5</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">[</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0xd&#39;</span><span class="p">,</span> <span class="s1">&#39;p(J)&#39;</span><span class="p">)][</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0xe&#39;</span><span class="p">,</span> <span class="s1">&#39;ZJjv&#39;</span><span class="p">)][</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0xf&#39;</span><span class="p">,</span> <span class="s1">&#39;2W(k&#39;</span><span class="p">)](</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x10&#39;</span><span class="p">,</span> <span class="s1">&#39;R!FI&#39;</span><span class="p">));</span>
+    <span class="kd">var</span> <span class="mi">_0</span><span class="nx">x431fea</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">[</span><span class="s1">&#39;enc&#39;</span><span class="p">][</span><span class="s1">&#39;Latin1&#39;</span><span class="p">][</span><span class="s1">&#39;parse&#39;</span><span class="p">](</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x11&#39;</span><span class="p">,</span> <span class="s1">&#39;N6Ge&#39;</span><span class="p">));</span>
+    <span class="kd">var</span> <span class="mi">_0</span><span class="nx">x28806e</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">[</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x12&#39;</span><span class="p">,</span> <span class="s1">&#39;U[)g&#39;</span><span class="p">)][</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x13&#39;</span><span class="p">,</span> <span class="s1">&#39;u4yX&#39;</span><span class="p">)](</span><span class="mi">_0</span><span class="nx">x55cd15</span><span class="p">,</span> <span class="mi">_0</span><span class="nx">x2b29a5</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;iv&#39;</span><span class="o">:</span> <span class="mi">_0</span><span class="nx">x431fea</span><span class="p">,</span>
+        <span class="s1">&#39;mode&#39;</span><span class="o">:</span> <span class="nx">CryptoJS</span><span class="p">[</span><span class="s1">&#39;mode&#39;</span><span class="p">][</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x14&#39;</span><span class="p">,</span> <span class="s1">&#39;R!FI&#39;</span><span class="p">)],</span>
+        <span class="s1">&#39;adding&#39;</span><span class="o">:</span> <span class="nx">CryptoJS</span><span class="p">[</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x15&#39;</span><span class="p">,</span> <span class="s1">&#39;KvSw&#39;</span><span class="p">)][</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x16&#39;</span><span class="p">,</span> <span class="s1">&#39;eITC&#39;</span><span class="p">)]</span>
+    <span class="p">})[</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x17&#39;</span><span class="p">,</span> <span class="s1">&#39;o*r^&#39;</span><span class="p">)](</span><span class="nx">CryptoJS</span><span class="p">[</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x18&#39;</span><span class="p">,</span> <span class="s1">&#39;ZH@&amp;&#39;</span><span class="p">)][</span><span class="mi">_0</span><span class="nx">x4525</span><span class="p">(</span><span class="s1">&#39;0x19&#39;</span><span class="p">,</span> <span class="s1">&#39;o(Cg&#39;</span><span class="p">)]);</span>
+    <span class="k">return</span> <span class="mi">_0</span><span class="nx">x28806e</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>于是放弃复现，而是把所有用到的JS代码全部扣出来，然后用Python的<code>execjs</code>库来运行这些JS代码。</p>
+<p>注意这里它用了<code>CryptoJS</code>库，这个库可以用<code>npm install crypto-js</code>安装到本地后，再用<code>require</code>来导入即可。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">CryptoJS</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&#34;crypto.js&#34;</span><span class="p">);</span>
+</code></pre></div><h2 id="代码实现">代码实现</h2>
+<p>首先定义调用JS代码的Python函数：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_js_function</span><span class="p">(</span><span class="n">js_path</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="s1">&#39;&#39;&#39;
+</span><span class="s1">    获取指定目录下的js代码, 并且指定js代码中函数的名字以及函数的参数。
+</span><span class="s1">    :param js_path: js代码的位置
+</span><span class="s1">    :param func_name: js代码中函数的名字
+</span><span class="s1">    :args: js代码中函数的参数
+</span><span class="s1">    :return: 返回调用js函数的结果
+</span><span class="s1">    &#39;&#39;&#39;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">js_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">js</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="n">execjs</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">js</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">func_name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</code></pre></div><p>然后用正则表达式获取密文<code>hahaha</code>，并完成解密，这里的<code>r.text</code>是获取到的响应的文本形式。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">hahaha</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&#34;hahaha = &#39;(.*?)&#39;;&#34;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">download_url</span> <span class="o">=</span> <span class="n">get_js_function</span><span class="p">(</span><span class="s1">&#39;bilibili.js&#39;</span><span class="p">,</span> <span class="s1">&#39;decrypt&#39;</span><span class="p">,</span> <span class="n">hahaha</span><span class="p">)</span>
+</code></pre></div><p>需要注意的是，获取得到的下载链接只是一个临时链接，2个小时后就会失效，所以是不能长期用来在线观看的。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201128010722191.png" alt="url中包含deadline这么一个参数"></p>
+<h2 id="小彩蛋">小彩蛋</h2>
+<p>我写了一小段程序，功能是随机播放一个我B站收藏夹里的视频，这样写代码写累了就可以在<code>Jupyter Notebook</code>里看B站视频了，只是没法加载弹幕。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201128010938623.png" alt="在Jupyter中观看视频"></p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

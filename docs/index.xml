@@ -8,6 +8,27 @@
     <language>en</language>
     <lastBuildDate>Fri, 23 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>测试 MathJax 的渲染效果</title>
+      <link>/posts/math/</link>
+      <pubDate>Fri, 23 Jul 2021 13:18:55 +0800</pubDate>
+      
+      <guid>/posts/math/</guid>
+      <description>Hugo 本身是不支持 Latex 的渲染的，所以我早期的一些包含较多公式的文章无法显示。
+根据网上几个教程，用 MathJax 实现了这个功能。
+之前含有公式的文章都是在 Wordpress 上用 Katex 写的，迁移过来还需要一些额外的工作，之后有空再完成好了。
+主要参考了：
+  在Hugo中使用MathJax
+  Render LaTeX math expressions in Hugo with MathJax 3
+  通用 LaTeX 数学公式语法手册
+  测试：
+$$ \dfrac{2}{4} = 0.5 \qquad \dfrac{2}{c + \dfrac{2}{d + \dfrac{2}{4}}} = a $$
+$$ \cfrac{2}{c + \cfrac{2}{d + \cfrac{2}{4}}} = a $$
+$$ \sqrt[3]{\frac{x^3+y^3}{2}} $$
+$$ dy/dx, \mathrm{d}y/\mathrm{d}x, \frac{dy}{dx}, \frac{\mathrm{d}y}{\mathrm{d}x}, \frac{\partial^2}{\partial x_1\partial x_2}y $$
+$$ \textstyle \int_{-N}^{N} e^x dx $$</description>
+    </item>
+    
+    <item>
       <title>解决 Chrome 无法打开博客中的图片（七牛云图床）</title>
       <link>/posts/chrome-qiniu/</link>
       <pubDate>Fri, 23 Jul 2021 13:18:55 +0800</pubDate>
@@ -28,14 +49,574 @@
     
     <item>
       <title>用 SSH 远程访问 Jupyter Lab 并用 Kite 实现自动补全</title>
-      <link>/posts/ssh-jupyter/</link>
+      <link>/posts/ssh-jupyterlab/</link>
       <pubDate>Thu, 22 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/ssh-jupyter/</guid>
+      <guid>/posts/ssh-jupyterlab/</guid>
       <description>要跑深度学习代码，只用本地电脑肯定是不够用的，必然需要远程使用服务器的计算资源。我观察到实验室很多人用的是 PyCharm , 但是我觉得PyCharm 用着挺费劲的。呆呆象师兄用的是 VScode，我比较习惯用 Jupyter Notebook 。但是Jupyter Notebook有着各种各样的问题，于是有了他的加强版—— Jupyter Lab。
 安装 Jupyter Lab 如果之前安装过 Jupyter Notebook 或者使用的是 Anaconda 的话，环境中很可能还保留着旧版本的 Jupyter Lab，所以要先安装最新版的 Jupyter Lab。
 pip install jupyterlab --upgrade 如果遇到类似 ERROR: Cannot uninstall &#39;terminado&#39;. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. 这样的报错信息，可以执行下方命令，然后重新 pip 安装 Jupyter Lab。
 pip install terminado --ignore-installed 我看到有的教程写的要安装 npm 和 nodejs ，但是我试了一下不装也不影响，如果遇到报错的话可以用 pip 或者 conda 安装一下。</description>
+    </item>
+    
+    <item>
+      <title>在线视频抓取神器：CoCoCut——可见皆可得</title>
+      <link>/posts/cococut/</link>
+      <pubDate>Thu, 17 Jun 2021 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/cococut/</guid>
+      <description>今天上午见证了杜兰特 49+17+10 的死神表现，就想着把全场录像保存下来。上次这样做还是14年还在上高中时候的事情了，当时有一场火箭对阵开拓者的季后赛，豪哥打得贼牛逼，我从不知道哪个地方找到高清录像，存下来看了好几遍。
+上周脑袋一热花25块钱开了一个腾讯NBA会员，这也就省去了一些找资源的时间，这次就直接下载腾讯视频上的英文原声录像。
+下载完我也就自己看，一不传播，二不盈利，何况我还开了会员。
+获取视频下载地址 如果要自己抓包，一点一点分析视频的真实地址，就算真能弄出来也是要浪费很多时间的，况且这种VIP专属的视频肯定加密手段会更复杂一些。因此首先想到的是用第三方提供的在线视频解析网站。
+之前用过这个叫做 VideoFK 的网站，虽然支持的视频平台很多，但是可惜不支持腾讯视频。
+之后找到这个叫做 分享网 的视频解析平台，能用，但是只能得到720p的视频，显然无法满足我的需求。
+CoCoCut 使用介绍 嗅探视频地址 这个功能和 IDM 的插件类似，都是可以嗅探到在线视频的真实地址。不过一般这种页面都是比较简单的，愿意花一点时间打开浏览器开发者工具的 Network，也是可以抓到的。
+录制模式 这个是 CoCoCut 最厉害的地方。
+有时候在线视频的真实地址很难找到，又或者得到的是 m3u8 文件，抓取只能抓到一堆ts格式的视频片段。这个时候 CoCoCut 的录制模式就派上用场了。
+第一步：在想要抓取的视频页面点击插件栏中的 CoCoCut
+第二部：打开录制模式
+第三部：回到视频页面，拖动进度条以快速完成全部视频的缓存
+小插曲——用 FFmpeg 合并视频 因为这场的全场录像不知道为什么播放一直有问题，我只能分别下载四节的视频然后合并起来。
+本来想用 Mac 自带的 iMovie，但是每次拼接完输出的时候都都会报错，而且生成的这部分也是没有声音的。
+在网上找到了这个方法，试了一下不仅快而且效果很好。思路是先把 mp4 转化成 ts 格式，之后拼接 ts 文件，最后再转化为 mp4。
+代码如下：
+#! /bin/bash # 将 mp4 文件封装为 ts 格式 ffmpeg -i a1.mp4 -vcodec copy -acodec copy -vbsf h264_mp4toannexb 1.ts ffmpeg -i a2.</description>
+    </item>
+    
+    <item>
+      <title>白色背景图片与透明背景图片的相互转化</title>
+      <link>/posts/transparent-image/</link>
+      <pubDate>Thu, 13 May 2021 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/transparent-image/</guid>
+      <description>前几天在 中用从 Statmuse 上获取到的球员头像作为数据，训练了一个生成模型，生成出了一些没有见过的球员的头像。
+PIL 支持的标准模式一共有7种：
+这些收集到的图片用 PIL 打开以后，它们的 mode 全部都是 P。P 模式的图片每个像素点的值是一个 0 到 255之间 的整数。
+我在 Pillow 的文档中并没有解释从 P 模式转化为 RGB 模式时产生的操作，只好看了一下源代码：
+elif self.mode in (&amp;#34;L&amp;#34;, &amp;#34;RGB&amp;#34;, &amp;#34;P&amp;#34;) and mode in (&amp;#34;L&amp;#34;, &amp;#34;RGB&amp;#34;, &amp;#34;P&amp;#34;): t = self.info[&amp;#34;transparency&amp;#34;] if isinstance(t, bytes): # Dragons. This can&amp;#39;t be represented by a single color warnings.warn( &amp;#34;Palette images with Transparency expressed in bytes should be &amp;#34; &amp;#34;converted to RGBA images&amp;#34; ) delete_trns = True 大概的意思是带有透明属性的P模式的图像，在转化为 RGB 模式时会出现警告。效果是虽然仍然可以转化为 RGB 模式，但是由于透明属性被删掉了，背景会变成某种绿色（不知道为什么是这个颜色，测试了很多图片，都是这个颜色，RGB 值也相同）</description>
+    </item>
+    
+    <item>
+      <title>【JS逆向】获取「魔鬼蓝天」西瓜视频全部视频链接</title>
+      <link>/posts/lantian28/</link>
+      <pubDate>Thu, 07 Jan 2021 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/lantian28/</guid>
+      <description>9月份开始弃坑王者以后，就一直没有看关于游戏的视频。10月底时候在B站看到几个关于红警的视频，但是都是打的战役或者魔改版本，不如真人对战有意思。偶然在推荐区看到了「蓝天28」这个up主的视频，完全打破了我对红警这个游戏的认识。各种花式套路，什么路径偷、拉基地躲炸弹、一个三级多功能步兵车灭一个国家、锅盖藏尤里。谷歌搜了一下「红警蓝天」，在知乎的一个回答里了解到，这个蓝天28是魔鬼战队的蓝天，他是很多法国战术的发明人，也当过红警历史第一人——月亮3的陪练。除了1v1和混战，蓝天最拿手的强项其实是是2v2，他曾经在一个2v2比赛中大比分战胜月亮3所在的队伍。
+红警是我小时候玩的第一款“大型游戏”，当时是院里小伙伴拷给我的。我玩的版本是尤里的复仇，蓝天玩的是原版红警2。当时我全靠自己打人机时候摸索出了一些套路，比如选法国时候，工程师占敌人一个房子，然后在敌人家里造巨炮。再比如选韩国的时候，黑鹰战机手动操作绕个圈子去炸基地。看来自己还是有一点点游戏天赋的，要不然去年也不能把程咬金打到国服。
+10月份刚开始看蓝天的视频的时候，他在B站不过1万多个粉丝，两个多月过去已经涨到5万多了。而且每个月都有几百个人充电，还有老板动不动就几万几万地充电。也难怪，有实力、套路多、一口逗人的川普，想不火都难。可惜的是蓝天每天在B站只发2-3个视频，但是每天在西瓜视频都会发4个或者更多的视频，原因是头条财大气粗，西瓜视频给的收益多一点。弄得我这个从来不看西瓜视频的人都去注册了一个账号。
+今天分析一下如何获取蓝天在西瓜视频的全部视频链接，并且批量下载。
+抓包 打开开发者模式，容易发现视频信息包含在这一条请求的响应中：
+https://www.ixigua.com/api/videov2/author/video?author_id=75436727443&amp;amp;type=video&amp;amp;max_time=0&amp;amp;_signature=_02B4Z6wo00f01Fr7PIwAAIBAvQB2YrHe9Jxa-jgAAElQd0 这个GET请求包含4个参数：
+ author_id：视频作者的id type：video，为固定参数 max_time：视频的最新时间，默认为0，表示最新的视频 _signature：加密参数  补全headers 经过测试，headers中必须包括user-agent、referer和一个名为tt-anti-token的参数，这个参数一看就是反爬虫用的。
+一个好的习惯是先搜值，再搜变量名，全局搜索tt-anti-token的值，马上就能发现它是包含在页面的HTML源码中的，只需要用正则表达式把它抠出来即可。
+现在的问题是，用Requests模拟访问西瓜视频的页面，如果不携带cookies，会被判断为爬虫因而拒绝访问。
+获取cookies 首先在Network的cookies标签栏中看一下需要的cookies
+这两个cookie分别包含在两个请求的响应的set-cookie中
+所以，只要让我们的session分别发送这两个请求就可以得到cookies了，代码如下。
+import requests # 初始化 session sess = requests.Session() sess.headers.update({ &amp;#39;user-agent&amp;#39;: &amp;#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&amp;#39;, &amp;#39;referer&amp;#39;: &amp;#39;https://www.ixigua.com/home/75436727443/&amp;#39;, }) # 获取 cookies sess.get(&amp;#39;https://i.snssdk.com/slardar/sdk.js?bid=xigua_video_web_pc&amp;#39;) data = &amp;#39;{&amp;#34;region&amp;#34;:&amp;#34;cn&amp;#34;,&amp;#34;aid&amp;#34;:1768,&amp;#34;needFid&amp;#34;:false,&amp;#34;service&amp;#34;:&amp;#34;www.ixigua.com&amp;#34;,&amp;#34;migrate_info&amp;#34;:{&amp;#34;ticket&amp;#34;:&amp;#34;&amp;#34;,&amp;#34;source&amp;#34;:&amp;#34;node&amp;#34;},&amp;#34;cbUrlProtocol&amp;#34;:&amp;#34;https&amp;#34;,&amp;#34;union&amp;#34;:true}&amp;#39; sess.post(&amp;#39;https://ttwid.bytedance.com/ttwid/union/register/&amp;#39;, data=data) sess.get(&amp;#39;https://www.ixigua.com/ttwid/union/register/callback/?aid=1768&amp;amp;ticket=1L9sEpLg5btXOIUkHqGQARW9Y34v8EEWhb1XjOhBBGWX9Z7A-KcojXXMBC5_MpIxJ&amp;#39;) 获取_signature 现在只剩下这一个未知的参数了，全局搜索一下，只搜到一个位置：
+在文件内再次搜索_signature，在找到的位置上打上一个断点，刷新页面：
+在console中运行一下，可以看出，_signature的值就是从这里赋予的。
+按F11（而不是更常用的F10）可以进入函数内部，如果对Chrome的调试方法不熟悉的朋友，可以查看下面的几个教程：
+ 在 Chrome 中调试 在 Chrome DevTools 中调试 JavaScript 入门 如何单步调试代码  在函数内部按F10，一直到最后一行，可以看出，关键的函数是这个window.</description>
+    </item>
+    
+    <item>
+      <title>用 StyleGAN2 生成 Statmuse 风格的人物头像</title>
+      <link>/posts/statmuse/</link>
+      <pubDate>Thu, 07 Jan 2021 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/statmuse/</guid>
+      <description>Statmuse 发了个推特，让我们看看世界上最大的运动员头像集。那这个最大的头像集有多少呢，其实也没多少只看 NBA 的球员，有407张，加上其他几个没听说过的联赛，一共是1127张。
+获取训练数据 之前在 中爬取头像的时候用的是 Selenium，不仅慢，而且容易断，一断就得重新爬。这次用 Requests。
+上次是按照球队和赛季遍历所有头像，于是一些「流浪汉」就有很多张图片，比如我们的豪哥。可以看出，除了发型和球衣有些变化，人物肖像中最重要的脸部特征是没有变的。这就相当于收集到了重复的数据。于是这次只收集每个球员最新的头像。
+import os, re, requests from bs4 import BeautifulSoup from urllib.request import urlretrieve dir_path = &amp;#39;./statmuse_all/&amp;#39; os.makedirs(dir_path, exist_ok=True) resp = requests.get(&amp;#39;https://www.statmuse.com/players&amp;#39;) bs = BeautifulSoup(resp.text, &amp;#39;html.parser&amp;#39;) # 解析出图片地址并保存在本地 for img in bs.find_all(&amp;#39;lazy-img&amp;#39;, src=re.compile(&amp;#39;https://cdn.statmuse.com/img/.*?&amp;#39;)): urlretrieve(img[&amp;#39;src&amp;#39;], os.path.join(dir_path, img[&amp;#39;alt&amp;#39;]+&amp;#39;.png&amp;#39;)) 一共只需要不到十行代码，一共收集到 len(os.listdir(&#39;./statmuse_all&#39;)) = 1127 张图像。
+数据增广 众所周知，训练一个深度神经网络，动辄需要几万甚至几十万张图像。MNIST 有7万张，CIFAR10 有6万张，ImageNet 有约150万张。而常见的人脸数据集，CelebA 有20万张，FFHQ 有7万张。
+但是我们刚才至收集到 1100 多张图像，与这些常用数据集差了好几个数量级。这就需要进行下一步——数据增广。
+数据增广的方法有很多：
+在 NVIDIA 的这篇论文中，通过一种叫做 non-leaking 的方法，将真实的图像和生成的图像都进行不同的数据增广。效果是只需要几千张训练图像就能训练出生成效果很好的GAN。
+训练 训练的代码用的是 StyleGAN 的一个第三方的实现：https://github.com/lucidrains/stylegan2-pytorch
+数据增广部分有官方代码：https://github.com/NVlabs/stylegan2-ada，几乎是即插即用的</description>
+    </item>
+    
+    <item>
+      <title>2020浙大信息化年度数据账单中的code参数分析</title>
+      <link>/posts/zju-code/</link>
+      <pubDate>Mon, 04 Jan 2021 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/zju-code/</guid>
+      <description>从去年年末开始，各大APP就开始给用户推送他们的「年度报告」。很快啊，朋友圈就被网易云、QQ音乐、B站的年度报告刷屏了。说起来还挺矛盾的，人们一边为自己的信息泄露而焦虑着，一边又享受着别人分析自己数据。今天吃完板烧鸡腿堡出来在群里看到好多人在讨论浙大出的这个信息化年度数据账单，然而并没有什么有价值的数据。
+下午摸鱼的时候稍微分析了一下接口，不复杂，但是因为想当然浪费了很多时间。
+网址：
+https://it2020.zju.edu.cn/ 一个小坑：访问https://it2020.zju.edu.cn/会跳转到实际的页面https://it2020.zju.edu.cn/share，但是直接访问https://it2020.zju.edu.cn/share则会跳转到微信推文的页面。
+用浏览器随便抓一下包，容易看出所有的数据都包含在这条POST请求的响应中：
+这个请求有两个参数，其中redirect_uri为固定参数，我们只需要找到code这个参数就好了。
+之前写浙大通行证模拟登录的时候就发现登录时会发送多个状态码为302的重定向请求：
+这里重定向的过程是通过如下方法获得的：
+# 登录 resp = s.post(......) for r in resp.history: print(r.status_code, r.url) 因为这里最后一次重定向请求的url中包含一个ST开头的ticket参数，我就想当然的觉得我们需要的code参数就是这个。然而把这个ticket参数的值扣下来赋值给code，然后发送POST请求，得到的响应为「500 Internal Server Error」。
+我只好按部就班地沿着请求列表向上找，希望能找到code参数的来源。
+一番攀谈交心了解到，code参数和上面一个302重定向的请求中的ticket参数相同：
+而这个请求是由登录的POST请求重定向而来的：
+到这里，解决办法就很显然了——把登录时的URL稍作调整即可。
+把每一次重定向的过程都print出来，可以看出，在登录过程中，有两个重定向URL都包含ticket这个参数，但是它们的值是不一样的，第一个ticket的值才是我们想要的code参数的值。</description>
+    </item>
+    
+    <item>
+      <title>如何白嫖O&#39;Reilly 的电子书</title>
+      <link>/posts/oreilly/</link>
+      <pubDate>Sun, 27 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/oreilly/</guid>
+      <description>O&amp;rsquo;Reilly的书有口皆碑！我不信有那个程序员的书架上没有基本O&amp;rsquo;Reilly的动物书。
+比如这本
+或者这本：
+上面两个都是网友用生成器自己做的。正儿八经O&amp;rsquo;Reilly的书甚至可以拼成一条彩虹。
+在O&amp;rsquo;Reilly的学习网站https://learning.oreilly.com/上，我们几乎可以看到它出版的所有的电子书。
+但是有一个问题，订阅是十分昂贵的，一个月要49刀，作为一个穷逼，我肯定是付不起的。
+好在O&amp;rsquo;Reilly的网站上提供了十天的免费试用机会，而且我发现随便编一个邮箱都可以完成注册。也就是说十天的试用期到期以后，我们再注册一个账号就能继续白嫖了。
+「完」
+没完 就如之前写的P站学习资料下载中写的，我很害怕哪天O&amp;rsquo;reilly不提供10天的免费试用，或者限定只有认证过后的edu邮箱才可以。我就想在这10天的试用期过去之前先把没看完的书保存下来。这里，保存成HTML是没有用的，保存成MHTML文件格式才可以：
+ 什么是MHTML文件？MHTML文件是包含网页所有内容的档案。 它存储HTML网页以及网页中的链接资源，其中可能包括的CSS, JavaScript，图像和音频文件。 MHTML文件主要由Web开发人员用来保存网页的当前状态以用于存档。
+ 我用Requetium写了一个自动化的脚本，能够自动把一本书的每一章都保存下来，方便之后学习。
+毕竟是白嫖，代码就不放了，有需要的可以直接找我要。
+O&amp;rsquo;Reilly封面生成器
+这些年我们一起读过的O&amp;rsquo;Reilly动物书
+Selenium保存网页为mhtml方法
+.MHTML文件扩展名</description>
+    </item>
+    
+    <item>
+      <title>【爬虫实战】如何用爬虫来找女朋友</title>
+      <link>/posts/cc98-girlfriend/</link>
+      <pubDate>Thu, 24 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/cc98-girlfriend/</guid>
+      <description>最近在回顾之前在98上发的旧帖子，觉得有些还挺好玩的，改一改发到这里好了。
+昨天有一个很久没联系的朋友突然戳我 大丈夫不为五斗米折腰，但是可以为板烧鸡腿堡，所以我就帮他写了 这个功能应该怎么实现呢？其实无非就是隔一段时间查看一下新帖中有没有征人的贴就好了。
+在「查看新帖」页面打开开发者工具，可以找到这样一个API：
+https://api.cc98.org/topic/new?from=0&amp;amp;size=20 这个API的响应是最近的20个帖子的数据，要注意的是请求头里必须带上authorization这个参数，这个参数包含在登录请求的响应中。
+频繁发送请求是不好的，会加重服务器的负担，所以要观察一下98发帖的速度。大部分情况下，30分钟内的新帖个数不会超过20个，也就是说我们每隔30分钟，获取一下最新的帖子列表，然后再根据帖子的boardId属性判断一下有没有缘分的帖子即可。
+我一开始的想法是如果发现有缘分天空的新帖，就用Python的smtplib模块给他发送一个邮件，让他及时查看。突然想起来之前在Github上一个抢口罩的程序中看到他是用「Server酱」完成消息推送，就尝试了一下。
+ Server酱是什么
+「Server酱」，英文名「ServerChan」，是一款「程序员」和「服务器」之间的通信软件。 说人话？就是从服务器推报警和日志到手机的工具。 开通并使用上它，只需要一分钟：
+ 登入：用GitHub账号登入网站，就能获得一个SCKEY（在「发送消息」页面） 绑定：点击「微信推送」，扫码关注同时即可完成绑定 发消息：往 http://sc.ftqq.com/SCKEY.send 发GET请求，就可以在微信里收到消息啦   使用的时候只需要用Requests模块对这个URL发送一个请求即可
+因为支持mardown，我就索性把帖子中的图片由ubb语法转成markdown语法了，实现方法很简单：
+md_content = content.replace(&amp;#39;\n&amp;#39;, &amp;#39;&amp;lt;br&amp;gt;&amp;#39;).replace(&amp;#39;[img]&amp;#39;, &amp;#39;![](&amp;#39;).replace(&amp;#39;[/img]&amp;#39;, &amp;#39;)&amp;#39;) 至于任务调度，因为这个任务比较简单，我就用了Python的schedule模块，这是一个轻量级的任务调度模块。如果有更复杂的需求，可以使用apscheduler。
+然后我做了一个简单的测试： 似乎没有什么问题，加上帖子的内容再测试一下： 弄完了我就愉快的去吃东西了，然而过了一会： 赶紧跑回实验室改bug，果然改完这个bug就没问题了 征到没征到我不知道，反正最近板烧鸡腿堡吃到吐。</description>
+    </item>
+    
+    <item>
+      <title>Requestium = Requests &#43; Selenium</title>
+      <link>/posts/requestium/</link>
+      <pubDate>Tue, 22 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/requestium/</guid>
+      <description>这个框架是我在知乎「Python有哪些常见的、好用的爬虫框架？」的高赞答案中看到的，试着用了一下，还挺好玩。
+下面的内容主要来自Requestsium的GitHub上的介绍：https://github.com/tryolabs/requestium，少量是我自己的测试代码。
+定位 Requestium是集Requests和Selenium于一体的WEB自动化工具。Requestium可以看作是在Requests为主体的基础上增加了Selenium的部分功能，如果你需要一个以Selenium为主体，增加部分Requests功能的Python库，可以去看一下 另一个叫做Selenium-Requests的库。
+Requestium最主要的特性是能够在保持当前Web会话的同时，允许在Requests的Session和Selenium的Webdriver之间切换。
+安装方法 pip install requestium 使用方法 对于能够熟练使用Requests和Selenium的人来说，学习Requestium几乎没有什么成本（Requestium的源码一共也只有400多行）。如果不熟悉的话还是要先去学着两个库，最好的学习资料就是它们的官方文档。
+首先创建一个session，初始化参数包含webdriver的路径，浏览器，timeout时限，以及webdriver所需参数。
+from requestium import Session, Keys s = Session(webdriver_path=&amp;#39;./chromedriver&amp;#39;, browser=&amp;#39;chrome&amp;#39;, default_timeout=15, webdriver_options={&amp;#39;arguments&amp;#39;: [&amp;#39;headless&amp;#39;]}) 至于浏览器，Requestium只支持PhantomJS和Chrome，鉴于PhantomJS已死，作者短时间内没有更新这个上次commit是2018年2月的库，我们可以认为Requestium只支持Chrome，当然自己写一个支持其他浏览器的版本也并非难事。
+和Requests不同，我们不需要手动解析收到的响应，当调用xpath，css，re的时候，解析会自动完成，例如这样：
+title = s.get(&amp;#39;http://samplesite.com&amp;#39;).xpath(&amp;#39;//title/text()&amp;#39;).extract_first(default=&amp;#39;Default Title&amp;#39;) Requestium的session对象本质上就是Requests的session对象，所以它原本自带的方法都可以用：
+s.post(&amp;#39;http://www.samplesite.com/sample&amp;#39;, data={&amp;#39;field1&amp;#39;: &amp;#39;data1&amp;#39;}) s.proxies.update({&amp;#39;http&amp;#39;: &amp;#39;http://10.11.4.254:3128&amp;#39;, &amp;#39;https&amp;#39;: &amp;#39;https://10.11.4.252:3128&amp;#39;}) 也可以切换到webdriver模式来运行js代码：
+s.transfer_session_cookies_to_driver() # You can maintain the session if needed s.driver.get(&amp;#39;http://www.samplesite.com/sample/process&amp;#39;) Requestium的session.driver对象本质上就是Selenium的driver对象，所以它原本自带的方法都可以用：
+s.driver.find_element_by_xpath(&amp;#34;//input[@class=&amp;#39;user_name&amp;#39;]&amp;#34;).send_keys(&amp;#39;James Bond&amp;#39;, Keys.ENTER) # New method which waits for element to load instead of failing, useful for single page web apps s.</description>
+    </item>
+    
+    <item>
+      <title>【JS逆向】模拟登录浙大通行证</title>
+      <link>/posts/zjuam-login/</link>
+      <pubDate>Sat, 19 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/zjuam-login/</guid>
+      <description>这么多年一直都在用Chrome，但是Chrome的有各种各样的问题，准备以后逐渐向Firefox转移，这次抓包用的是Firefox。
+网址：
+https://zjuam.zju.edu.cn/cas/login 猜测zjuam中的am可能是authentication mainpage的意思。
+FAQ 登录有什么用 因为浙大的大部分网站（教务网、计财处、就业信息网、学在浙大等等）都可以通过浙大通行证进行授权登录，所以只要登录了浙大通行证，就可以方便的完成一些机械化的操作。简单点可以用来自动进行「每日健康打卡」，复杂一些可以导出课表、成绩单、每个专业的就业情况、批量下载课件和视频。
+之后有时间的话，可以补充一些真正有用的应用。
+既然这么简单，有风险吗？ **没有。**只要你的密码不外泄，没人可以登录你的浙大通行证。印象里今年上半年朋友圈里有一个疯转的「生成你的浙大记忆」小程序，输入浙大通行证的账号密码以后会给出你的很多数据，比如体测成绩、图书馆借阅情况、成绩单、CC98有几个账号、发了几个帖。这个是相当危险的，你不知道他有没有把你的账号密码保存在他的服务器上，而且就算他说他没有主动保存，这些数据也很可能会自动保存在某些地方。所以建议浙大通行证的密码设的复杂一点，也警惕这些社会工程学的攻击。
+PC端登录 抓包 账号密码都输入123456，找到登录对应的请求：
+提交的表单数据如下：
+可以看出，密码是经过加密的，而且还有一个来源未知的execution参数。
+在调试器中打开全局搜索（Mac：cmd+shift+F，Win：ctrl+shift+F），搜索execution，可以在登录页面的HTML源码中找到它的值，类似之前写抽卡机时候碰到的RequestVerificationToken参数。
+定位加密 全局搜索password，在login.js文件中找到加密的流程如下
+这里RSA加密所需的两个参数exponent和modulus是从登录前的一个请求的响应中得到的：
+我们知道，每次对getPubKey这个API发送请求得到的响应是不同的，那么在模拟登录时如何保证我们获取得到的公钥就是这次登录需要的呢？事实上获取公钥的响应中还包含了一个名为_pv0的cookie，发送登录的POST请求时需要包含这个cookie。
+复现加密的流程 用PyExecJS 把login.js中的checkform函数和用到的RSAUtils保存下来，然后用PyExecJS调用这段JS代码，可以得到控制台中相同的结果。
+用Python复现 如果用Python的rsa库或者pycryptodome库来实现，即使公钥的固定的，每次加密的结果也是不一样的。这是因为这几个库会按一定规则对原文随机填充后再加密。我在GitHub上找到了别人实现的没有填充的RSA加密，向他敬礼🖖🏼。
+代码 扫描二维码登录 除了输入账号密码，还可以通过用钉钉客户端扫描二维码来登录浙大通行证。
+获取二维码 将二维码保存到本地
+随便找一个可以识别二维码的网站，将二维码转化为url，可以看到url中有一个code参数
+在请求列表中可以找到包含这个code的请求：
+获取登录状态 这个url很好找，因为页面会不断的自动获取登录状态
+这是一个POST请求，表单信息如下：
+容易看出，除了三个固定的参数和已知的qrCode，我们还需要找到这个pdmToken。事实上，pdmToken包含在另一个请求的响应中：
+这个POST请求的表单信息如下，经过我的测试，只要包含data参数即可，内容可以随意填写。
+登录后更新cookie 扫码后，login_with_qr这个请求的响应中会包含登录时重定向的url，对这个url发送GET请求，即可更新session中的cookie。
+代码 </description>
+    </item>
+    
+    <item>
+      <title>【爬虫实战】如何下载PornHub上的学习资料</title>
+      <link>/posts/pornhub-download/</link>
+      <pubDate>Tue, 15 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/pornhub-download/</guid>
+      <description>众所周知，P站（PxxxHub）是一个综合性视频网站，包罗万象，经常有小伙伴会在上面上传自己喜欢的学习资料。但是因为某些原因，很多资料被下架了。这就教给我们一个道理，重要的学习资料应该「下载」，而不仅仅「收藏」。下面我以李永乐老师的视频为例，讨论一下如何下载P站上的学习资料。
+定位加密 可以看出，视频的地址media_1是由一系列字符串拼接而成的，然后再赋给flashvars_212700282[&#39;mediaDefinitions&#39;][1][&#39;videoUrl&#39;]
+在控制台里看一下这个变量，果不其然，不同分辨率的视频地址都包含在内。
+思路 这次的代码就不放了，大致的思路如下：
+ 获取视频页面的HTML 定位到包含这段JavaScript代码的script标签 运行这段JavaScript代码 用正则表达式找到flashvars开头的变量名 输出视频个数和视频地址。  这次的爬虫没用Python写，参考着一些教程用NodeJS写了个爬虫。</description>
+    </item>
+    
+    <item>
+      <title>【爬虫实战】获取最新一期青年大学习的结束图</title>
+      <link>/posts/qingniandaxuexi/</link>
+      <pubDate>Mon, 14 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/qingniandaxuexi/</guid>
+      <description>今天是认真看论文的霏霏，奖励自己摸一会儿鱼。其实有时候闲下来看一点和实验室无关的东西还挺放松的，就和打球、玩游戏没有什么区别。之前写的东西吧，虽然大部分没什么技术含量，也没什么实际用处，但是我感觉还挺好玩的。其实Python本来就挺好玩的，因为比较简单，对新手也比较友好。对我来说，至少不会像C一样，让我想起大一那会儿被黑压压的控制台支配的恐惧。很多时候，稍微写那么几行代码，就能完成一个小任务，及时的反馈也能让人有一些成就感。
+原理 打开青年大学习的首页，网址：
+http://news.cyol.com/node_67071.htm 进入最近一期视频，打开开发者工具，可以看到请求列表中包含了我们想要的结束图：
+这期视频的URL为：
+http://h5.cyol.com/special/daxuexi/lfvuyhztrd/index.html 结束图的URL为：
+http://h5.cyol.com/special/daxuexi/lfvuyhztrd/images/end.jpg 那么现在思路就很清晰了，先获取到最新一期青年大学习的url，然后把url末尾的index.html替换为image/end.jpg即可。因为比较简单，所以多写几种实现方法。
+获取HTML 方法一：用Python标准库urllib from urllib.request import urlopen html = urlopen(&amp;#39;http://news.cyol.com/node_67071.htm&amp;#39;) print(html.read().decode(&amp;#39;utf-8&amp;#39;)) 方法二：用Reuqests import requests r = requests.get(&amp;#39;http://news.cyol.com/node_67071.htm&amp;#39;) print(r.text) 解析HTML 方法一：用BeautifulSoup import requests from bs4 import BeautifulSoup r = requests.get(&amp;#39;http://news.cyol.com/node_67071.htm&amp;#39;) bs = BeautifulSoup(r.text, &amp;#39;html.parser&amp;#39;) image_url = bs.find(&amp;#39;a&amp;#39;, class_=&amp;#34;transition&amp;#34;)[&amp;#39;href&amp;#39;].rsplit(&amp;#39;/&amp;#39;, 1)[0] + &amp;#39;/images/end.jpg&amp;#39; 方法二：用lxml import requests from lxml import etree r = requests.get(&amp;#39;http://news.cyol.com/node_67071.htm&amp;#39;) html = etree.HTML(r.text) image_url = html.xpath(&amp;#39;/html/body/div[4]/dl/dd/ul/li[1]/a/@href&amp;#39;)[0].rsplit(&amp;#39;/&amp;#39;, 1)[0] + &amp;#39;/images/end.jpg&amp;#39; 保存图片 用Python标准库urllib from urllib.</description>
+    </item>
+    
+    <item>
+      <title>利用百度AI Platform进行简单验证码的识别</title>
+      <link>/posts/baidu-captcha/</link>
+      <pubDate>Sat, 12 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/baidu-captcha/</guid>
+      <description>百度AI平台提供了一系列免费的识别API，包括文字识别、身份证识别、公式识别等功能，免去了我们在本地训练模型的繁琐流程。这次我们用其中的「通用文字识别（标准版）」API来进行验证码的识别。
+网址：
+https://cloud.baidu.com/doc/OCR/index.html 安装Python SDK pip install git+https://github.com/Baidu-AIP/python-sdk.git@master 定义一个简单的检测器类 from aip import AipOcr class Image2Text: def __init__(self): &amp;#34;&amp;#34;&amp;#34; 初始化检测器对象。APP_ID, API_KEY, SECRET_KEY 登录后在控制台获取 &amp;#34;&amp;#34;&amp;#34; self.APP_ID = &amp;#39;&amp;#39; self.API_KEY = &amp;#39;&amp;#39; self.SECRET_KEY = &amp;#39;&amp;#39; self.aipOcr = AipOcr(self.APP_ID, self.API_KEY, self.SECRET_KEY) def detect(self, file_path): with open(file_path, &amp;#39;rb&amp;#39;) as f: r = self.aipOcr.basicGeneral(f.read()) try: return r[&amp;#39;words_result&amp;#39;][0][&amp;#39;words&amp;#39;]	except: return r detector = Image2Text() 获取简单验证码 我们选取浙江大学教务网的验证码作为识别的目标：
+这个验证码的特征如下：
+ 四个字符 由英文字母和数字组成 英文字母全部为大写且不包括O，数字不包括9  获取并保存下当前路径下：
+import requests from PIL import Image def get_zju_captcha(): img = requests.</description>
+    </item>
+    
+    <item>
+      <title>【爬虫实战】如何把抓取到的数据储存下来</title>
+      <link>/posts/store-data/</link>
+      <pubDate>Sun, 06 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/store-data/</guid>
+      <description>如果只是把爬虫程序抓取到的数据用print打印在命令行中或者保存在内存中，那么如果下次还要获取这些数据，就得把这个程序重新跑一遍。浪费时间是其次的，如果网页结构发生了变化，或者API失效了，那么你肯定会后悔当初没有把抓到的数据保存在本地。
+下午时候在98看到这么一个帖子，试了一下不是很复杂，当作例子讲解一下。
+了解网站结构 网址：http://nappserv.app.yuchai.com/weixin-pages/stations/filter
+界面如下：
+F12打开开发者工具，将省选择为“山西省”，此时出现这样一条请求：
+点击Preview查看响应的预览，可以看出这里的响应为山西省内可查询的市。
+类似地，选择市后，响应为该市内可查询的行政区名称，例如：
+选中县/区后，点击查询，得到该地的数据：
+明确需求 一番攀谈交心了解到，楼主的需求为获取每一个区/县中服务点的个数：
+抓取数据 刚才看到的Preview是浏览器渲染完成后的结果，查看响应还得看Response一栏：
+可以看出，数据是直接写在html中的，没有加密、混淆等乱七八糟的东西。每个class为station的div中包含了一个服务点的信息。
+import requests from bs4 import BeautifulSoup provinces = [&amp;#39;云南省&amp;#39;, &amp;#39;内蒙区&amp;#39;, &amp;#39;北京市&amp;#39;, &amp;#39;吉林省&amp;#39;, &amp;#39;四川省&amp;#39;, &amp;#39;天津市&amp;#39;, &amp;#39;宁夏省&amp;#39;, &amp;#39;安徽省&amp;#39;, &amp;#39;山东省&amp;#39;, &amp;#39;山西省&amp;#39;, &amp;#39;广西省&amp;#39;, &amp;#39;广东省&amp;#39;, &amp;#39;新疆省&amp;#39;, &amp;#39;江苏省&amp;#39;, &amp;#39;江西省&amp;#39;, &amp;#39;河北省&amp;#39;, &amp;#39;河南省&amp;#39;, &amp;#39;浙江省&amp;#39;, &amp;#39;海南省&amp;#39;, &amp;#39;湖北省&amp;#39;, &amp;#39;湖南省&amp;#39;, &amp;#39;甘肃省&amp;#39;, &amp;#39;福建省&amp;#39;, &amp;#39;西藏省&amp;#39;, &amp;#39;贵州省&amp;#39;, &amp;#39;辽宁省&amp;#39;, &amp;#39;重庆市&amp;#39;, &amp;#39;陕西省&amp;#39;, &amp;#39;青海省&amp;#39;, &amp;#39;黑龙江省&amp;#39;] for province in provinces: # 选择省 r = requests.get(&amp;#39;http://nappserv.app.yuchai.com/weixin-pages/stations/city-list/?province={}&amp;#39;.format(province)) for city in r.json()[&amp;#39;cities&amp;#39;]: # 选择市 r = requests.get(&amp;#39;http://nappserv.app.yuchai.com/weixin-pages/stations/county-list/?city={}&amp;#39;.format(city)) for county in r.</description>
+    </item>
+    
+    <item>
+      <title>【JS逆向】破解第三方Bilibili视频下载加密策略（2）</title>
+      <link>/posts/bilibili-download-2/</link>
+      <pubDate>Fri, 04 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/bilibili-download-2/</guid>
+      <description>之前写过一篇，这篇写的是另一个网站功能类似的网站。这次的网站和上次那个相比，免费API只能生成清晰度为360P的视频，但是加密策略还挺好玩的，所以还是整理出来发一下。
+网址：
+aHR0cHM6Ly9hcGkuc3BhcGkuY24= 两次POST请求 在Network标签页中查看请求，可以看到有连续的两次POST请求
+第一次POST请求的form-data：
+参数为B站视频链接、时间戳、一个加密参数sign
+响应为一个url，应该是指加密后的B站视频链接：
+第二次POST请求的form-data：
+参数为第一次请求的响应url、时间戳、和第一次不同的加密参数sign，username和otype不用管，都是固定的。
+响应为加密的image和video地址
+XHR断点 在sources中没有查找到sign的信息，在源码中也没有查找到，于是选择加一个XHR断点。
+然后就找到这个jiexi函数了：
+第一个sign是这样生成的：var sign = captcha(timestamp + url + strings);
+第二个sign是这样生成的：var sign = captcha(timestamp + key + url);
+captcha函数在另一个JS文件中定义，但是这个JS文件也加了混淆，打不动，但是我注意到sign恒为32位，就猜它是一个md5加密。
+随便找了一个在线加密的网站验证了一下，果然没错，这就叫化劲，四两拨千斤。
+解密 解密得到视频地址：
+hex2bin是将十六进制字符串转换为二进制字符的函数，也很好实现。
+坑 这个网站有一个坑，就是jiexi函数中的key是写死在js文件中的，但是过一段时间后，这个值又会发生变化，所以用起来是不太方便的。而且这个网站生成的视频质量比较低，我也就没有兴趣继续搞他了。而且这个网站有点不友好，源码中能看到这么一个函数：</description>
+    </item>
+    
+    <item>
+      <title>【JS逆向】破解B站登录加密策略</title>
+      <link>/posts/bilibili-login/</link>
+      <pubDate>Thu, 03 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/bilibili-login/</guid>
+      <description>昨天还立flag说今天不摸鱼了，结果又摸了半天，稍微总结一下。
+GitHub上有一个叫做「哔哩哔哩-API收集整理」的仓库：https://github.com/SocialSisterYi/bilibili-API-collect
+是之前破解第三方B站视频下载方式的时候明一发给我的，当时没有看的很仔细，今天又找出来看了看里面的文档，解决了很多之前的疑惑。
+登录有什么用——获取cookie 昨天那篇推文里，随口提了一句登录的作用。
+ 登录以后可以获得更多的权限，比如发帖、收藏等功能，此外有些内容只有登录以后才能访问。
+ 对于B站来说，注册成为正式会员以后可以点赞、投币、收藏喜欢的视频，也算对up主小小的鼓励。此外，不管通过什么途径（插件、客户端等等），想要下载720P及以上的视频，都需要保持登录状态，如果想要下载的是大会员的专属视频，那么需要的就是大会员的cookie。
+ 关于视频流会员鉴权：
+ 获取720P及以上清晰度视频时需要登录（Cookie） 获取高帧率（1080P60）/高码率（1080P+）视频时需要有大会员的账号登录（Cookie） 获取会员专属视频时需要登录（Cookie）   而那些第三方的下载网站，原理无非是网站的管理员持有多个账号，然后用这些账号登录后的cookie来获取视频的下载链接。而显然，一个个账号手动登录再把cookie保存下来是不现实的，所以才需要用爬虫程序来完成登录。
+找齐所需参数 首先按照之前提到的套路，用错误的密码进行登录。
+需要的参数如下：
+ captchaType、keep、goUrl为固定参数 username：用户名，这里填的是手机号 password：加密过后的密码，看到最后的=可以猜测是加密以后再用Base64编码 key、challenge、validate、seccode：加密参数，来源暂时未知  再次查阅一下「哔哩哔哩-API收集整理」，可以知道这里的key和challenge都是从B站的API获取的，而validate和seccode是从极验获取的。
+   参数名 类型 内容 必要性 备注     captchaType num 6 必要 必须为6   username str 用户登录账号 必要 手机号或邮箱地址   password str 加密后的带盐密码 必要 base64格式   keep bool true 必要 必须为true   key str 登录秘钥 必要 从B站API获取   challenge str 极验challenge 必要 从B站API获取   validate str 极验结果 必要 从极验获取   seccode str 极验结果 必要 从极验获取    返回Network请求列表，仔细查找，果然在登录前面找到这样一个请求：</description>
+    </item>
+    
+    <item>
+      <title>【JS逆向】破解第三方Bilibili视频下载加密策略</title>
+      <link>/posts/bilibili-download/</link>
+      <pubDate>Thu, 03 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/bilibili-download/</guid>
+      <description>最近一段时间老板管的比较松，就跟着咸鱼大佬的公众号自学了一些JS逆向的知识，再加上自己的摸索得比较勤快，感觉还是有一些进步的，这篇文章算是一点点学以致用吧。
+目标网站：aHR0cHM6Ly94YmVpYmVpeC5jb20vYXBpL2JpbGliaWxpLw==
+（看到最后的==，你应该知道这是什么编码了吧😆）
+前段时间对B站视频的下载方法比较感兴趣，一路顺着谷歌→GitHub→微信公众号找到了这篇文章，文章写的特别详细，可惜的就是那个下载的接口失效了，于是我就想自己动手试一试。
+抓包和定位 找到提交的表单信息：
+很明显，第一个参数是待解析的B站链接，第二个为是否增强解析的参数，设置为True。
+预览一下响应内容，可以看到MP4地址这一栏是空着的，那说明肯定就是动态加载的了。
+打开开发者模式，映入眼帘的就是一个草泥马，说明这个网站不想让人爬它，但是可惜我还年轻，不讲武德。 破解无限debugger 其实打开开发者模式，第一眼看到的不是草泥马，是一个debugger，滑到最上面才看得到草泥马。这个debugger会让我们卡在这里，陷入死循环。但是这个其实很好破，右键添加条件断点Add Conditional breakpoint，然后条件设为false，这个时候无限debbuger的反爬就被我们绕过了。
+刷新页面，将待解析的b站链接输入文本框并点击“解析视频”，又出现一个debugger，用同样的方法解决。 定位加密点 在hahaha这里添加一个断点，刷新页面 这时发现MP4地址这里空了，说明这一步是关键的一步。 按F11进行下一步，发现加密的地方 然后在控制台测试一下，发现这就是我们想要找的MP4下载地址 于是现在我们需要分析一下这个decrypt函数。
+破解加密策略 点击decrypt函数进入他的内部，可以看到所有JS代码都是加了混淆的，代码的可读性变的特别差，例如这样：
+function decrypt(_0x55cd15) { var _0x2b29a5 = CryptoJS[_0x4525(&amp;#39;0xd&amp;#39;, &amp;#39;p(J)&amp;#39;)][_0x4525(&amp;#39;0xe&amp;#39;, &amp;#39;ZJjv&amp;#39;)][_0x4525(&amp;#39;0xf&amp;#39;, &amp;#39;2W(k&amp;#39;)](_0x4525(&amp;#39;0x10&amp;#39;, &amp;#39;R!FI&amp;#39;)); var _0x431fea = CryptoJS[&amp;#39;enc&amp;#39;][&amp;#39;Latin1&amp;#39;][&amp;#39;parse&amp;#39;](_0x4525(&amp;#39;0x11&amp;#39;, &amp;#39;N6Ge&amp;#39;)); var _0x28806e = CryptoJS[_0x4525(&amp;#39;0x12&amp;#39;, &amp;#39;U[)g&amp;#39;)][_0x4525(&amp;#39;0x13&amp;#39;, &amp;#39;u4yX&amp;#39;)](_0x55cd15, _0x2b29a5, { &amp;#39;iv&amp;#39;: _0x431fea, &amp;#39;mode&amp;#39;: CryptoJS[&amp;#39;mode&amp;#39;][_0x4525(&amp;#39;0x14&amp;#39;, &amp;#39;R!FI&amp;#39;)], &amp;#39;adding&amp;#39;: CryptoJS[_0x4525(&amp;#39;0x15&amp;#39;, &amp;#39;KvSw&amp;#39;)][_0x4525(&amp;#39;0x16&amp;#39;, &amp;#39;eITC&amp;#39;)] })[_0x4525(&amp;#39;0x17&amp;#39;, &amp;#39;o*r^&amp;#39;)](CryptoJS[_0x4525(&amp;#39;0x18&amp;#39;, &amp;#39;ZH@&amp;amp;&amp;#39;)][_0x4525(&amp;#39;0x19&amp;#39;, &amp;#39;o(Cg&amp;#39;)]); return _0x28806e; } 于是放弃复现，而是把所有用到的JS代码全部扣出来，然后用Python的execjs库来运行这些JS代码。
+注意这里它用了CryptoJS库，这个库可以用npm install crypto-js安装到本地后，再用require来导入即可。
+const CryptoJS = require(&amp;#34;crypto.js&amp;#34;); 代码实现 首先定义调用JS代码的Python函数：</description>
+    </item>
+    
+    <item>
+      <title>【JS逆向】破解知乎登录加密策略</title>
+      <link>/posts/zhihu-login/</link>
+      <pubDate>Wed, 02 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/zhihu-login/</guid>
+      <description>如果礼拜天那场球赛不算的话，应该是本周最后一次摸鱼🥺。
+为什么需要登录 原因很简单，登录以后可以获得更多的权限，比如发帖、收藏等功能，此外有些内容只有登录以后才能访问。
+如何用Python模拟登录 一般地，用Python模拟登录就是用Requests库对目标网站的登录API发起一个POST请求，请求中要包含网站需要的所有数据。
+市面上十本爬虫书，九个都会以豆瓣当例子，但是爬取的都是静态的页面，而涉及加密的页面（比如豆瓣读书的索引页）都不会提到。所以看书基本没什么用，尤其是中文的爬虫书，上来就是100页的安装教程，本质上是在水字数，这些东西在网上有大把现成的教程。入门书籍只推荐O&amp;rsquo;Reilly的那本《Web Scraping with Python (2nd Edition))》，我对API最初的认识就是来自这本书。
+在豆瓣的登录页面打开开发者工具，然后提交一个包含用户名、信息的表单。
+点击登录后，可以在开发者工具的Network标签页中看到这样一条请求：
+这样，我们就得到了豆瓣登录时需要发送请求的API，以及提交的信息。可以看出除了我们输入的用户名和密码，前端还生成了两个参数。
+登录都有哪些坑 接着刚才豆瓣登录的例子，如果输入的正确的账号和密码，浏览器会自动跳转到登录前你在浏览的页面。但是如果短时间内多次输入错误的账号密码，浏览器就会跳出一个滑动验证码，通过后才能继续登录。使用Python模拟登录的时候也会遇到这个问题，通常是用Selenium来模拟滑动的过程。验证码的问题，有机会再说（说人话——我也不太会😅）。
+豆瓣的登录并没有涉及到加密参数，这在常用网站中是比较少见的。一个请求可以包含很多加密的参数，我们看一下requests库的文档：
+众多参数中，常用的只有这么几个：
+ data/json：提交的数据，选择哪个和headers中的content-type有关。 headers：请求头，包含了很多重要信息。很多反爬措施都会通过headers判断是人类用户还是爬虫程序。 cookies：请求时携带的cookie，很多时候可以用cookie跳过登录，直接访问登录后才可以访问的页面。cookie也可以写在headers中。  知乎登录 抓包 在登录页面输入错误的账号和密码后可以在Network中看到如下POST请求，相比登录页面的GET请求，headers中多了三个身份验证字段：x-xsrftoken、x-ab-param、x-ab-pb，经过测试，只有x-xsrftoken是必需的。
+还可以观察到Form Data中的信息是加密的：
+定位加密 打开全局搜索：
+搜索sign_in
+打开搜索到的这个js文件，点击左下角的{}进行格式化，之后会出现美化后的js代码：
+进入格式化后的文件，在文件内再次搜索sign_in，定位到如下位置，打上断点。
+再次点击登录，页面会停在刚才打的断点的位置：
+可以看出，这里的局部变量e包含了我们提交的用户名和密码。
+现在的任务还剩两个：
+  凑齐这个表单中的其他变量，
+  找到加密函数
+  补全变量   clientId、grantType、lang、refSource、source 都是固定参数
+  captcha：验证码，这里因为没有触发验证码机制，为空。
+  username、password：用户名和原始密码
+  timestamp：当前时间的时间戳，JavaScript中new Date().getTime()等价于Python中int(time.time()*1000)
+  signature：签名认证，一个加密参数。
+  全局搜索signature，结果如下：
+在第二个文件中定位到signature生成的地方：
+是对几个字符串拼接后进行HMAC加密
+验证码 和豆瓣一样，短时间内重复提交登录，页面就会出现一个验证码，有时是英文字母识别，有时是倒立汉字识别，我对验证码的东西知之甚少，这部分参考了知乎上的这篇文章。
+ captcha 验证码，是通过 GET 请求单独的 API 接口返回是否需要验证码（无论是否需要，都要请求一次），如果是 True 则需要再次 PUT 请求获取图片的 base64 编码。</description>
+    </item>
+    
+    <item>
+      <title>CC98抽卡机</title>
+      <link>/posts/cc98-card/</link>
+      <pubDate>Fri, 27 Nov 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/cc98-card/</guid>
+      <description>抽卡机是我第一个独立完成的小项目，它对我意义非凡。
+抽卡？什么是抽卡？ CC98 抽卡是由CC98和 NexusHD 共同推出的一款抽卡小游戏。卡牌内容包括 CC98、NexusHD，以及浙江大学相关的各种人事物，不同的卡片具有不同的等级，同时也具有不同的价值和抽取几率。
+等级介绍  Mystery是对98、NHD有杰出贡献的四位用户 SSR是98站务组和技术组正式成员、荣誉站长、创始人逗逼形象和NHD维护开发员、管理员 SR是98正式版主和全站贵宾、拥有大于等于3个VIP（包括协会退休成员）或威望超过98或帖数超过10w的98用户，NHD总版主和发布员 R是98实习版主、认证用户、版面贵宾、98运营管理团队成员和帖数大于等于10000或威望大于等于15的用户 N是其他普通用户。  等级分布    等级 N R SR SSR Mystery     比例 53.49% 30.00% 15.00% 1.50% 0.01%   最低数量 0 0 1 0 0    为什么需要抽卡机，手动抽不好吗 原因也简单，懒呗。如果要手动抽完每个月从N站兑换来的100万财富值（现在缩水到80万了），就算不每次都全部点开，也得十几二十分钟，费时费力费鼠标。之前有人用按键精灵来抽卡，也算是一种解放劳动力的方案。今年十月份的时候我自学了一些爬虫的基础知识，就想着能不能学以致用，写一个能够完成自动抽卡的Python程序。
+第一版抽卡机——用Cookie绕过登录 起初，我以为所有网站的登录都差不多，无非就是用POST方法提交一个包含用户名和密码的表单，但是显然事情没有我想象得那么简单。
+登录CC98抽卡中心需要先登录CC98登录中心
+登录后，还需要通过抽卡中心发起的许可，方可进入CC98抽卡中心。
+在Chrome的开发者工具中看了一下登录CC98登录中心需要提交的信息：
+完全不知道这个__RequestVerificationToken是从哪来的，复制下来尝试用Requests来模拟登录，得到了状态码为400的响应——登录失败了。
+在网上查了很多资料以后发现一种可以绕过登录的方法——保存cookie。
+于是我去开发者工具里把抽卡页面的cookie保存了下来，然后对抽卡的API：https://card.cc98.org/Draw/Run/发送一个POST请求，终于，我第一次成功用Python完成了抽卡。
+CSRF验证 虽然能够抽卡了，我还是十分好奇Form-data里的那个__RequestVerificationToken是怎么来的，通过谷歌，我找到了这样一篇博客：
+当爬虫遇到CSRF 验证（__RequestVerificationToken）
+原来这个__RequestVerificationToken是可以从页面的html中找到的，也就是说也可以用程序来获得：
+import requests from bs4 import BeautifulSoup # 获取CSRF验证 r = requests.</description>
+    </item>
+    
+    <item>
+      <title>在macOS上用sshfs远程访问linux服务器的文件</title>
+      <link>/posts/mac-sshfs/</link>
+      <pubDate>Mon, 12 Oct 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/mac-sshfs/</guid>
+      <description>之前用windows的时候，用的是zzq师兄推荐的samba，换成mac以后不知为为什么怎么都连不上
+问了一下zt师兄，他说可以用sshfs，就试了一下，很快就成功了。
+安装sshfs 需要先安装fuse brew install Caskroom/cask/osxfuse 然后安装sshfs brew install sshfs 然后就可以挂载了 sshfs -C -o reconnect user@hostname:remote_dir local_dir 例如：
+sshfs -C -o reconnect leizongfei@10.212.43.26:/home/leizongfei/code /Users/leizongfei/code/codeshare # 需要输入密码 leizongfei@10.212.43.26&amp;#39;s password: 取消挂载 sudo diskutil umount force /Users/leizongfei/code/codeshare 装的太慢咋办——让命令行走代理 export all_proxy=socks5://127.0.0.1:7891 注意要把clash设置为全局模式，为了方便一点可以在~/.zshrc里设一个alias</description>
+    </item>
+    
+    <item>
+      <title>程咬金攻略</title>
+      <link>/posts/chengyaojin/</link>
+      <pubDate>Mon, 17 Aug 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/chengyaojin/</guid>
+      <description>分享一些本人对程咬金玩法的思考和经验，会不断调整玩法和更新攻略。
+作者：霏霏
+安卓微信区ID：魔鬼筋肉人$\gamma$
+更新日期：2020.8.17
+19年11月短暂地上过国服，战力最高打到过9898。 皮肤 程咬金有5个皮肤，数量和质量在坦克里都还不错。皮肤增加的120点血量对一级对拼还挺重要的。 手感的话，我的个人排名如下： $$ 活力突击&amp;gt;华尔街大亨&amp;gt;星际陆战队&amp;gt;爱与正义\approx 原皮&amp;gt; 功夫厨神 $$
+功夫厨神平A手感很差，哑铃皮太贵，大亨皮限时出售，所以星际陆战队是一个性价比比较不错的选择。另外偶尔用爱与正义恶心一下对面也是不错的，比如越塔杀完以后，在塔下跳个突围尬舞。有诗为证：
+ 绿色背心小裤衩，爱心斧子两边插。金黄胡子翘啊翘，粉红嘴巴么么哒。
+ 出装铭文技能 一个人玩透一个英雄的必要条件是能够灵活地调整出装和铭文，而不是照搬别人的。
+铭文 这是两套我常带的铭文，第一套更肉一点，适合对线前期强势的英雄：
+ 10狩猎，10鹰眼，7宿命，3祸源 10狩猎，10鹰眼，3红月，3宿命，4祸源  狩猎为了移速，追人和跑路都有用，鹰眼是为了清兵快一点，还可以抢二级。红色铭文稍微有些变化，我也看过一些主播的铭文，有挺多人带5红月5祸源的，应该也是为了卡一级16.6的攻速阈值。被誉为程咬金科学家的南宁时空尝试过宿命、祸源、异变、红月，最后基本带的是狩猎百穿。
+出装 程咬金的核心装备只有三件：韧性鞋 冰心 不死鸟，其他的根据对线的人和具体场景灵活应对。
+我的出装通常是这样的：
+Tips：
+ 尽量在十分钟内出完不死鸟，否则很难在这个关键时间节点在团战中发挥出自己的作用。 S20法师迎来了一定程度的加强，比如小乔出完法穿鞋、回响、帽子，就可以秒掉没有出魔抗的残血金金了。所以火甲可以改成只出小火甲，或者直接出完冰心就出不死鸟。 如果对面法师真的很猛，出魔女吧。 火甲不是必出的，可以换成别的防御装或者输出装。  召唤师技能 一个原则：打得过而且能杀就带干扰；打得过但是杀不了就到惩戒；打不过就带治疗或者弱化吧吧。至于打得过打不过需要很多经验，这个后面具体说。
+PS：现在看来，干扰套路只适用于低分段（排位30🌟以下，巅峰赛1600分以下），到了稍微高一点的分段，大家都知道你带干扰是想干什么，所以开始收起来带惩戒或者弱化吧。干扰就让辅助带好了。
+技能连招 只有一个很简单的连招：跳+A+转，这里的转可以取消平A的前摇。如果对方是有位移的英雄就跳+转，短时间打出最高输出。
+虽然程咬金的位移很长，但是在面对有位移的英雄时，不管是追击还是逃跑，都不要优先使用位移，这样就能掌握主动权。
+程咬金帮助队伍获胜的三个方法  中后期不停地带线，为队友提供视野，从而得到开龙和推塔的机会 团战切脆皮，即使切不死也要打乱阵型，让他们首尾不能相顾。 在线上，通过单杀来获取线上优势  这里第一点是最简单的，能够带好线，并且保证自己这路没崩就是合格的程咬金了。第二点就需要一些操作了，如何接近脆皮，如何控制血量，如何全身而退，都是需要操作的。第三点是最难的，这需要很精细的操作，对敌方英雄的认识，知道谁打得过，谁打不过，打得过如何杀，打不过如何保证不死而且经济不落后太多。
+如何带线？ 二三点后面会详细讲解，这里简单说一下第一点。清兵的时候站在三个兵中间，可以提高清兵效率，清兵速度快了，就有更多时间来做别的事情。这也是为什么我喜欢出火甲。**如果是顺风局或者均势局，一定要保证自己家有一路兵线是有优势的。**这样不仅可以提供视野，还可以为队友推塔和拿龙争取时间和空间。这个时候带线要带容易带的那一路，如何判断带哪一路呢？根据以下几点：
+ 塔。如果自家这路一塔还在，对面这路一塔已破，那么这路比较容易带。 对线的英雄。如果是老夫子、暗信、猪八戒，这种程咬金遇到以后单挑没有优势的，就换一路带。 可能来抓你的英雄。如果对面有多个抓边能力很强的英雄，例如张良、鬼谷子，而且队友并没有给你提供足够的视野，那就不要带的太深，否则被抓后4打5会比较不利。  **如果是逆风局，也要去带线，同样要去带容易带出去的那一路，但是根据对方抓边的情况选择继续深入带，还是回去帮队友守塔。**逆风局程咬金装备难以成型，很脆，容易被抓，如果被抓崩了就会被举报，就不能继续玩了。所以为了下局还能继续快乐地玩耍，觉得没有翻盘点的局就保一下KDA吧。
+后期如果自己家有一路高地塔被推掉了，那么要优先带这路难带的兵线，防止被对面偷掉水晶。
+四一分推是最简单，也最适合程咬金的战术。告诉队友让他们不要单独行动，抱团推进（通常是推中或者打龙），然后在程咬金清完一路线以后一起发起进攻。
+重要的时间节点 程咬金强势期有两个，一个是一级对线大部分边路的时候，二是冰心不死鸟刚出来，而对面破甲或者制裁还没有出来的时候，利用好强势期打出些优势吧。
+对线细节 一般对线物理输出的边路（射手，大部分战士、坦克），出门买一个220块的布甲，然后再预购一个，最好能一边打兵一边打对面英雄，如果不行就强行抢二级。消耗到可以杀了就开干扰越塔拿个一血。
+下面我会详细描述对线常见英雄的方法，没有提到的说明太好打了，不需要浪费口舌。
+常见边路 马超 王者30星以下基本没有会玩的马超，除非是炸鱼。遇到不是很厉害的，很容易就打爆他了，但是打爆高分段会玩的马超是不现实的，甚至很多时候打不过他。那么怎么限制马超呢？首先马超的输出基本都靠捡到枪以后的强化普攻，所以改出布甲鞋，然后用冰心+不详的组合来让他A不出来。
+扩展阅读：遇到马超总是被吃分？掌握好这几点反制马超其实很简单!</description>
+    </item>
+    
+    <item>
+      <title>安装mmdetection踩的坑</title>
+      <link>/posts/mmdetection/</link>
+      <pubDate>Thu, 13 Aug 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/mmdetection/</guid>
+      <description>&lt;p&gt;主要参考官方的&lt;a href=&#34;https://github.com/open-mmlab/mmdetection/blob/master/docs/install.md&#34;&gt;安装指南&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>DLG/iDLG Deep Leakage from Gradients and its Improvment</title>
+      <link>/posts/dlg-idlg/</link>
+      <pubDate>Wed, 15 Jul 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/dlg-idlg/</guid>
+      <description>Motivation 分布式机器学习可以让多个设备在本地用本地数据集进行训练，这样就可以一定程度上保证本地数据的安全性，但是传输梯度真的安全吗？文【1】认为，已知模型及其参数，如果能够得到loss函数在一对input/label上的梯度，那么就可以反过来得到这组训练数据。
+Method Assumptions 假设训练流程是这样的：
+ 在第$t$轮，每个节点$i$从它的数据集中选取一批$(\mathbf{x_{t, i}, y_{t, i}})$，然后计算梯度  \nabla W_{t, i}=\frac{\partial \ell\left(F\left(\mathbf{x}_{t, i}, W_{t}\right), \mathbf{y}_{t, i}\right)}{\partial W_{t}}  将$N$个客户端的梯度取平均，用平均梯度来跟新模型参数  \nabla W_{t}=\frac{1}{N} \sum_{j}^{N} \nabla W_{t, j} ; \quad W_{t+1}=W_{t}-\eta \nabla W_{t} 现在已知模型$F()$，公共参数$W_t$，和通过某种途径获得的客户端$k$的梯度$\nabla W_{t,k}$，文章提出的DLG算法可以恢复出$k$的本地数据。
+DLG算法   首先随机初始化一个dummy input $\mathbf{x}^\prime$ 和一个lable $\mathbf{y}^\prime$
+  然后根据这个dummy input计算出dummy gradient：
+  \nabla W&amp;#39;=\frac{\partial \ell(F(\mathbf{x}^\prime ,W),\mathbf{y}^\prime)}{\partial W}  最小化$\nabla W^\prime$和$\nabla W$的距离，并得到这个时候的$\mathbf{x}^\prime$和$\mathbf{y}^\prime$  \mathbf{x}^{\prime *}, \mathbf{y}^{\prime *}=\underset{\mathbf{x}^{\prime}, \mathbf{y}^{\prime}}{\arg \min }\left\|\nabla W^{\prime}-\nabla W\right\|^{2}=\underset{\mathbf{x}^{\prime}, \mathbf{y}^{\prime}}{\arg \min }\left\|\frac{\partial \ell\left(F\left(\mathbf{x}^{\prime}, W\right), \mathbf{y}^{\prime}\right)}{\partial W}-\nabla W\right\|^{2} 这里$||\nabla W^{\prime}-\nabla W||^{2}$需要定义成一个可导的函数，然后通过梯度下降的方法进行优化。</description>
+    </item>
+    
+    <item>
+      <title>macOS中typora图片自动上传配置方法</title>
+      <link>/posts/mac-typora/</link>
+      <pubDate>Sun, 05 Jul 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/mac-typora/</guid>
+      <description>之前一直用windows的时候，师兄教给我在typora中自动将图片上传到图床中的方法，换成macOS以后就得靠自己探索了。
+macOS版的typora支持的图床挺多的，比如iPic这种付费，这里贫穷的我选择免费的uPic。
+在uPic中的设置 下载地址
+作者的GitHub上还骂了半天苹果😂
+在偏好设置中填写区域、空间名称、AK、SK、域名，保存路径默认就可以了。
+在typora中的设置 在偏好设置中将上传服务设置为uPic。
+然后点击验证图片上传选项测试一下，这样就是成功了：</description>
+    </item>
+    
+    <item>
+      <title>用PyTorch做分类任务的一个Baseline和若干Tricks</title>
+      <link>/posts/pytorch-baseline/</link>
+      <pubDate>Thu, 02 Jul 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/pytorch-baseline/</guid>
+      <description>&lt;p&gt;从12月做Kaggle的比赛起，才算正儿八经开始跑程序了，查了挺多的资料，但是大部分想法都没有机会实践，写这个全当作整理，方便以后查看。
+例子就用这个&lt;a href=&#34;https://www.flyai.com/d/ChestXray02&#34;&gt;肺炎识别的比赛&lt;/a&gt;。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux 命令行中通过代理进行下载</title>
+      <link>/posts/terminal-proxy/</link>
+      <pubDate>Sat, 06 Jun 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/terminal-proxy/</guid>
+      <description>用的代理工具为clash。现在我的几台设备上windows和macos都用的是clash了，很方便。
+在用户目录下创建 clash 文件夹
+mkdir &amp;amp;&amp;amp; cd clash 在GitHub上下载对应版本的二进制文件，解压并重命名为 clash
+wget https://github.com/Dreamacro/clash/releases/download/v1.0.0/clash-linux-amd64-v1.0.0.gz gzip -d clash-linux-amd64-v1.0.0.gz mv clash-linux-amd64-v1.0.0 clash 在终端 cd 到 Clash 二进制文件所在的目录，然后下载 Clash 配置文件
+wget -O config.yml 你的配置链接 修改权限
+chmod +x clash 启动 Clash，同时启动 HTTP 代理和 Socks5 代理。
+./clash -d 访问 Clash Dashboard 可以进行切换节点、测延迟等操作。 Clash Dashboard
+设置端口： 修改规则： 之后让Linux终端走代理的方法可以参照这里：Linux 让终端走代理的几种方法</description>
+    </item>
+    
+    <item>
+      <title>【JS逆向】DeepL翻译和有道翻译</title>
+      <link>/posts/youdao-deepl/</link>
+      <pubDate>Wed, 13 May 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/youdao-deepl/</guid>
+      <description>现在有很多翻译软件能够同时提供多个网站的翻译结果，比如非常好用的copytranslator：
+其实它们也是调用了这些翻译网站的API，下面选择DeepL翻译和有道翻译来尝试破解。
+DeepL翻译 网址：https://www.deepl.com/translator
+DeepLy翻译宣称是全世界最好的机器翻译。
+先随便翻译一个句子：
+尝试一下在开发中工具中获取它翻译的API：https://www2.deepl.com/jsonrpc，提交的参数为：
+可以看出每个参数都有很明确的含义，并没有加密的参数。id这个参数经过我的测试，随便填一个数都可以。
+import time import random import requests def deepl_translator(sentence): sentence = &amp;#39;&amp;#34;&amp;#39; + sentence + &amp;#39;&amp;#34;&amp;#39; u_sentence = sentence.encode(&amp;#34;unicode_escape&amp;#34;).decode() data = &amp;#39;{&amp;#34;jsonrpc&amp;#34;:&amp;#34;2.0&amp;#34;,&amp;#34;method&amp;#34;: &amp;#34;LMT_handle_jobs&amp;#34;,&amp;#34;params&amp;#34;:{&amp;#34;jobs&amp;#34;:[{&amp;#34;kind&amp;#34;:&amp;#34;default&amp;#34;,&amp;#34;raw_en_sentence&amp;#34;:&amp;#39; + sentence + &amp;#39;,&amp;#34;raw_en_context_before&amp;#34;:[],&amp;#34;raw_en_context_after&amp;#34;:[],&amp;#34;preferred_num_beams&amp;#34;:4,&amp;#34;quality&amp;#34;:&amp;#34;fast&amp;#34;}],&amp;#34;lang&amp;#34;:{&amp;#34;user_preferred_langs&amp;#34;:[&amp;#34;EN&amp;#34;,&amp;#34;ZH&amp;#34;],&amp;#34;source_lang_user_selected&amp;#34;:&amp;#34;auto&amp;#34;,&amp;#34;target_lang&amp;#34;:&amp;#34;EN&amp;#34;},&amp;#34;priority&amp;#34;:-1,&amp;#34;commonJobParams&amp;#34;:{},&amp;#34;timestamp&amp;#34;:&amp;#39; + str( int(time.time() * 10000)) + &amp;#39;},&amp;#34;id&amp;#34;:&amp;#39; + str( random.randint(1, 100000000)) + &amp;#39;}&amp;#39; r = requests.post(&amp;#39;https://www2.deepl.com/jsonrpc&amp;#39;, headers={&amp;#39;content-type&amp;#39;: &amp;#39;application/json&amp;#39;}, data=data.encode()) return r.json()[&amp;#39;result&amp;#39;][&amp;#39;translations&amp;#39;][0][&amp;#39;beams&amp;#39;] print(deepl_translator(&amp;#39;摸鱼就开心&amp;#39;)) # 输出： # [{&amp;#39;postprocessed_sentence&amp;#39;: &amp;#34;I&amp;#39;m happy when I touch the fish.&amp;#34;, &amp;#39;num_symbols&amp;#39;: 12}, # {&amp;#39;postprocessed_sentence&amp;#39;: &amp;#34;You&amp;#39;ll be happy if you touch the fish.</description>
+    </item>
+    
+    <item>
+      <title>【爬虫实战】爬两次</title>
+      <link>/posts/crawl-twice/</link>
+      <pubDate>Wed, 13 May 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/crawl-twice/</guid>
+      <description>定义 「爬两次」这个词是我自己随便编的，意思就是要对相同的API发送两次请求。学过小学奥数的人应该知道「算两次」，就是用不同的两种方法来计算同一个东西，因为结果必然是一样的，所以可以得到两个式子间一些关系。「爬两次」和「算两次」没什么关系，扯这么多是因为我闲的蛋疼。
+问题 这个问题是下午在闲鱼大佬的爬虫交流群里看到的：
+网站：
+http://hd.chinatax.gov.cn/nszx/InitCredit.html 打开开发者模式，随便点击一个省份，在Network中看一下抓到的请求：
+可以看出，数据确实都直接写出来了，没有什么加密措施。
+import requests headers = { &amp;#39;User-Agent&amp;#39;: &amp;#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36&amp;#39;, &amp;#39;Content-Type&amp;#39;: &amp;#39;application/x-www-form-urlencoded; charset=UTF-8&amp;#39;, &amp;#39;Referer&amp;#39;: &amp;#39;http://hd.chinatax.gov.cn/nszx/InitCredit.html&amp;#39;, } data = { &amp;#39;page&amp;#39;: &amp;#39;0&amp;#39;, &amp;#39;location&amp;#39;: &amp;#39;140000&amp;#39;, &amp;#39;code&amp;#39;: &amp;#39;&amp;#39;, &amp;#39;name&amp;#39;: &amp;#39;&amp;#39;, &amp;#39;evalyear&amp;#39;: &amp;#39;2019&amp;#39; } r = requests.post(&amp;#39;http://hd.chinatax.gov.cn/service/findCredit.do&amp;#39;, headers=headers, data=data) r.text 运行一下，收到的响应为一堆html代码，并没有我们想要的数据。
+解决 这种情况一般都是带的参数少了，既然form data是全的，那么很可能少的是cookie，翻回去再看一下Network：
+可以看到浏览器对这个API发送了两次相同的POST请求，第一次的状态码为307，也就是临时重定向，我们需要的数据包含在第二次POST请求的响应中。
+在Cookies一栏中可以看到第一次POST请求的响应中包含了第二次POST请求所需的cookie：
+我们并不需要先用reuqests发送一次请求，然后第二次请求时携带保存下来的cookie，这样太麻烦了。requests库中的session就能帮我们自动完成cookie保存的工作。
+import requests s = requests.session() headers = { &amp;#39;User-Agent&amp;#39;: &amp;#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.</description>
+    </item>
+    
+    <item>
+      <title>集中自适应的学习率算法</title>
+      <link>/posts/adaptive-lr/</link>
+      <pubDate>Sun, 02 Feb 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/adaptive-lr/</guid>
+      <description>因为众所不知的原因，这一周都浑浑噩噩的，可以说什么也没干，希望下周状态好一点，锻炼锻炼。 随便写写，当作一个简单的笔记，不涉及数学，头疼。
+1. SGD v.s. Ada. 目前应用最广泛的优化器还是SGD/SGDM和Adam，SGD强在它最终收敛的效果，而一系列自适应算法强在可以在训练初期快速收敛。下面这个图可以说明这种情况 2.常见的自适应学习率算法 2.1 AdaGrad AdaGrad的想法是具有较大偏导的参数应该有一个较大的学习率，于是用每一个参数的所有梯度的历史平方值得和的平方根来缩放。
+2.2 RMSProp RMSProp是在AdaGrad的基础上改动的，思路是丢弃遥远过去的历史，让最近几次梯度的权重大一些。
+2.3 Adam Adam算法可以看作是RMSProp+momentum 用修正后的有偏一阶矩代替梯度，用修正后的有偏二阶矩的平方根作为缩放的比例。 Adam通常被认为对超参数的选择相当鲁棒，除了作者推荐的1e-4，3e-4和5e-4也经常被选择作为初始学习率。🐶 PyTorch 实现 Adam的源码
+bias_correction1 = 1 - beta1 ** state[&amp;#39;step&amp;#39;] bias_correction2 = 1 - beta2 ** state[&amp;#39;step&amp;#39;] exp_avg.mul_(beta1).add_(1 - beta1, grad) exp_avg_sq.mul_(beta2).addcmul_(1 - beta2, grad, grad) denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(group[&amp;#39;eps&amp;#39;]) step_size = group[&amp;#39;lr&amp;#39;] / bias_correction1 p.data.addcdiv_(-step_size, exp_avg, denom) 这里可以把计算看做是分成两步
+\text{denom}=\sqrt{\frac{v_t}{1-beta_2^t}}+\epsilon\\ \Delta x=-\frac{\alpha_t}{1-\beta_1^t} \cdot \frac{m_t}{\text{denom}}=-\frac{\alpha_t}{1-\beta_1^t} \cdot \frac{m_t}{\sqrt{\frac{v_t}{1-\beta_2^t}}+\epsilon} 2.4 Adabound ADAPTIVE GRADIENT METHODS WITH DYNAMIC BOUND OF LEARNING RATE 二作是可爱的🐻神，这篇论文后来被指出来有数学错误，但是用我贫瘠的数学知识在短时间内是不太可能看懂的，也就不看了，想到这里还真是难受，为什么自己就这么菜啊，卑微。 卑微是要卑微的，卑微完了看看人家是怎么实现的，看懂数学推导很难，看懂算法流程和实现方法还是可行的。 文章为了和引用的文章所用符号匹配上，用了一些花里胡哨的表达，其实核心思想很简单:</description>
+    </item>
+    
+    <item>
+      <title>用SSH远程使用Jupyter</title>
+      <link>/posts/ssh-jupyter/</link>
+      <pubDate>Sat, 01 Feb 2020 15:00:00 +0800</pubDate>
+      
+      <guid>/posts/ssh-jupyter/</guid>
+      <description>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。
+1.在Linux命令行中 conda install ipykernel source activate 环境名称 python -m ipykernel install --user --name 环境名称 --display-name &amp;#34;Python (环境名称)&amp;#34; jupyter notebook --no-browser --port=8080 2.在Windows命令行中 ssh -N -L 8080:localhost:8080 usr@ip 端口默认是22，需要修改： 然后将Linux命令行中的地址复制到浏览器中即可： </description>
     </item>
     
   </channel>

@@ -11,22 +11,22 @@
 
     <meta property="og:site_name" content="霏霏">
     <meta property="og:title" content="
-  用SSH远程使用Jupyter - 霏霏
+  安装mmdetection踩的坑 - 霏霏
 ">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="/posts/ssh-jupyter/">
+    <meta property="og:url" content="/posts/mmdetection/">
     <meta property="og:image" content="images/tn.png">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="/posts/ssh-jupyter/">
+    <meta name="twitter:site" content="/posts/mmdetection/">
     <meta name="twitter:image" content="images/tn.png">
 
-    <base href="../../posts/ssh-jupyter/">
+    <base href="../../posts/mmdetection/">
     <title>
-  用SSH远程使用Jupyter - 霏霏
+  安装mmdetection踩的坑 - 霏霏
 </title>
 
-    <link rel="canonical" href="../../posts/ssh-jupyter/">
+    <link rel="canonical" href="../../posts/mmdetection/">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     
@@ -119,26 +119,51 @@ code.has-jax {
   <section class="container post">
   <article>
     <header>
-      <h1 class="title">用SSH远程使用Jupyter</h1>
-      <h2 class="date">February 1, 2020</h2>
+      <h1 class="title">安装mmdetection踩的坑</h1>
+      <h2 class="date">August 13, 2020</h2>
 
       
     </header>
 
-    <p>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。</p>
-<h2 id="1在linux命令行中">1.在Linux命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">conda install ipykernel
-<span class="nb">source</span> activate 环境名称
-python -m ipykernel install --user --name 环境名称 --display-name <span class="s2">&#34;Python (环境名称)&#34;</span>
-jupyter notebook --no-browser --port<span class="o">=</span><span class="m">8080</span>
-</code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/Fsy38OavxaJFhTBuBrQ9gSznTy5N" alt=""></p>
-<h2 id="2在windows命令行中">2.在Windows命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">ssh -N -L 8080:localhost:8080 usr@ip
-</code></pre></div><p>端口默认是22，需要修改：
-<img src="https://qiniusave.feifeizaici.xyz/FoNlph-SiH3TzFmr6YX701PThueP" alt=""></p>
-<p>然后将Linux命令行中的地址复制到浏览器中即可：
-<img src="https://qiniusave.feifeizaici.xyz/FndV9kc_Kn4TFTdI_KeE8qyzv5ni" alt=""></p>
+    <p>主要参考官方的<a href="https://github.com/open-mmlab/mmdetection/blob/master/docs/install.md">安装指南</a></p>
+<h2 id="重装pytorch">重装PyTorch</h2>
+<h3 id="mmdetection的requirements">mmdetection的Requirements</h3>
+<ul>
+<li>Linux or macOS (Windows is not currently officially supported)</li>
+<li>Python 3.6+</li>
+<li>PyTorch 1.3+</li>
+<li>CUDA 9.2+ (If you build PyTorch from source, CUDA 9.0 is also compatible)</li>
+<li>GCC 5+</li>
+<li>mmcv
+看了一下服务器上当前的环境，只有PyTorch版本太低不满足，于是就升级到最新的1.5.1了</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">pip install --upgrade torch torchvision
+</code></pre></div><p>升级完成以后<code>torch.cuda.is_available()</code>变成了<code>False</code>，猜测是CUDA版本不对</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">In <span class="o">[</span>1<span class="o">]</span>: import torch
 
+In <span class="o">[</span>2<span class="o">]</span>: torch.cuda.is_available<span class="o">()</span>
+Out<span class="o">[</span>2<span class="o">]</span>: False
+
+In <span class="o">[</span>3<span class="o">]</span>: torch.version.cuda
+Out<span class="o">[</span>3<span class="o">]</span>: <span class="s1">&#39;10.2.x&#39;</span>
+</code></pre></div><p>服务器上CUDA的版本上10.0，也就是说需要升级一下CUDA，师兄说可以下一个10.2，然后把路径改一下，这样别人还可以继续用10.0。我觉得有点麻烦，想试试能不能下个支持CUDA10.0的&gt;=1.3.0的PyTorch。但是现在官网上默认只有9.2，10.1和10.2版本的：
+<img src="https://qiniusave.feifeizaici.xyz/funnybox/6witV5%20.png" alt="6witV5">
+看官方工作人员的说法，应该是修复了10.0的诸多bug以后就弃用掉了
+<img src="https://qiniusave.feifeizaici.xyz/funnybox/7NUVT8%20.png" alt="7NUVT8"></p>
+<p>最后在<a href="https://pytorch.org/get-started/previous-versions/">previous-versions</a>找到了旧版本的wheel文件<a href="https://download.pytorch.org/whl/cu100/torch_stable.html">下载地址</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">wget https://download.pytorch.org/whl/cu100/torch-1.3.0%2Bcu100-cp36-cp36m-linux_x86_64.whl
+wget https://download.pytorch.org/whl/cu100/torchvision-0.4.1%2Bcu100-cp36-cp36m-linux_x86_64.whl
+pip install torch-1.3.0+cu100-cp36-cp36m-linux_x86_64.whl torchvision-0.4.1+cu100-cp36-cp36m-linux_x86_64.whl
+
+rm torch* <span class="c1"># 删掉whl文件</span>
+</code></pre></div><h2 id="完成安装">完成安装</h2>
+<p>搞定Pytorch和CUDA的版本以后就很好装了：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">pip install mmcv-full<span class="o">==</span>latest+torch1.3.0+cu100 -f https://openmmlab.oss-accelerate.aliyuncs.com/mmcv/dist/index.html
+git clone https://github.com/open-mmlab/mmdetection.git
+<span class="nb">cd</span> mmdetection
+pip install -r requirements/build.txt
+pip install -v -e .  <span class="c1"># or &#34;python setup.py develop&#34;</span>
+</code></pre></div>
   </article>
 
   <br/>

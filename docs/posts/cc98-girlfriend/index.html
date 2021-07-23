@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【爬虫实战】如何用爬虫来找女朋友 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/cc98-girlfriend/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/cc98-girlfriend/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/cc98-girlfriend/">
+    <title>
+  【爬虫实战】如何用爬虫来找女朋友 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/cc98-girlfriend/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【爬虫实战】如何用爬虫来找女朋友</h1>
+      <h2 class="date">December 24, 2020</h2>
+
+      
+    </header>
+
+    <p>最近在回顾之前在98上发的旧帖子，觉得有些还挺好玩的，改一改发到这里好了。</p>
+<p>昨天有一个很久没联系的朋友突然戳我
+<img src="https://qiniusave.feifeizaici.xyz/uPic/vtty4pp3.png" alt=""></p>
+<p>大丈夫不为五斗米折腰，但是可以为板烧鸡腿堡，所以我就帮他写了
+<img src="https://qiniusave.feifeizaici.xyz/uPic/d4eef0ju.png" alt=""></p>
+<p>这个功能应该怎么实现呢？其实无非就是隔一段时间查看一下新帖中有没有征人的贴就好了。</p>
+<p>在「查看新帖」页面打开开发者工具，可以找到这样一个API：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">https://api.cc98.org/topic/new?from=0&amp;size=20
+</code></pre></div><p>这个API的响应是最近的20个帖子的数据，要注意的是请求头里必须带上<code>authorization</code>这个参数，这个参数包含在登录请求的响应中。</p>
+<p>频繁发送请求是不好的，会加重服务器的负担，所以要观察一下98发帖的速度。大部分情况下，30分钟内的新帖个数不会超过20个，也就是说我们每隔30分钟，获取一下最新的帖子列表，然后再根据帖子的<code>boardId</code>属性判断一下有没有缘分的帖子即可。</p>
+<p>我一开始的想法是如果发现有缘分天空的新帖，就用Python的<code>smtplib</code>模块给他发送一个邮件，让他及时查看。突然想起来之前在Github上一个抢口罩的程序中看到他是用「Server酱」完成消息推送，就尝试了一下。</p>
+<blockquote>
+<p><strong>Server酱是什么</strong></p>
+<p>「Server酱」，英文名「ServerChan」，是一款「程序员」和「服务器」之间的通信软件。
+说人话？就是从服务器推报警和日志到手机的工具。
+开通并使用上它，只需要一分钟：</p>
+<ol>
+<li>登入：用GitHub账号<a href="http://sc.ftqq.com/?c=github&amp;a=login">登入网站</a>，就能获得一个<a href="http://sc.ftqq.com/?c=code">SCKEY</a>（在「<a href="http://sc.ftqq.com/?c=code">发送消息</a>」页面）</li>
+<li>绑定：点击「<a href="http://sc.ftqq.com/?c=wechat&amp;a=bind">微信推送</a>」，扫码关注同时即可完成绑定</li>
+<li>发消息：往 <a href="http://sc.ftqq.com/SCKEY.send">http://sc.ftqq.com/SCKEY.send</a> 发GET请求，就可以在微信里收到消息啦</li>
+</ol>
+</blockquote>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/59bdc111f5d7df399b5f86a20163dfa0.gif" alt="Server酱原理图示"></p>
+<p>使用的时候只需要用Requests模块对这个URL发送一个请求即可</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201229144546139.png" alt=""></p>
+<p>因为支持mardown，我就索性把帖子中的图片由ubb语法转成markdown语法了，实现方法很简单：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">md_content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;br&gt;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[img]&#39;</span><span class="p">,</span> <span class="s1">&#39;![](&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[/img]&#39;</span><span class="p">,</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+</code></pre></div><p>至于任务调度，因为这个任务比较简单，我就用了Python的<code>schedule</code>模块，这是一个轻量级的任务调度模块。如果有更复杂的需求，可以使用<code>apscheduler</code>。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/zvlimaro.png" alt=""></p>
+<p>然后我做了一个简单的测试：
+<img src="https://qiniusave.feifeizaici.xyz/uPic/fifhfooh.png" alt=""></p>
+<p>似乎没有什么问题，加上帖子的内容再测试一下：
+<img src="https://qiniusave.feifeizaici.xyz/uPic/egcuerdi.png" alt=""></p>
+<p>弄完了我就愉快的去吃东西了，然而过了一会：
+<img src="https://qiniusave.feifeizaici.xyz/uPic/da2nlrve.png" alt=""></p>
+<p>赶紧跑回实验室改bug，果然改完这个bug就没问题了
+<img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201229141603363.png" alt=""></p>
+<p>征到没征到我不知道，反正最近板烧鸡腿堡吃到吐。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201229143853977.png" alt=""></p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

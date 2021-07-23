@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  Requestium = Requests &#43; Selenium - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/requestium/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/requestium/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/requestium/">
+    <title>
+  Requestium = Requests &#43; Selenium - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/requestium/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">Requestium = Requests &#43; Selenium</h1>
+      <h2 class="date">December 22, 2020</h2>
+
+      
+    </header>
+
+    <p><img src="http://qiniusave.feifeizaici.xyz/uPic/32966130-8bb15b00-cbb7-11e7-9faf-85963ec5bd82.png" alt="Requestium"></p>
+<p>这个框架是我在知乎「Python有哪些常见的、好用的爬虫框架？」的高赞答案中看到的，试着用了一下，还挺好玩。</p>
+<p>下面的内容主要来自<code>Requestsium</code>的GitHub上的介绍：https://github.com/tryolabs/requestium，少量是我自己的测试代码。</p>
+<h2 id="定位">定位</h2>
+<p><code>Requestium</code>是集<code>Requests</code>和<code>Selenium</code>于一体的WEB自动化工具。<code>Requestium</code>可以看作是在<code>Requests</code>为主体的基础上增加了<code>Selenium</code>的部分功能，如果你需要一个以<code>Selenium</code>为主体，增加部分<code>Requests</code>功能的Python库，可以去看一下 另一个叫做<code>Selenium-Requests</code>的库。</p>
+<p><code>Requestium</code>最主要的特性是能够<strong>在保持当前Web会话的同时，允许在Requests的Session和Selenium的Webdriver之间切换。</strong></p>
+<h2 id="安装方法">安装方法</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">pip install requestium
+</code></pre></div><h2 id="使用方法">使用方法</h2>
+<p>对于能够熟练使用<code>Requests</code>和<code>Selenium</code>的人来说，学习<code>Requestium</code>几乎没有什么成本（<code>Requestium</code>的源码一共也只有400多行）。如果不熟悉的话还是要先去学着两个库，最好的学习资料就是它们的官方文档。</p>
+<p>首先创建一个session，初始化参数包含<code>webdriver</code>的路径，浏览器，timeout时限，以及<code>webdriver</code>所需参数。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">requestium</span> <span class="kn">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">Keys</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">webdriver_path</span><span class="o">=</span><span class="s1">&#39;./chromedriver&#39;</span><span class="p">,</span>
+            <span class="n">browser</span><span class="o">=</span><span class="s1">&#39;chrome&#39;</span><span class="p">,</span>
+            <span class="n">default_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+            <span class="n">webdriver_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;arguments&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;headless&#39;</span><span class="p">]})</span>
+</code></pre></div><p>至于浏览器，<code>Requestium</code>只支持<code>PhantomJS</code>和<code>Chrome</code>，鉴于<code>PhantomJS</code>已死，作者短时间内没有更新这个上次commit是2018年2月的库，我们可以认为<code>Requestium</code>只支持<code>Chrome</code>，当然自己写一个支持其他浏览器的版本也并非难事。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201211222034854.png" alt="有人想用Firefox"></p>
+<p>和<code>Requests</code>不同，我们不需要手动解析收到的响应，当调用xpath，css，re的时候，解析会自动完成，例如这样：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">title</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://samplesite.com&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;//title/text()&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">extract_first</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;Default Title&#39;</span><span class="p">)</span>
+</code></pre></div><p><code>Requestium</code>的session对象本质上就是<code>Requests</code>的session对象，所以它原本自带的方法都可以用：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://www.samplesite.com/sample&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;field1&#39;</span><span class="p">:</span> <span class="s1">&#39;data1&#39;</span><span class="p">})</span>
+<span class="n">s</span><span class="o">.</span><span class="n">proxies</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;http&#39;</span><span class="p">:</span> <span class="s1">&#39;http://10.11.4.254:3128&#39;</span><span class="p">,</span> <span class="s1">&#39;https&#39;</span><span class="p">:</span> <span class="s1">&#39;https://10.11.4.252:3128&#39;</span><span class="p">})</span>
+</code></pre></div><p>也可以切换到<code>webdriver</code>模式来运行js代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">s</span><span class="o">.</span><span class="n">transfer_session_cookies_to_driver</span><span class="p">()</span>  <span class="c1"># You can maintain the session if needed</span>
+<span class="n">s</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://www.samplesite.com/sample/process&#39;</span><span class="p">)</span>
+</code></pre></div><p><code>Requestium</code>的session.driver对象本质上就是<code>Selenium</code>的driver对象，所以它原本自带的方法都可以用：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">s</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s2">&#34;//input[@class=&#39;user_name&#39;]&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="s1">&#39;James Bond&#39;</span><span class="p">,</span> <span class="n">Keys</span><span class="o">.</span><span class="n">ENTER</span><span class="p">)</span>
+
+<span class="c1"># New method which waits for element to load instead of failing, useful for single page web apps</span>
+<span class="n">s</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">ensure_element_by_xpath</span><span class="p">(</span><span class="s2">&#34;//div[@attribute=&#39;button&#39;]&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+</code></pre></div><p>除了原本自带的函数，requestium的session.driver对象还有xpath，css，re方法，可以用来定位：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">re</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;ID_\d\w\d some_pattern&#39;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Found it!&#39;</span><span class="p">)</span>
+</code></pre></div><p>切换回session模式同样简单：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">s</span><span class="o">.</span><span class="n">transfer_driver_cookies_to_session</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://www.samplesite.com/sample2&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;key1&#39;</span><span class="p">:</span> <span class="s1">&#39;value1&#39;</span><span class="p">})</span>
+</code></pre></div><h2 id="ensure-方法">ensure 方法</h2>
+<p><code>Requestium</code>的另一大特点是增加了一系列<code>ensure</code> 方法，可以确保driver确实发现了指定元素或者转移了cookie。</p>
+<p>如果使用的是<code>Selenium</code>的 <code>find_element_by_</code>方法，一旦driver没有发现我们想要的元素，就会立刻抛出一个异常。而<code>Requestium</code>则会等待这个元素的出现。下面是四个<code>Requestium</code>可以等待的状态：</p>
+<ul>
+<li>present （默认）</li>
+<li>clickable</li>
+<li>visible</li>
+<li>invisible (例如等待<em>loading&hellip;</em> 消失)</li>
+</ul>
+<h2 id="一些对比的例子">一些对比的例子</h2>
+<h3 id="官网上的一个例子登录reddit">官网上的一个例子：登录Reddit</h3>
+<p>使用<code>Requestium</code>时的代码量只有使用<code>Requests + Selenium + lxml</code>的一半。（可不是嘛，你把好多<code>try...except</code>都用<code>ensure</code>封装起来了😅）。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/carbon%20(2).png" alt="用Requestium登录Reddit"></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/carbon%20(3).png" alt="用Requests+Selenium登录Reddit"></p>
+<h3 id="一个例子用requestium登录浙大通行证">一个例子——用Requestium登录浙大通行证</h3>
+<p>速度要慢一点，但是写起来不用动脑子。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">requestium</span> <span class="kn">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">Keys</span>
+
+<span class="n">login_url</span> <span class="o">=</span> <span class="s1">&#39;https://zjuam.zju.edu.cn/cas/login&#39;</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="n">webdriver_path</span><span class="o">=</span><span class="s1">&#39;/usr/local/bin/chromedriver&#39;</span><span class="p">,</span>
+            <span class="n">browser</span><span class="o">=</span><span class="s1">&#39;chrome&#39;</span><span class="p">,</span>
+            <span class="n">default_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+            <span class="n">webdriver_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;arguments&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;headless&#39;</span><span class="p">]}</span>
+           <span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">login_url</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s2">&#34;//*[@id=&#39;username&#39;]&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s2">&#34;//*[@id=&#39;password&#39;]&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">Keys</span><span class="o">.</span><span class="n">ENTER</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">transfer_driver_cookies_to_session</span><span class="p">()</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">login_url</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;nick: </span><span class="se">\&#39;</span><span class="s1">(.*?)</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;登录成功!&#39;</span><span class="p">)</span>
+</code></pre></div>
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

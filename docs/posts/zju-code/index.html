@@ -11,22 +11,22 @@
 
     <meta property="og:site_name" content="霏霏">
     <meta property="og:title" content="
-  用SSH远程使用Jupyter - 霏霏
+  2020浙大信息化年度数据账单中的code参数分析 - 霏霏
 ">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="/posts/ssh-jupyter/">
+    <meta property="og:url" content="/posts/zju-code/">
     <meta property="og:image" content="images/tn.png">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="/posts/ssh-jupyter/">
+    <meta name="twitter:site" content="/posts/zju-code/">
     <meta name="twitter:image" content="images/tn.png">
 
-    <base href="../../posts/ssh-jupyter/">
+    <base href="../../posts/zju-code/">
     <title>
-  用SSH远程使用Jupyter - 霏霏
+  2020浙大信息化年度数据账单中的code参数分析 - 霏霏
 </title>
 
-    <link rel="canonical" href="../../posts/ssh-jupyter/">
+    <link rel="canonical" href="../../posts/zju-code/">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     
@@ -119,25 +119,36 @@ code.has-jax {
   <section class="container post">
   <article>
     <header>
-      <h1 class="title">用SSH远程使用Jupyter</h1>
-      <h2 class="date">February 1, 2020</h2>
+      <h1 class="title">2020浙大信息化年度数据账单中的code参数分析</h1>
+      <h2 class="date">January 4, 2021</h2>
 
       
     </header>
 
-    <p>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。</p>
-<h2 id="1在linux命令行中">1.在Linux命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">conda install ipykernel
-<span class="nb">source</span> activate 环境名称
-python -m ipykernel install --user --name 环境名称 --display-name <span class="s2">&#34;Python (环境名称)&#34;</span>
-jupyter notebook --no-browser --port<span class="o">=</span><span class="m">8080</span>
-</code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/Fsy38OavxaJFhTBuBrQ9gSznTy5N" alt=""></p>
-<h2 id="2在windows命令行中">2.在Windows命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">ssh -N -L 8080:localhost:8080 usr@ip
-</code></pre></div><p>端口默认是22，需要修改：
-<img src="https://qiniusave.feifeizaici.xyz/FoNlph-SiH3TzFmr6YX701PThueP" alt=""></p>
-<p>然后将Linux命令行中的地址复制到浏览器中即可：
-<img src="https://qiniusave.feifeizaici.xyz/FndV9kc_Kn4TFTdI_KeE8qyzv5ni" alt=""></p>
+    <p>从去年年末开始，各大APP就开始给用户推送他们的「年度报告」。很快啊，朋友圈就被网易云、QQ音乐、B站的年度报告刷屏了。说起来还挺矛盾的，人们一边为自己的信息泄露而焦虑着，一边又享受着别人分析自己数据。今天吃完板烧鸡腿堡出来在群里看到好多人在讨论浙大出的这个信息化年度数据账单，然而并没有什么有价值的数据。</p>
+<p>下午摸鱼的时候稍微分析了一下接口，不复杂，但是因为想当然浪费了很多时间。</p>
+<p>网址：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">https://it2020.zju.edu.cn/
+</code></pre></div><p>一个小坑：访问<code>https://it2020.zju.edu.cn/</code>会跳转到实际的页面<code>https://it2020.zju.edu.cn/share</code>，但是直接访问<code>https://it2020.zju.edu.cn/share</code>则会跳转到微信推文的页面。</p>
+<p>用浏览器随便抓一下包，容易看出所有的数据都包含在这条POST请求的响应中：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210104185255732.png" alt="image-20210104185255732"></p>
+<p>这个请求有两个参数，其中<code>redirect_uri</code>为固定参数，我们只需要找到<code>code</code>这个参数就好了。</p>
+<p>之前写浙大通行证模拟登录的时候就发现登录时会发送多个状态码为302的重定向请求：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210104185843762.png" alt="数据获取失败"></p>
+<p>这里重定向的过程是通过如下方法获得的：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 登录</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="o">......</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">history</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+</code></pre></div><p>因为这里最后一次重定向请求的url中包含一个ST开头的<code>ticket</code>参数，我就想当然的觉得我们需要的<code>code</code>参数就是这个。然而把这个<code>ticket</code>参数的值扣下来赋值给<code>code</code>，然后发送POST请求，得到的响应为「<strong>500 Internal Server Error</strong>」。</p>
+<p>我只好按部就班地沿着请求列表向上找，希望能找到<code>code</code>参数的来源。</p>
+<p>一番攀谈交心了解到，<code>code</code>参数和上面一个302重定向的请求中的<code>ticket</code>参数相同：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210104190620377.png" alt=""></p>
+<p>而这个请求是由登录的POST请求重定向而来的：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210104190743520.png" alt=""></p>
+<p>到这里，解决办法就很显然了——把登录时的URL稍作调整即可。</p>
+<p>把每一次重定向的过程都print出来，可以看出，在登录过程中，有两个重定向URL都包含<code>ticket</code>这个参数，但是它们的值是不一样的，第一个<code>ticket</code>的值才是我们想要的<code>code</code>参数的值。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210104191201720.png" alt="数据获取成功"></p>
 
   </article>
 

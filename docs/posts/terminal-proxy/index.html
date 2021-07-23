@@ -11,22 +11,22 @@
 
     <meta property="og:site_name" content="霏霏">
     <meta property="og:title" content="
-  用SSH远程使用Jupyter - 霏霏
+  Linux 命令行中通过代理进行下载 - 霏霏
 ">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="/posts/ssh-jupyter/">
+    <meta property="og:url" content="/posts/terminal-proxy/">
     <meta property="og:image" content="images/tn.png">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="/posts/ssh-jupyter/">
+    <meta name="twitter:site" content="/posts/terminal-proxy/">
     <meta name="twitter:image" content="images/tn.png">
 
-    <base href="../../posts/ssh-jupyter/">
+    <base href="../../posts/terminal-proxy/">
     <title>
-  用SSH远程使用Jupyter - 霏霏
+  Linux 命令行中通过代理进行下载 - 霏霏
 </title>
 
-    <link rel="canonical" href="../../posts/ssh-jupyter/">
+    <link rel="canonical" href="../../posts/terminal-proxy/">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     
@@ -119,25 +119,33 @@ code.has-jax {
   <section class="container post">
   <article>
     <header>
-      <h1 class="title">用SSH远程使用Jupyter</h1>
-      <h2 class="date">February 1, 2020</h2>
+      <h1 class="title">Linux 命令行中通过代理进行下载</h1>
+      <h2 class="date">June 6, 2020</h2>
 
       
     </header>
 
-    <p>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。</p>
-<h2 id="1在linux命令行中">1.在Linux命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">conda install ipykernel
-<span class="nb">source</span> activate 环境名称
-python -m ipykernel install --user --name 环境名称 --display-name <span class="s2">&#34;Python (环境名称)&#34;</span>
-jupyter notebook --no-browser --port<span class="o">=</span><span class="m">8080</span>
-</code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/Fsy38OavxaJFhTBuBrQ9gSznTy5N" alt=""></p>
-<h2 id="2在windows命令行中">2.在Windows命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">ssh -N -L 8080:localhost:8080 usr@ip
-</code></pre></div><p>端口默认是22，需要修改：
-<img src="https://qiniusave.feifeizaici.xyz/FoNlph-SiH3TzFmr6YX701PThueP" alt=""></p>
-<p>然后将Linux命令行中的地址复制到浏览器中即可：
-<img src="https://qiniusave.feifeizaici.xyz/FndV9kc_Kn4TFTdI_KeE8qyzv5ni" alt=""></p>
+    <p>用的代理工具为clash。现在我的几台设备上windows和macos都用的是clash了，很方便。</p>
+<p>在用户目录下创建 clash 文件夹</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">mkdir <span class="o">&amp;&amp;</span> <span class="nb">cd</span> clash
+</code></pre></div><p>在GitHub上下载对应版本的二进制文件，解压并重命名为 clash</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">wget https://github.com/Dreamacro/clash/releases/download/v1.0.0/clash-linux-amd64-v1.0.0.gz
+gzip -d clash-linux-amd64-v1.0.0.gz
+mv clash-linux-amd64-v1.0.0 clash
+</code></pre></div><p>在终端 cd 到 Clash 二进制文件所在的目录，然后下载 Clash 配置文件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">wget -O config.yml 你的配置链接
+</code></pre></div><p>修改权限</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">chmod +x clash
+</code></pre></div><p>启动 Clash，同时启动 HTTP 代理和 Socks5 代理。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">./clash -d
+</code></pre></div><p>访问 Clash Dashboard 可以进行切换节点、测延迟等操作。
+<a href="http://clash.razord.top/">Clash Dashboard</a></p>
+<p>设置端口：
+<img src="https://qiniusave.feifeizaici.xyz/funnybox/6Jultj%20.png" alt="6Jultj"></p>
+<p>修改规则：
+<img src="https://qiniusave.feifeizaici.xyz/funnybox/ITou8W%20.png" alt="ITou8W"></p>
+<p>之后让Linux终端走代理的方法可以参照这里：<a href="https://zhuanlan.zhihu.com/p/46973701">Linux 让终端走代理的几种方法
+</a></p>
 
   </article>
 

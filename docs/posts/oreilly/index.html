@@ -11,22 +11,22 @@
 
     <meta property="og:site_name" content="霏霏">
     <meta property="og:title" content="
-  用SSH远程使用Jupyter - 霏霏
+  如何白嫖O&#39;Reilly 的电子书 - 霏霏
 ">
     <meta property="og:description" content="">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="/posts/ssh-jupyter/">
+    <meta property="og:url" content="/posts/oreilly/">
     <meta property="og:image" content="images/tn.png">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="/posts/ssh-jupyter/">
+    <meta name="twitter:site" content="/posts/oreilly/">
     <meta name="twitter:image" content="images/tn.png">
 
-    <base href="../../posts/ssh-jupyter/">
+    <base href="../../posts/oreilly/">
     <title>
-  用SSH远程使用Jupyter - 霏霏
+  如何白嫖O&#39;Reilly 的电子书 - 霏霏
 </title>
 
-    <link rel="canonical" href="../../posts/ssh-jupyter/">
+    <link rel="canonical" href="../../posts/oreilly/">
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     
@@ -119,25 +119,42 @@ code.has-jax {
   <section class="container post">
   <article>
     <header>
-      <h1 class="title">用SSH远程使用Jupyter</h1>
-      <h2 class="date">February 1, 2020</h2>
+      <h1 class="title">如何白嫖O&#39;Reilly 的电子书</h1>
+      <h2 class="date">December 27, 2020</h2>
 
       
     </header>
 
-    <p>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。</p>
-<h2 id="1在linux命令行中">1.在Linux命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">conda install ipykernel
-<span class="nb">source</span> activate 环境名称
-python -m ipykernel install --user --name 环境名称 --display-name <span class="s2">&#34;Python (环境名称)&#34;</span>
-jupyter notebook --no-browser --port<span class="o">=</span><span class="m">8080</span>
-</code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/Fsy38OavxaJFhTBuBrQ9gSznTy5N" alt=""></p>
-<h2 id="2在windows命令行中">2.在Windows命令行中</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">ssh -N -L 8080:localhost:8080 usr@ip
-</code></pre></div><p>端口默认是22，需要修改：
-<img src="https://qiniusave.feifeizaici.xyz/FoNlph-SiH3TzFmr6YX701PThueP" alt=""></p>
-<p>然后将Linux命令行中的地址复制到浏览器中即可：
-<img src="https://qiniusave.feifeizaici.xyz/FndV9kc_Kn4TFTdI_KeE8qyzv5ni" alt=""></p>
+    <p>O&rsquo;Reilly的书有口皆碑！我不信有那个程序员的书架上没有基本O&rsquo;Reilly的动物书。</p>
+<p>比如这本</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201227163647805.png" alt="Getting it to work and have no idea"></p>
+<p>或者这本：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/fhgzVEt.jpeg" alt="Google the error message"></p>
+<p>上面两个都是网友用生成器自己做的。正儿八经O&rsquo;Reilly的书甚至可以拼成一条彩虹。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/v2-d787aea77f68fa4fd191b787e9ae0067_1440w.jpg" alt="这一柜子书得多少钱"></p>
+<p>在O&rsquo;Reilly的学习网站<code>https://learning.oreilly.com/</code>上，我们几乎可以看到它出版的所有的电子书。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201227143043777.png" alt="系列课"></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201227143334634.png" alt="最新的强化学习教程"></p>
+<p>但是有一个问题，订阅是十分昂贵的，一个月要49刀，作为一个穷逼，我肯定是付不起的。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201227160813447.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203213543754.png" alt="《让子弹飞》截图"></p>
+<p>好在O&rsquo;Reilly的网站上提供了十天的免费试用机会，而且我发现随便编一个邮箱都可以完成注册。也就是说十天的试用期到期以后，我们再注册一个账号就能继续白嫖了。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201227144537207.png" alt="Poor me"></p>
+<p>「完」</p>
+<h2 id="没完">没完</h2>
+<p>就如之前写的P站学习资料下载中写的，我很害怕哪天O&rsquo;reilly不提供10天的免费试用，或者限定只有认证过后的edu邮箱才可以。我就想在这10天的试用期过去之前先把没看完的书保存下来。这里，保存成HTML是没有用的，保存成MHTML文件格式才可以：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201227161912699.png" alt="保存为MHTML"></p>
+<blockquote>
+<p>什么是MHTML文件？<!-- raw HTML omitted -->MHTML文件是包含网页所有内容的档案。 它存储HTML网页以及网页中的链接资源，其中可能包括的CSS, JavaScript，图像和音频文件。 MHTML文件主要由Web开发人员用来保存网页的当前状态以用于存档。</p>
+</blockquote>
+<p>我用Requetium写了一个自动化的脚本，能够自动把一本书的每一章都保存下来，方便之后学习。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/Dec-27-2020%2016-29-30.gif" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201227162156820.png" alt=""></p>
+<p>毕竟是白嫖，代码就不放了，有需要的可以直接找我要。</p>
+<p><a href="https://orly.nanmu.me/">O&rsquo;Reilly封面生成器</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/32346545">这些年我们一起读过的O&rsquo;Reilly动物书</a></p>
+<p><a href="https://www.cnblogs.com/superhin/p/12600358.html">Selenium保存网页为mhtml方法</a></p>
+<p><a href="https://m33.wiki/extension/mhtml.html">.MHTML文件扩展名</a></p>
 
   </article>
 

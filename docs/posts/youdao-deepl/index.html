@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【JS逆向】DeepL翻译和有道翻译 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/youdao-deepl/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/youdao-deepl/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/youdao-deepl/">
+    <title>
+  【JS逆向】DeepL翻译和有道翻译 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/youdao-deepl/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【JS逆向】DeepL翻译和有道翻译</h1>
+      <h2 class="date">May 13, 2020</h2>
+
+      
+    </header>
+
+    <p>现在有很多翻译软件能够同时提供多个网站的翻译结果，比如非常好用的<code>copytranslator</code>：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201201001516358.png" alt="copytranslator"></p>
+<p>其实它们也是调用了这些翻译网站的API，下面选择<code>DeepL翻译</code>和<code>有道翻译</code>来尝试破解。</p>
+<h2 id="deepl翻译">DeepL翻译</h2>
+<p>网址：https://www.deepl.com/translator</p>
+<p><code>DeepLy</code>翻译宣称是全世界最好的机器翻译。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201201001140605.png" alt="DeepL"></p>
+<p>先随便翻译一个句子：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201130211402467.png" alt="摸鱼确实快乐"></p>
+<p>尝试一下在开发中工具中获取它翻译的API：<code>https://www2.deepl.com/jsonrpc</code>，提交的参数为：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201130210103369.png" alt="Request Payload"></p>
+<p>可以看出每个参数都有很明确的含义，并没有加密的参数。<code>id</code>这个参数经过我的测试，随便填一个数都可以。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="k">def</span> <span class="nf">deepl_translator</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    <span class="n">sentence</span> <span class="o">=</span> <span class="s1">&#39;&#34;&#39;</span> <span class="o">+</span> <span class="n">sentence</span> <span class="o">+</span> <span class="s1">&#39;&#34;&#39;</span>
+    <span class="n">u_sentence</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;unicode_escape&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;{&#34;jsonrpc&#34;:&#34;2.0&#34;,&#34;method&#34;: &#34;LMT_handle_jobs&#34;,&#34;params&#34;:{&#34;jobs&#34;:[{&#34;kind&#34;:&#34;default&#34;,&#34;raw_en_sentence&#34;:&#39;</span> <span class="o">+</span> <span class="n">sentence</span> <span class="o">+</span> <span class="s1">&#39;,&#34;raw_en_context_before&#34;:[],&#34;raw_en_context_after&#34;:[],&#34;preferred_num_beams&#34;:4,&#34;quality&#34;:&#34;fast&#34;}],&#34;lang&#34;:{&#34;user_preferred_langs&#34;:[&#34;EN&#34;,&#34;ZH&#34;],&#34;source_lang_user_selected&#34;:&#34;auto&#34;,&#34;target_lang&#34;:&#34;EN&#34;},&#34;priority&#34;:-1,&#34;commonJobParams&#34;:</span><span class="si">{}</span><span class="s1">,&#34;timestamp&#34;:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;},&#34;id&#34;:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100000000</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://www2.deepl.com/jsonrpc&#39;</span><span class="p">,</span>
+                      <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;content-type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">},</span>
+                      <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;translations&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;beams&#39;</span><span class="p">]</span>
+  
+<span class="nb">print</span><span class="p">(</span><span class="n">deepl_translator</span><span class="p">(</span><span class="s1">&#39;摸鱼就开心&#39;</span><span class="p">))</span>
+
+<span class="c1"># 输出：</span>
+<span class="c1"># [{&#39;postprocessed_sentence&#39;: &#34;I&#39;m happy when I touch the fish.&#34;, &#39;num_symbols&#39;: 12},</span>
+<span class="c1">#  {&#39;postprocessed_sentence&#39;: &#34;You&#39;ll be happy if you touch the fish.&#34;, &#39;num_symbols&#39;: 13},</span>
+<span class="c1">#  {&#39;postprocessed_sentence&#39;: &#34;It&#39;s fun to touch fish.&#34;, &#39;num_symbols&#39;: 10},</span>
+<span class="c1">#  {&#39;postprocessed_sentence&#39;: &#34;You&#39;ll be happy if you touch the fish&#34;, &#39;num_symbols&#39;: 12}]</span>
+</code></pre></div><p>返回的是最佳的四个翻译，<code>num_symbols</code>的含义我不是很确定，猜测是代表置信度。</p>
+<h2 id="有道翻译">有道翻译</h2>
+<p>网址：http://fanyi.youdao.com/</p>
+<p>在有道翻译中同样翻译“摸鱼很快乐”这句话：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201130211741539.png" alt="有道翻译"></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201130222215240.png" alt="Form Data"></p>
+<p>容易发现<code>from</code>、<code>to</code>、<code>smartresult</code>、<code>client</code>、<code>doctype</code>、<code>version</code>、<code>keyfrom</code>、<code>action</code> 都是固定参数，不用调整。</p>
+<p>需要获取的参数：</p>
+<ul>
+<li><code>i</code>： 输入</li>
+<li><code>salt</code>、<code>lts</code>：很像时间戳，但是位数不同</li>
+<li><code>sign</code>、<code>bv</code>：长度都是32位，很可能是<code>MD5</code>加密以后得到的值</li>
+</ul>
+<p>全局搜索<code>salt</code>参数</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201130222645602.png" alt="全局搜索"></p>
+<p>格式化这个js文件后，在文件内再次搜索<code>salt</code>，定位到这里：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201130222807352.png" alt="定位加密"></p>
+<p>其实看到这里，每个参数生成的逻辑就应该很清楚了，为了更清楚，我们在这里打上一个断点，重新翻译一下。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201130223151417.png" alt="打上断点，仔细观察"></p>
+<p>我们分析一下各个参数生成的逻辑：</p>
+<ul>
+<li><code>e</code>为输入的句子</li>
+<li><code>navigator.appVersion</code>其实就是<code>User-Agent</code>，<code>t</code>为它进行<code>md5</code>加密后的结果</li>
+</ul>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201130223441293.png" alt="在控制台调试"></p>
+<ul>
+<li>
+<p><code>r</code>为当前时间的时间戳</p>
+</li>
+<li>
+<p><code>i</code>为<code>r</code>在末尾加上一个随机整数</p>
+</li>
+<li>
+<p><code>sign</code>为<code>e</code>和<code>i</code>拼接后再分别在前后加上一个固定字符串，再进行md5加密后的结果</p>
+</li>
+</ul>
+<p>然后就能用Python还原整个加密过程了。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
+
+<span class="k">def</span> <span class="nf">youdao_translator</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    
+    <span class="c1"># 获取参数</span>
+    <span class="n">lts</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="n">salt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">))</span>
+    <span class="n">ua</span> <span class="o">=</span> <span class="s1">&#39;5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36&#39;</span>
+    <span class="n">bv</span> <span class="o">=</span> <span class="n">md5</span><span class="p">(</span><span class="n">ua</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="n">md5</span><span class="p">((</span><span class="s1">&#39;fanyideskweb&#39;</span> <span class="o">+</span> <span class="n">sentence</span> <span class="o">+</span> <span class="n">salt</span> <span class="o">+</span> <span class="s1">&#39;]BjuETDhU)zqSxf-=B#7m&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    
+    <span class="c1"># 创建一个会话来获取cookie</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://fanyi.youdao.com&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># headers中必要的三个参数，其他的都不必要</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Referer&#39;</span><span class="p">:</span> <span class="s1">&#39;http://fanyi.youdao.com/&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="n">sentence</span><span class="p">,</span>
+      <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTO&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTO&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;smartresult&#39;</span><span class="p">:</span> <span class="s1">&#39;dict&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;client&#39;</span><span class="p">:</span> <span class="s1">&#39;fanyideskweb&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;salt&#39;</span><span class="p">:</span> <span class="n">salt</span><span class="p">,</span>
+      <span class="s1">&#39;sign&#39;</span><span class="p">:</span> <span class="n">sign</span><span class="p">,</span>
+      <span class="s1">&#39;lts&#39;</span><span class="p">:</span> <span class="n">lts</span><span class="p">,</span>
+      <span class="s1">&#39;bv&#39;</span><span class="p">:</span> <span class="n">bv</span><span class="p">,</span>
+      <span class="s1">&#39;doctype&#39;</span><span class="p">:</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="s1">&#39;2.1&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;keyfrom&#39;</span><span class="p">:</span> <span class="s1">&#39;fanyi.web&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="s1">&#39;FY_BY_REALTlME&#39;</span>
+    <span class="p">}</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://fanyi.youdao.com/translate_o?smartresult=dict&amp;smartresult=rule&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;translateResult&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;tgt&#39;</span><span class="p">]</span>
+  
+  
+<span class="nb">print</span><span class="p">(</span><span class="n">youdao_translator</span><span class="p">(</span><span class="s1">&#39;不想学习&#39;</span><span class="p">))</span>
+<span class="c1"># 输出：</span>
+<span class="c1"># &#34;Don&#39;t want to learn&#34;</span>
+</code></pre></div>
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【JS逆向】模拟登录浙大通行证 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/zjuam-login/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/zjuam-login/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/zjuam-login/">
+    <title>
+  【JS逆向】模拟登录浙大通行证 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/zjuam-login/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【JS逆向】模拟登录浙大通行证</h1>
+      <h2 class="date">December 19, 2020</h2>
+
+      
+    </header>
+
+    <p>这么多年一直都在用Chrome，但是Chrome的有各种各样的问题，准备以后逐渐向Firefox转移，这次抓包用的是Firefox。</p>
+<p>网址：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">https://zjuam.zju.edu.cn/cas/login
+</code></pre></div><p>猜测zjuam中的am可能是<code>authentication mainpage</code>的意思。</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="登录有什么用">登录有什么用</h3>
+<p>因为浙大的大部分网站（教务网、计财处、就业信息网、学在浙大等等）都可以通过浙大通行证进行授权登录，所以只要登录了浙大通行证，就可以方便的完成一些机械化的操作。简单点可以用来自动进行「每日健康打卡」，复杂一些可以导出课表、成绩单、每个专业的就业情况、批量下载课件和视频。</p>
+<p>之后有时间的话，可以补充一些真正有用的应用。</p>
+<h3 id="既然这么简单有风险吗">既然这么简单，有风险吗？</h3>
+<p>**没有。**只要你的密码不外泄，没人可以登录你的浙大通行证。印象里今年上半年朋友圈里有一个疯转的「生成你的浙大记忆」小程序，输入浙大通行证的账号密码以后会给出你的很多数据，比如体测成绩、图书馆借阅情况、成绩单、CC98有几个账号、发了几个帖。这个是相当危险的，你不知道他有没有把你的账号密码保存在他的服务器上，而且就算他说他没有主动保存，这些数据也很可能会自动保存在某些地方。所以建议浙大通行证的密码设的复杂一点，也警惕这些社会工程学的攻击。</p>
+<h2 id="pc端登录">PC端登录</h2>
+<h3 id="抓包">抓包</h3>
+<p>账号密码都输入123456，找到登录对应的请求：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218230029116.png" alt=""></p>
+<p>提交的表单数据如下：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218225952036.png" alt=""></p>
+<p>可以看出，密码是经过加密的，而且还有一个来源未知的<code>execution</code>参数。</p>
+<p>在调试器中打开全局搜索（Mac：<code>cmd+shift+F</code>，Win：<code>ctrl+shift+F</code>），搜索<code>execution</code>，可以在登录页面的HTML源码中找到它的值，类似之前写抽卡机时候碰到的<code>RequestVerificationToken</code>参数。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218230516958.png" alt=""></p>
+<h3 id="定位加密">定位加密</h3>
+<p>全局搜索<code>password</code>，在login.js文件中找到加密的流程如下</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218231030185.png" alt=""></p>
+<p>这里RSA加密所需的两个参数<code>exponent</code>和<code>modulus</code>是从登录前的一个请求的响应中得到的：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218231305015.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218231325023.png" alt=""></p>
+<p>我们知道，每次对<code>getPubKey</code>这个API发送请求得到的响应是不同的，那么在模拟登录时如何保证我们获取得到的公钥就是这次登录需要的呢？事实上获取公钥的响应中还包含了一个名为<code>_pv0</code>的cookie，发送登录的POST请求时需要包含这个cookie。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218232334338.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218232448868.png" alt=""></p>
+<h3 id="复现加密的流程">复现加密的流程</h3>
+<h4 id="用pyexecjs">用PyExecJS</h4>
+<p>把login.js中的<code>checkform</code>函数和用到的<code>RSAUtils</code>保存下来，然后用<code>PyExecJS</code>调用这段JS代码，可以得到控制台中相同的结果。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218233314747.png" alt=""></p>
+<h4 id="用python复现">用Python复现</h4>
+<p>如果用Python的<code>rsa</code>库或者<code>pycryptodome</code>库来实现，即使公钥的固定的，每次加密的结果也是不一样的。这是因为这几个库会按一定规则对原文随机填充后再加密。我在GitHub上找到了别人实现的没有填充的RSA加密，向他敬礼🖖🏼。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201218233954434.png" alt=""></p>
+<h3 id="代码">代码</h3>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/carbon%20(4).png" alt=""></p>
+<h2 id="扫描二维码登录">扫描二维码登录</h2>
+<p>除了输入账号密码，还可以通过用钉钉客户端扫描二维码来登录浙大通行证。</p>
+<h3 id="获取二维码">获取二维码</h3>
+<p>将二维码保存到本地</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219210618829.png" alt=""></p>
+<p>随便找一个可以识别二维码的网站，将二维码转化为url，可以看到url中有一个<code>code</code>参数</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219210933486.png" alt=""></p>
+<p>在请求列表中可以找到包含这个<code>code</code>的请求：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219211310641.png" alt=""></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219211323991.png" alt=""></p>
+<h3 id="获取登录状态">获取登录状态</h3>
+<p>这个url很好找，因为页面会不断的自动获取登录状态</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219211601652.png" alt=""></p>
+<p>这是一个POST请求，表单信息如下：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219211635419.png" alt=""></p>
+<p>容易看出，除了三个固定的参数和已知的<code>qrCode</code>，我们还需要找到这个<code>pdmToken</code>。事实上，<code>pdmToken</code>包含在另一个请求的响应中：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219212015188.png" alt=""></p>
+<p>这个POST请求的表单信息如下，经过我的测试，只要包含data参数即可，内容可以随意填写。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219212115100.png" alt=""></p>
+<h3 id="登录后更新cookie">登录后更新cookie</h3>
+<p>扫码后，login_with_qr这个请求的响应中会包含登录时重定向的url，对这个url发送GET请求，即可更新session中的cookie。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201219212418466.png" alt=""></p>
+<h3 id="代码-1">代码</h3>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/carbon%20(5).png" alt=""></p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

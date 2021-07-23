@@ -11,6 +11,9 @@
     <loc>/tags/%E4%B8%83%E7%89%9B%E4%BA%91/</loc>
     <lastmod>2021-07-23T13:18:55+08:00</lastmod>
   </url><url>
+    <loc>/posts/math/</loc>
+    <lastmod>2021-07-23T13:18:55+08:00</lastmod>
+  </url><url>
     <loc>/posts/chrome-qiniu/</loc>
     <lastmod>2021-07-23T13:18:55+08:00</lastmod>
   </url><url>
@@ -20,8 +23,98 @@
     <loc>/tags/jupyter/</loc>
     <lastmod>2021-07-22T13:18:55+08:00</lastmod>
   </url><url>
-    <loc>/posts/ssh-jupyter/</loc>
+    <loc>/posts/ssh-jupyterlab/</loc>
     <lastmod>2021-07-22T13:18:55+08:00</lastmod>
+  </url><url>
+    <loc>/tags/web-crawling/</loc>
+    <lastmod>2021-06-17T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/cococut/</loc>
+    <lastmod>2021-06-17T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/transparent-image/</loc>
+    <lastmod>2021-05-13T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/lantian28/</loc>
+    <lastmod>2021-01-07T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/statmuse/</loc>
+    <lastmod>2021-01-07T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/zju-code/</loc>
+    <lastmod>2021-01-04T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/oreilly/</loc>
+    <lastmod>2020-12-27T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/cc98-girlfriend/</loc>
+    <lastmod>2020-12-24T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/requestium/</loc>
+    <lastmod>2020-12-22T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/zjuam-login/</loc>
+    <lastmod>2020-12-19T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/pornhub-download/</loc>
+    <lastmod>2020-12-15T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/qingniandaxuexi/</loc>
+    <lastmod>2020-12-14T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/baidu-captcha/</loc>
+    <lastmod>2020-12-12T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/store-data/</loc>
+    <lastmod>2020-12-06T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/bilibili-download-2/</loc>
+    <lastmod>2020-12-04T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/bilibili-login/</loc>
+    <lastmod>2020-12-03T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/bilibili-download/</loc>
+    <lastmod>2020-12-03T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/zhihu-login/</loc>
+    <lastmod>2020-12-02T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/cc98-card/</loc>
+    <lastmod>2020-11-27T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/mac-sshfs/</loc>
+    <lastmod>2020-10-12T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/chengyaojin/</loc>
+    <lastmod>2020-08-17T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/mmdetection/</loc>
+    <lastmod>2020-08-13T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/dlg-idlg/</loc>
+    <lastmod>2020-07-15T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/mac-typora/</loc>
+    <lastmod>2020-07-05T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/pytorch-baseline/</loc>
+    <lastmod>2020-07-02T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/terminal-proxy/</loc>
+    <lastmod>2020-06-06T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/youdao-deepl/</loc>
+    <lastmod>2020-05-13T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/crawl-twice/</loc>
+    <lastmod>2020-05-13T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/adaptive-lr/</loc>
+    <lastmod>2020-02-02T15:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/ssh-jupyter/</loc>
+    <lastmod>2020-02-01T15:00:00+08:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
   </url>

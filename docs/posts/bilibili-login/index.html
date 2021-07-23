@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  【JS逆向】破解B站登录加密策略 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/bilibili-login/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/bilibili-login/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/bilibili-login/">
+    <title>
+  【JS逆向】破解B站登录加密策略 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/bilibili-login/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">【JS逆向】破解B站登录加密策略</h1>
+      <h2 class="date">December 3, 2020</h2>
+
+      
+    </header>
+
+    <p>昨天还立flag说今天不摸鱼了，结果又摸了半天，稍微总结一下。</p>
+<p>GitHub上有一个叫做「哔哩哔哩-API收集整理」的仓库：https://github.com/SocialSisterYi/bilibili-API-collect</p>
+<p>是之前破解第三方B站视频下载方式的时候明一发给我的，当时没有看的很仔细，今天又找出来看了看里面的文档，解决了很多之前的疑惑。</p>
+<h2 id="登录有什么用获取cookie">登录有什么用——获取cookie</h2>
+<p>昨天那篇推文里，随口提了一句登录的作用。</p>
+<blockquote>
+<p>登录以后可以获得更多的权限，比如发帖、收藏等功能，此外有些内容只有登录以后才能访问。</p>
+</blockquote>
+<p>对于B站来说，注册成为正式会员以后可以点赞、投币、收藏喜欢的视频，也算对up主小小的鼓励。此外，<strong>不管通过什么途径</strong>（插件、客户端等等），想要下载720P及以上的视频，都需要保持登录状态，如果想要下载的是大会员的专属视频，那么需要的就是大会员的cookie。</p>
+<blockquote>
+<p>关于视频流会员鉴权：</p>
+<ul>
+<li>获取720P及以上清晰度视频时需要登录（Cookie）</li>
+<li>获取高帧率（1080P60）/高码率（1080P+）视频时需要有大会员的账号登录（Cookie）</li>
+<li>获取会员专属视频时需要登录（Cookie）</li>
+</ul>
+</blockquote>
+<p>而那些第三方的下载网站，原理无非是网站的管理员持有多个账号，然后用这些账号登录后的cookie来获取视频的下载链接。而显然，一个个账号手动登录再把cookie保存下来是不现实的，所以才需要用爬虫程序来完成登录。</p>
+<h2 id="找齐所需参数">找齐所需参数</h2>
+<p>首先按照之前提到的套路，用错误的密码进行登录。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203192658897.png" alt="登录B站的Form Data"></p>
+<p>需要的参数如下：</p>
+<ul>
+<li><code>captchaType</code>、<code>keep</code>、<code>goUrl</code>为固定参数</li>
+<li><code>username</code>：用户名，这里填的是手机号</li>
+<li><code>password</code>：加密过后的密码，看到最后的=可以猜测是加密以后再用Base64编码</li>
+<li><code>key</code>、<code>challenge</code>、<code>validate</code>、<code>seccode</code>：加密参数，来源暂时未知</li>
+</ul>
+<p>再次查阅一下「哔哩哔哩-API收集整理」，可以知道这里的<code>key</code>和<code>challenge</code>都是从B站的API获取的，而<code>validate</code>和<code>seccode</code>是从极验获取的。</p>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>类型</th>
+<th>内容</th>
+<th>必要性</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>captchaType</td>
+<td>num</td>
+<td>6</td>
+<td>必要</td>
+<td>必须为<code>6</code></td>
+</tr>
+<tr>
+<td>username</td>
+<td>str</td>
+<td>用户登录账号</td>
+<td>必要</td>
+<td>手机号或邮箱地址</td>
+</tr>
+<tr>
+<td>password</td>
+<td>str</td>
+<td>加密后的带盐密码</td>
+<td>必要</td>
+<td>base64格式</td>
+</tr>
+<tr>
+<td>keep</td>
+<td>bool</td>
+<td>true</td>
+<td>必要</td>
+<td>必须为<code>true</code></td>
+</tr>
+<tr>
+<td>key</td>
+<td>str</td>
+<td>登录秘钥</td>
+<td>必要</td>
+<td>从B站API获取</td>
+</tr>
+<tr>
+<td>challenge</td>
+<td>str</td>
+<td>极验challenge</td>
+<td>必要</td>
+<td>从B站API获取</td>
+</tr>
+<tr>
+<td>validate</td>
+<td>str</td>
+<td>极验结果</td>
+<td>必要</td>
+<td>从极验获取</td>
+</tr>
+<tr>
+<td>seccode</td>
+<td>str</td>
+<td>极验结果</td>
+<td>必要</td>
+<td>从极验获取</td>
+</tr>
+</tbody>
+</table>
+<p>返回Network请求列表，仔细查找，果然在登录前面找到这样一个请求：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203193325874.png" alt="获取key和challenge的API）"></p>
+<p>这次请求的响应包含了<code>key</code>和<code>challenge</code>，此外还有一个参数<code>gt</code>。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203193359318.png" alt="响应中的key和challenge"></p>
+<p>那么剩下的<code>validate</code>和<code>seccode</code>是怎么来的呢？在请求列表中继续往下找，可以找到这样一个请求：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203193827939.png" alt="获取验证码的POST请求"></p>
+<p>它的响应包含了刚才登录时弹出的验证码：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203193900530.png" alt="响应中包含验证码地址"></p>
+<p>将<code>image_servers</code>中的任意一个字符串和<code>pic</code>字符串拼接后就得到了验证码的图片地址：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203194026225.png" alt="验证码图示"></p>
+<p>按照顺序点击“越”、“橘”、“红”后生成一个<code>w</code>参数，再次发起请求得到<code>validate</code>和<code>seccode</code>（<code>seccode</code>就是<code>validate</code>后面拼接一个<code>|jordan</code>）:</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203194247298.png" alt="响应中的validate"></p>
+<p>到这里我们已经知道所有参数的来源了，我画了一张图来表示这个过程：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6.jpg" alt="参数生成流程图"></p>
+<h2 id="破解加密策略">破解加密策略</h2>
+<p>全局搜索<code>password</code>关键字，可以找到11个文件，注意到这个login开头的js文件，相当可疑。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201201161415275.png" alt="全局搜索password"></p>
+<p>在文件中再次搜索<code>password</code>，找到这个地方，不出意外应该就是<code>password</code>赋值的地方，打上一个断点：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201201161739063.png" alt="定位到加密处"></p>
+<p>打上断点以后，重新点击登录，</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201201162130799.png" alt="确认是在这里加密"></p>
+<p>可以看出密码是在<code>s = this.encryptPassword(this.password)</code>这行代码中被加密的，加密函数为<code>this.encryptPassword</code></p>
+<p>进入函数内部</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201201162343477.png" alt="加密函数"></p>
+<p>可以看到这里用到了<code>JSEncrypt</code>库，这个库是专门用来做<code>RSA</code>加密的，<code>hash</code>和<code>key</code>包含在另一个响应中：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201201162831814.png" alt="响应中的公钥"></p>
+<p>现在分析一下密码加密的逻辑：</p>
+<ol>
+<li>通过GET <a href="https://passport.bilibili.com/login?act=getkey&amp;r=">https://passport.bilibili.com/login?act=getkey&amp;r=</a>随机数 这个API来获取<code>RSA</code>加密的参数<code>hash</code>和<code>key</code></li>
+<li>将<code>key</code>设置为公钥</li>
+<li>将字符串<code>hash</code>和原始密码拼接，然后进行RSA加密</li>
+</ol>
+<p>由于逻辑比较清晰，可以直接用Python把这个加密流程复现出来。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="kn">import</span> <span class="n">RSA</span>
+<span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="kn">import</span> <span class="n">PKCS1_v1_5</span> <span class="k">as</span> <span class="n">Cipher_pkcs1_v1_5</span>
+
+<span class="n">password</span> <span class="o">=</span> <span class="s1">&#39;password&#39;</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://passport.bilibili.com/login?act=getkey&amp;r=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()))</span>
+<span class="n">key</span><span class="p">,</span> <span class="n">_hash</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;key&#39;</span><span class="p">],</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span>
+
+<span class="n">rsa_key</span> <span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">importKey</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="n">cipher</span> <span class="o">=</span> <span class="n">Cipher_pkcs1_v1_5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">rsa_key</span><span class="p">)</span>  
+<span class="n">crypted_password</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">cipher</span><span class="o">.</span><span class="n">encrypt</span><span class="p">((</span><span class="n">_hash</span> <span class="o">+</span> <span class="n">password</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>  
+</code></pre></div><h2 id="破解验证码">“破解”验证码</h2>
+<p>之所以加了引号是因为我走了个后门，并没有实际解决验证码的加密流程——如何获取参数<code>w</code>。</p>
+<p>经过一番网上冲浪，我查到有一个叫「2captcha」的网站专门处理各种各样的验证码，包括极验。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203213259171.png" alt="2captcha提供的服务"></p>
+<p>收费是每1000次请求2.99美元，用支付宝就可以支付，于是我为了试一试这个服务就付了3美元。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203213543754.png" alt="优埃斯刀了"></p>
+<h2 id="超时hash是有寿命的">超时——hash是有寿命的</h2>
+<p>我把刚才的想法实现完以后，得到的响应是这样的：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203214820825.png" alt="提交超时"></p>
+<p>这个“提交超时”是咋回事呢？我测试了一下输入错误的密码和错误的验证信息都会得到不同的报错信息。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203225254780.png" alt="账号密码错误"></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203224147603.png" alt="验证码参数错误"></p>
+<p>于是只能再次求助「哔哩哔哩-API收集整理」了，一番查阅之后查到了如下内容：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203233621839.png" alt="hash是有寿命的"></p>
+<p>到这里我就搞明白我之前失败的原因了——每次验证都需要30秒左右的时间，<code>hash</code>早就过期了。于是调整一下顺序，先进行验证，再对密码进行加密，然后就成功啦。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201203233923410.png" alt="成功登录"></p>
+<p>旁边的师兄看到我又在不务正业，在写这些确实没什么卵用的代码，教育我说道：“霏霏你这样每天不科研是没法毕业的，你看看人家大师兄顶会一篇接一篇发着，你不惭愧吗？”。</p>
+<p>我留下了不务正业的眼泪，泪水打湿了板烧鸡腿堡。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20201204000302612.png" alt=""></p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

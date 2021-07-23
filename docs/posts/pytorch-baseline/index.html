@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  用PyTorch做分类任务的一个Baseline和若干Tricks - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/pytorch-baseline/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/pytorch-baseline/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/pytorch-baseline/">
+    <title>
+  用PyTorch做分类任务的一个Baseline和若干Tricks - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/pytorch-baseline/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">用PyTorch做分类任务的一个Baseline和若干Tricks</h1>
+      <h2 class="date">July 2, 2020</h2>
+
+      
+    </header>
+
+    <p>从12月做Kaggle的比赛起，才算正儿八经开始跑程序了，查了挺多的资料，但是大部分想法都没有机会实践，写这个全当作整理，方便以后查看。
+例子就用这个<a href="https://www.flyai.com/d/ChestXray02">肺炎识别的比赛</a>。</p>
+<h2 id="1数据分析eda">1.数据分析——EDA</h2>
+<p><code>Exploratory data analysis(EDA)</code>，其实就是在分类前先对数据集有一个较为全面的认识，Wikipedia中的解释是这样的：In statistics, exploratory data analysis (EDA) is an approach to analyzing data sets to summarize their main characteristics, often with visual methods. A statistical model can be used or not, but primarily EDA is for seeing what the data can tell us beyond the formal modeling or hypothesis testing task.
+写一个EDA/starter kernel是那些资深的Kaggler常做的事，我也模仿着试一试。使用的工具是<code>Jupyter Notebook</code>，交互式的软件很适合用来做数据分析.</p>
+<p>查看当前路径</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="err">!</span><span class="n">pwd</span>
+<span class="c1"># output: /home/xdjf/code/2019-nCoV</span>
+</code></pre></div><p>查<code>train</code>, <code>validation</code>, <code>test</code>各有多少个样本。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&#34;./data/train/images&#34;</span><span class="p">))</span><span class="si">}</span><span class="s1"> pictures in train.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&#34;./data/validation/images&#34;</span><span class="p">))</span><span class="si">}</span><span class="s1"> pictures in val.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&#34;./data/test/images&#34;</span><span class="p">))</span><span class="si">}</span><span class="s1"> pictures in test.&#39;</span><span class="p">)</span>
+<span class="c1"># output:</span>
+<span class="c1"># 14502 pictures in train.</span>
+<span class="c1"># 4834 pictures in val.</span>
+<span class="c1"># 4834 pictures in test.</span>
+</code></pre></div><p>用<code>pandas</code>读取<code>csv</code>文件</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/train/train.csv&#39;</span><span class="p">)</span>
+<span class="n">validation</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/validation/validation.csv&#39;</span><span class="p">)</span>
+</code></pre></div><p>用<code>head()</code>查看一下<code>dataframe</code>的前5列</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="c1"># output:</span>
+<span class="c1"># image_path	labels</span>
+<span class="c1"># 0	images/00002783_000.png	0</span>
+<span class="c1"># 1	images/00017926_005.png	2</span>
+<span class="c1"># 2	images/00002878_010.png	0</span>
+<span class="c1"># 3	images/00000805_001.png	0</span>
+<span class="c1"># 4	images/00001718_012.png	3</span>
+</code></pre></div><p>很明显，第一列存放图片的路径，第二列存放图片的label。</p>
+<p>随机挑选16张图片，显示出来</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="c1"># display 20 images</span>
+<span class="n">train_imgs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&#34;./data/train/images/&#34;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">train_imgs</span><span class="p">,</span> <span class="mi">20</span><span class="p">)):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">xticks</span><span class="o">=</span><span class="p">[],</span> <span class="n">yticks</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&#34;./data/train/images/&#34;</span> <span class="o">+</span> <span class="n">img</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys_r&#39;</span><span class="p">)</span>
+    <span class="n">lab</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;image_path&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;images/&#39;</span><span class="o">+</span><span class="n">img</span><span class="p">,</span> <span class="s1">&#39;labels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Label: </span><span class="si">{</span><span class="n">lab</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div><p>效果如下：
+<img src="https://qiniusave.feifeizaici.xyz/FlonqFCd0XIJ9jNyQHpeb3dbfxKC" alt=""></p>
+<p>用<code>value_counts()</code>查看一个<code>Series</code>对象中每个值的个数</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">train</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="c1"># output:</span>
+<span class="c1"># 0    4795</span>
+<span class="c1"># 3    4743</span>
+<span class="c1"># 1    2569</span>
+<span class="c1"># 2    2395</span>
+<span class="c1"># Name: labels, dtype: int64</span>
+</code></pre></div><p>画成直方图更直观一些：
+<img src="https://qiniusave.feifeizaici.xyz/Fh4pA4Wuo8zHTA8qpSJ-mcxOK9de" alt="">
+可以看出四类样本的个数比例大概是<code>2:1:1:2</code>，不算非常不平衡，但是如果再平衡些就好了。</p>
+<h2 id="3数据读取自定义dataset类">3.数据读取———自定义Dataset类</h2>
+<p>在<code>PyTorch</code>中，读取数据常用<code>torchvision.datasets.ImageFolder</code>
+<code>ImageFolder</code>假设所有的文件按文件夹保存，每个文件夹下存储同一个类别的图片，文件夹名为类名，其构造函数如下：</p>
+<p><code>ImageFolder(root, transform=None, target_transform=None, loader=default_loader)</code>
+它主要有四个参数：
+<code>root</code>：在root指定的路径下寻找图片
+<code>transform</code>：对PIL Image进行的转换操作，transform的输入是使用loader读取图片的返回对象
+<code>target_transform</code>：对label的转换
+<code>loader</code>：给定路径后如何读取图片，默认读取为RGB格式的<code>PIL Image</code>对象</p>
+<p><strong>注意</strong>：<code>label</code>是按照文件夹名顺序排序后存成字典，即{类名:类序号(从0开始)}，一般来说最好直接将文件夹命名为从0开始的数字，这样会和<code>ImageFolder</code>实际的<code>label</code>一致，如果不是这种命名规范，可以用<code>self.class_to_idx</code>看一下label和文件夹名的映射关系。</p>
+<p>如果样本不是按照文件夹存放的，那就不能无脑使用<code>ImageFolder</code>，这时数据加载可通过自定义一个数据集对象来加载。数据集对象被抽象为<code>Dataset</code>类，实现自定义的数据集需要继承<code>Dataset</code>，并实现两个<code>Python</code>魔法方法：</p>
+<ul>
+<li><code>__getitem__</code>：返回一条数据，或一个样本。<code>obj[index]</code>等价于<code>obj.__getitem__(index)</code></li>
+<li><code>__len__</code>：返回样本的数量。<code>len(obj)</code>等价于<code>obj.__len__()</code></li>
+</ul>
+<p>按照这个规则可以写一个<code>XRayDataset</code>类：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">XRayDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">,</span> <span class="n">file_dir</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">images_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">join</span><span class="p">(</span><span class="n">file_dir</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;image_path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="n">img_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">images_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">label</span>
+
+	<span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">images_list</span><span class="p">)</span>
+</code></pre></div><p><strong>注意</strong>：</p>
+<ul>
+<li>肺炎检测数据集的图像理论上都应该是灰度图像，只有一个通道，但是再读取数据的时候发现有个别图像有四个通道<code>RGBA</code>，这就需要在利用<code>PIL.Image.open()</code>读取数据的时候做一个转换:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python">        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">)</span>
+</code></pre></div><ul>
+<li>用不同工具读取<code>RGB</code>图像时候通道的顺序是不同的，<code>PIL.Image</code>和<code>matplotlib.pypolt</code>都是<code>RGB</code>，而<code>OpenCV</code>是<code>BGR</code>，所以必要时候需要转换：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># opencv读进来的是一个numpy的2维ndarray对象</span>
+<span class="c1"># PIL读进来是PIL对象</span>
+<span class="c1"># 从opencv转化到PIL</span>
+<span class="n">opencvImg</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;1.jpg&#39;</span><span class="p">)</span>
+<span class="n">PILimg</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">opencvImg</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;uint8&#39;</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;RGB&#39;</span><span class="p">)</span>
+<span class="c1"># 从PIL转化到opencv</span>
+<span class="n">PILimg</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;PILimg.jpg&#39;</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">PILimg</span><span class="p">)</span>
+<span class="n">OpenCVimg</span> <span class="o">=</span> <span class="n">img</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div><p><code>Dataset</code>只能一张一张返回图像，训练时候需要用<code>DataLoader</code>批量读取图像。
+<code>DataLoader</code>的函数定义如下：</p>
+<p><code>DataLoader(dataset, batch_size=1, shuffle=False, sampler=None, num_workers=0, collate_fn=default_collate, pin_memory=False, drop_last=False)</code></p>
+<ul>
+<li><code>dataset</code>：加载的数据集(Dataset对象)</li>
+<li><code>batch_size</code>：batch size</li>
+<li><code>shuffle</code>:：是否将数据打乱</li>
+<li><code>sampler</code>： 样本抽样，后续会详细介绍</li>
+<li><code>num_workers</code>：使用多进程加载的进程数，0代表不使用多进程</li>
+<li><code>collate_fn</code>： 如何将多个样本数据拼接成一个batch，一般使用默认的拼接方式即可</li>
+<li><code>pin_memory</code>：是否将数据保存在pin memory区，pin memory中的数据转到GPU会快一些</li>
+<li><code>drop_last</code>：dataset中的数据个数可能不是batch_size的整数倍，drop_last为True会将多出来不足一个batch的数据丢弃</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">dataset_train</span> <span class="o">=</span> <span class="n">XRayDataset</span><span class="p">(</span><span class="n">csv_file</span><span class="o">=</span><span class="s1">&#39;./data/train/train.csv&#39;</span><span class="p">,</span> <span class="n">file_dir</span><span class="o">=</span><span class="s1">&#39;./data/train/&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+<span class="n">dataset_val</span> <span class="o">=</span> <span class="n">XRayDataset</span><span class="p">(</span><span class="n">csv_file</span><span class="o">=</span><span class="s1">&#39;./data/validation/validation.csv&#39;</span><span class="p">,</span> <span class="n">file_dir</span><span class="o">=</span><span class="s1">&#39;./data/validation/&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+<span class="n">dataloader_train</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset_train</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+<span class="n">dataloader_val</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset_val</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">num_workers</span><span class="p">)</span>
+</code></pre></div><h2 id="4数据增强data-augmentation">4.数据增强——data augmentation</h2>
+<p>使用多种数据增强的方式，可以增加样本的多样性，防止模型过拟合。有专门的做图像预处理的库，比如<a href="https://github.com/aleju/imgaug">imgaug</a>，功能花里胡哨的，但是大部分功能用不到，用<code>Pytorch</code>的<code>torchvision</code>或者<code>opencv</code>就足够了。</p>
+<p><code>torchvision</code>已经包含了大部分常用的图像变换的方法，它提供了对<code>PIL Image</code>对象和<code>Tensor</code>对象的常用操作。
+对<code>PIL Image</code>的操作包括：</p>
+<ul>
+<li><code>Scale</code>：调整图片尺寸，长宽比保持不变</li>
+<li><code>CenterCrop</code>、<code>RandomCrop</code>、<code>RandomResizedCrop</code>： 裁剪图片</li>
+<li><code>Pad</code>：填充</li>
+<li><code>ToTensor</code>：将<code>PIL Image</code>对象转成<code>Tensor</code>，会自动将<code>[0, 255]</code>归一化至<code>[0, 1]</code></li>
+</ul>
+<p>对<code>Tensor</code>的操作包括：</p>
+<ul>
+<li><code>Normalize</code>：标准化，即减均值，除以标准差</li>
+<li><code>ToPILImage</code>：将<code>Tensor</code>转为<code>PIL Image</code>对象
+如果要对图片进行多个操作，可通过<code>Compose</code>函数将这些操作拼接起来，类似于<code>nn.Sequential</code>。</li>
+</ul>
+<p>一开始我们不能确定每一种预处理方法都有效，所以先不要使用太复杂的预处理方法，就先只用一个随机水平翻转。
+<strong>注意</strong>：这里需要计算一下做标准化时候的均值和标准差。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_mean_std</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;Get mean and std by sample ratio
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="o">*</span><span class="n">ratio</span><span class="p">),</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>   <span class="c1"># 一个batch的数据 [64, 3, 224, 224]</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span>
+
+<span class="n">train_mean</span><span class="p">,</span> <span class="n">train_std</span> <span class="o">=</span> <span class="n">get_mean_std</span><span class="p">(</span><span class="n">dataset_train</span><span class="p">)</span>
+<span class="n">test_mean</span><span class="p">,</span> <span class="n">test_std</span> <span class="o">=</span> <span class="n">get_mean_std</span><span class="p">(</span><span class="n">dataset_val</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">train_mean</span><span class="p">,</span> <span class="n">train_std</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test_mean</span><span class="p">,</span><span class="n">test_std</span><span class="p">)</span>
+<span class="c1"># output:</span>
+<span class="c1"># [0.50500906 0.50500906 0.50500906] [0.24950728 0.24950728 0.24950728]</span>
+<span class="c1"># [0.50745845 0.50745845 0.50745845] [0.2495343 0.2495343 0.2495343]</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">transform_train</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">RandomHorizontalFlip</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+	<span class="c1"># 把灰度图像转化为伪RGB图像，复制两个数值相同的通道，这样就可以直接用预训练好的模型了</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Lambda</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="mi">0</span><span class="p">)),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.505</span><span class="p">,</span> <span class="mf">0.505</span><span class="p">,</span> <span class="mf">0.505</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">])</span>
+<span class="p">])</span>
+
+<span class="n">transform_val</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Lambda</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="mi">0</span><span class="p">)),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.505</span><span class="p">,</span> <span class="mf">0.505</span><span class="p">,</span> <span class="mf">0.505</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">])</span>
+<span class="p">])</span>
+
+</code></pre></div><h2 id="5文件管理">5.文件管理</h2>
+<p>作为一个Newbie，我之前一直把所有类、所有函数都放在一个<code>py</code>文件中，这样看上去很方便，但是其实很蠢，因为这样一来不方便查阅，二来不方便修改。所以一个好的文件管理就很重要。
+一个典型的文件组织架构：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">├── checkpoints/
+├── data/
+│   ├── __init__.py
+│   └── dataset.py
+├── models/
+│   ├── __init__.py
+│   └── ResNet50.py
+└── utils/
+│   ├── __init__.py
+│   └── visualize.py
+├── config.py
+├── main.py
+├── requirements.txt
+├── README.md
+</code></pre></div><p>每个文件夹的作用分别是：</p>
+<ul>
+<li><code>checkpoints/</code>： 用于保存训练好的模型，可使程序在异常退出后仍能重新载入模型，恢复训练</li>
+<li><code>data/</code>：数据相关操作，包括数据预处理、dataset实现等</li>
+<li><code>models/</code>：模型定义，可以有多个模型，例如上面的ResNet50，一个模型对应一个文件</li>
+<li><code>utils/</code>：可能用到的工具函数，暂时没有就空着</li>
+<li><code>config.py</code>：配置文件，所有可配置的变量都集中在此，并提供默认值</li>
+<li><code>main.py</code>：主文件，训练和测试程序的入口，可通过不同的命令来指定不同的操作和参数</li>
+<li><code>requirements.txt</code>：程序依赖的第三方库</li>
+<li><code>README.md</code>：提供程序的必要说明</li>
+</ul>
+<p><strong>注意</strong>：一个目录如果包含了<code>__init__.py</code> 文件，那么它就变成了一个包（package）。<code>__init__.py</code>可以为空，也可以定义包的属性和方法，但其必须存在，其它程序才能从这个目录中导入相应的模块或函数。</p>
+<h2 id="6baseline">6.Baseline</h2>
+<p>按照5中描述的文件架构，分别在各自的文件中实现对应的功能即可。
+用到一些小玩意，以后有空在详细写，总之很有用，可以很大程度提高效率和代码复用性：</p>
+<ul>
+<li><code>torchnet.meter</code>：<code>meter</code>提供了一些轻量级的工具，用于帮助用户快速统计训练过程中的一些指标。<code>AverageValueMeter</code>能够计算所有数的平均值和标准差，这里用来统计一个epoch中损失的平均值。<code>confusionmeter</code>用来统计分类问题中的分类情况，是一个比准确率更详细的统计指标。</li>
+<li><code>visdom</code>：实时可视化工具</li>
+<li><code>fire</code>：谷歌开源的一个命令行工具，可以使脚本中的每一个函数支持命令行参数输入。</li>
+</ul>
+<p><code>config.py</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="k">class</span> <span class="nc">DefaultConfig</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">vis_port</span> <span class="o">=</span><span class="mi">8097</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span> <span class="c1"># visdom 环境</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;ResNet50&#39;</span>
+
+    <span class="n">train_data_root</span> <span class="o">=</span> <span class="s1">&#39;./train/&#39;</span>
+    <span class="n">test_data_root</span> <span class="o">=</span> <span class="s1">&#39;./validation/&#39;</span>
+    <span class="n">load_model_path</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># &#39;checkpoints/model.pth&#39;</span>
+
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">num_workers</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">print_freq</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">max_epoch</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">lr</span> <span class="o">=</span> <span class="mf">3e-4</span>
+    <span class="n">use_gpu</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">        根据字典kwargs 更新 config参数
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&#34;Warning: opt has not attribut </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="n">k</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="n">opt</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">use_gpu</span> <span class="k">else</span> <span class="n">t</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;user config:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+<span class="n">opt</span> <span class="o">=</span> <span class="n">DefaultConfig</span><span class="p">()</span>
+</code></pre></div><p><code>main.py</code>：只需要实现两个函数：<code>train()</code>和<code>val()</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">vis</span> <span class="o">=</span> <span class="n">Visualizer</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">env</span><span class="p">,</span><span class="n">port</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">vis_port</span><span class="p">)</span>
+    <span class="c1"># step1: prepare data</span>
+    <span class="c1"># print(&#39;==&gt; Preparing data ...&#39;)</span>
+    <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">XRayDataset</span><span class="p">(</span><span class="n">csv_file</span><span class="o">=</span><span class="s1">&#39;./data/train/train.csv&#39;</span><span class="p">,</span> <span class="n">file_dir</span><span class="o">=</span><span class="s1">&#39;./data/train/&#39;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">val_dataset</span> <span class="o">=</span> <span class="n">XRayDataset</span><span class="p">(</span><span class="n">csv_file</span><span class="o">=</span><span class="s1">&#39;./data/validation/validation.csv&#39;</span><span class="p">,</span> <span class="n">file_dir</span><span class="o">=</span><span class="s1">&#39;./data/validation/&#39;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">train_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">num_workers</span><span class="p">)</span>
+    <span class="n">val_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">val_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">num_workers</span><span class="p">)</span>
+
+    <span class="c1"># step2: build model</span>
+    <span class="c1"># print(&#39;==&gt; Building model ...&#39;)</span>
+    <span class="c1"># model = model.ResNet50()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">)()</span>
+    <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">load_model_path</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">load_model_path</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">use_gpu</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+    <span class="c1"># step3: criterion and optimizer</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+    <span class="n">lr_scheduler</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">criterion</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+
+	<span class="c1"># step4: meters</span>
+    <span class="n">loss_meter</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">AverageValueMeter</span><span class="p">()</span>
+    <span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">ConfusionMeter</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">previous_loss</span> <span class="o">=</span> <span class="mf">1e100</span>
+
+    <span class="c1"># train</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">max_epoch</span><span class="p">):</span>
+        <span class="n">loss_meter</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">confusion_matrix</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">ii</span><span class="p">,(</span><span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">)):</span>
+            <span class="c1"># train model</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">score</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+            <span class="c1"># meters update and visualize</span>
+            <span class="n">loss_meter</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="n">confusion_matrix</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">score</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">target</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">ii</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="n">opt</span><span class="o">.</span><span class="n">print_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">vis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;loss&#39;</span><span class="p">,</span> <span class="n">loss_meter</span><span class="o">.</span><span class="n">value</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">save_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="s1">&#39;./checkpoint&#39;</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.pth&#39;</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">save_path</span><span class="p">)</span>
+
+        <span class="c1"># validate and visualize</span>
+        <span class="n">val_cm</span><span class="p">,</span> <span class="n">val_accuracy</span> <span class="o">=</span> <span class="n">val</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">val_dataloader</span><span class="p">)</span>
+
+        <span class="n">vis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;val_accuracy&#39;</span><span class="p">,</span><span class="n">val_accuracy</span><span class="p">)</span>
+        <span class="n">vis</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&#34;epoch:</span><span class="si">{epoch}</span><span class="s2">,lr:</span><span class="si">{lr}</span><span class="s2">,loss:</span><span class="si">{loss}</span><span class="s2">,train_cm:</span><span class="si">{train_cm}</span><span class="s2">,val_cm:</span><span class="si">{val_cm}</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">epoch</span> <span class="o">=</span> <span class="n">epoch</span><span class="p">,</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_meter</span><span class="o">.</span><span class="n">value</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">val_cm</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val_cm</span><span class="o">.</span><span class="n">value</span><span class="p">()),</span>
+            <span class="n">train_cm</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="o">.</span><span class="n">value</span><span class="p">()),</span>
+            <span class="n">lr</span><span class="o">=</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">get_lr</span><span class="p">()</span>
+        <span class="p">))</span>
+
+        <span class="c1"># update learning rate</span>
+        <span class="n">lr_scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+
+        <span class="n">previous_loss</span> <span class="o">=</span> <span class="n">loss_meter</span><span class="o">.</span><span class="n">value</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">val</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">meter</span><span class="o">.</span><span class="n">ConfusionMeter</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="p">(</span><span class="n">val_input</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+		<span class="n">confusion_matrix</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">score</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">label</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="n">cm_value</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="mf">100.</span> <span class="o">*</span> <span class="p">(</span><span class="n">cm_value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm_value</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm_value</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">cm_value</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">cm_value</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">accuracy</span>
+</code></pre></div><p>使用方法：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 训练模型</span>
+<span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="n">train</span>
+        <span class="o">--</span><span class="n">train</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="n">root</span><span class="o">=</span><span class="n">data</span><span class="o">/</span><span class="n">train</span><span class="o">/</span>
+        <span class="o">--</span><span class="n">load</span><span class="o">-</span><span class="n">model</span><span class="o">-</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;checkpoints/ResNet50_10.pth&#39;</span>
+        <span class="o">--</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.005</span>
+        <span class="o">--</span><span class="n">batch</span><span class="o">-</span><span class="n">size</span><span class="o">=</span><span class="mi">32</span>
+        <span class="o">--</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;ResNet50&#39;</span>
+        <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">epoch</span> <span class="o">=</span> <span class="mi">20</span>
+</code></pre></div><h2 id="7tricks">7.Tricks</h2>
+<h3 id="71选择合适的backbone模型">7.1选择合适的backbone模型</h3>
+<p>[4]中这么写道：</p>
+<blockquote>
+<ol>
+<li>对于baseline，从resnet18/34 or efficientnet-B0起步，把所有work的技巧（loss/augmentation/metric/lr_schedule）调好之后，这时就应该大模型（deeper）；</li>
+</ol>
+</blockquote>
+<ol start="2">
+<li>当更好需要换模型的时候，是不是就需要自己去设计/构造新模型呢？其实在比赛的短期里，重新设计一个新的backbone出来是不提倡的，因为模型不仅要work，还要重新在imagenet上预训练，时间消耗巨大，不合适比赛；</li>
+<li>由于学术界里，sota模型多之又多，那如何选择？从个人经验总结来看，比较推荐se-resnext50/101、SENet154（太大，很少用），带有se block的resnet，都不同类型的任务都有一定的通用性，性价比也较高；efficientnet系列（最近在某些比赛里还优于se-resnext）可以上到B3,B5，有条件的B7都没问题。其他的sota模型，可以尝试Xception，inception-resnetV2等等。</li>
+</ol>
+<p>[3]对应的书中（<a href="https://salttiger.com/programming-pytorch-for-deep-learning/">下载地址</a>）提到：</p>
+<blockquote>
+<p><strong>Which Model Should You Use?</strong>
+The unhelpful answer is, whichever one works best for you, naturally! But let’s dig in a little. First, although I suggest that you try the NASNet and PNAS architectures at the moment, I wouldn’t wholeheartedly recommend them, despite their impressive results on ImageNet. They can be surprisingly memory-hungry in operation, and the transfer learning technique, which you learn about in Chapter 4, is not quite as effective compared to the human-built architectures including ResNet. I suggest that you have a look around the image-based competitions on Kaggle, a website that runs hundreds of data science competitions, and see what the winning entries are using. More than likely you’ll end up seeing a bunch of ResNet-based ensembles. 
+<strong>Personally, I like and use the ResNet architectures over and above any of the others listed here</strong>, first because they offer good accuracy, and second because it’s easy to start out experimenting with a ResNet-34 model for fast iteration and then move to larger ResNets (and more realistically, an ensemble of different ResNet architectures, just as Microsoft used in their ImageNet win in 2015) once I feel I have something promising.</p>
+</blockquote>
+<p>他们共同认为应该从轻量级ResNet入手开始实验，并在后续的实验中移植到更深的网络。所以上一节的<code>Baseline</code>中选择<code>ResNet50</code>作为<code>backbone</code>。优化器选择<code>Adam</code>，学习率为<code>3e-4</code>，在训练了12个<code>epoch</code>后准确率为<code>57.1</code>。
+<img src="https://q5bqk9mse.bkt.clouddn.com/FjoVtM-8ecZ7l6LHiCxtkxLIIRmn" alt=""></p>
+<h3 id="72-调整学习率策略">7.2 调整学习率策略</h3>
+<p>尝试了两种策略：</p>
+<ul>
+<li><code>warmup+stepLR</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">torch.optim.lr_scheduler</span> <span class="kn">import</span> <span class="n">_LRScheduler</span>
+<span class="k">class</span> <span class="nc">GradualWarmupScheduler</span><span class="p">(</span><span class="n">_LRScheduler</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;Args:
+</span><span class="s2">    optimizer (Optimizer): Wrapped optimizer.
+</span><span class="s2">    multiplier: target learning rate = base lr * multiplier
+</span><span class="s2">    total_epoch: target learning rate is reached at total_epoch, gradually
+</span><span class="s2">    after_scheduler: after target_epoch, use this scheduler(eg. ReduceLROnPlateau)
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">multiplier</span><span class="p">,</span> <span class="n">total_epoch</span><span class="p">,</span> <span class="n">after_scheduler</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multiplier</span> <span class="o">=</span> <span class="n">multiplier</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplier</span> <span class="o">&lt;=</span> <span class="mf">1.</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;multiplier should be greater than 1.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_epoch</span> <span class="o">=</span> <span class="n">total_epoch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after_scheduler</span> <span class="o">=</span> <span class="n">after_scheduler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finished</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">get_lr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_epoch</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_epoch</span><span class="p">:</span>            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">after_scheduler</span><span class="p">:</span>                
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">finished</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">after_scheduler</span><span class="o">.</span><span class="n">base_lrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">base_lr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplier</span> <span class="k">for</span> <span class="n">base_lr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lrs</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">finished</span> <span class="o">=</span> <span class="kc">True</span>                
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">after_scheduler</span><span class="o">.</span><span class="n">get_lr</span><span class="p">()</span>            
+            <span class="k">return</span> <span class="p">[</span><span class="n">base_lr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplier</span> <span class="k">for</span> <span class="n">base_lr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lrs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">base_lr</span> <span class="o">*</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">multiplier</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_epoch</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_epoch</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span> <span class="k">for</span> <span class="n">base_lr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lrs</span><span class="p">]</span>    
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">finished</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">after_scheduler</span><span class="p">:</span>            
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">after_scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">GradualWarmupScheduler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">lr_scheduler</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="n">warmup_lr_scheduler</span> <span class="o">=</span> <span class="n">GradualWarmupScheduler</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">multiplier</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">total_epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">after_scheduler</span><span class="o">=</span><span class="n">lr_scheduler</span><span class="p">)</span>
+</code></pre></div><p>准确率最高为<code>58.77</code>。</p>
+<ul>
+<li><code>CosineAnnealingWarmRestarts</code>
+这种<code>CycleLR</code>的好处是可以发现多个局部最优，方便后边做<code>Snapshot Ensembles</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">scheduler</span> <span class="o">=</span> <span class="n">CosineAnnealingWarmRestarts</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">T_0</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">T_mult</span><span class="o">=</span><span class="p">,</span> <span class="n">eta_min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">iters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+	<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+        <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="n">i</span> <span class="o">/</span> <span class="n">iters</span><span class="p">)</span>
+</code></pre></div><p><strong>注意</strong>：</p>
+<ul>
+<li><code>T_0</code>是以几个<code>epoch</code>为周期，而不是像官方文档里写的<code>iteration</code>的个数。
+<code>T_mult</code>是周期递增时候的倍数，默认为<code>1</code>。</li>
+<li>多次<code>restart</code>的目的是跳出局部最优，但是如果<code>T_0</code>太小，<code>loss</code>还没达到局部最优就跳出去了，这样就会造成欠拟合，可以通过观察<code>loss</code>、<code>acurracy</code>和<code>lr</code>的曲线来调整<code>T_0</code>的大小。
+梯度更新的原理：
+$w_{t+1}=w_{t}-\eta \frac{1}{n} \sum_{x \in \mathcal{B}} \nabla l\left(x, w_{t}\right)$
+如果增大了<code>batch_size</code>，学习率也应该随之增大，除此之外，由于大的<code>batch_size</code>会让模型收敛的速度减慢，需要训练更多个<code>epoch</code>。对于<code>restart</code>，我们应该选择更大的<code>T_0</code>，从而使得模型在一个学习率周期内收敛，之后在跳出去。类似的，如果后续选择了更深的模型，收敛速度必然会降低，<code>T_0</code>也应该大一些。</li>
+</ul>
+<p><code>batch_size</code>为16，初始学习率为<code>1e-4</code>，<code>T_0</code>为10，训练9个epoch后，准确率为<code>59.66</code>。
+<!-- raw HTML omitted -->
+<code>batch_size</code>为64，初始学习率为<code>3e-4</code>，<code>T_0</code>为10，训练9个epoch后，准确率为<code>58.11</code>。
+<img src="https://qiniusave.feifeizaici.xyz/FgpNi03TAKQ23qSAC98gjR1mhGQ8" alt="">
+这里明显可以看出模型该没有完全收敛就因为学习率的激增而跳出了局部最优，所以对于较大的<code>batch_size</code>应该适当加大<code>T_0</code>。
+将<code>T_0</code>改为12重新训练，结果如下：
+<img src="https://qiniusave.feifeizaici.xyz/Fn_KmoxiboBM-mzI1qtD2T9XI2jt" alt="">
+准确率为<code>58.35</code>，比之前的略有提升，但还是不如小<code>batch_size</code>训练得到的模型。</p>
+<h2 id="73-数据增强">7.3 数据增强</h2>
+<p>对于医疗图像分类问题，许多肉眼观察良好的预处理的方式，实际上是破坏了原图真实类别关联的特征。不过一些简单的方法还是普遍有效的，比如随机水平翻转（左右双肺患病情况不同）、随机旋转一个小角度（人没站直）。</p>
+<h4 id="resizecrop">resize&amp;crop</h4>
+<p>或者先<code>crop</code>再<code>resize</code>，一般都有用，但是对本实验效果不佳。准确率没上过<code>58</code>。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">transforms</span><span class="o">.</span><span class="n">Resize</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+<span class="n">transforms</span><span class="o">.</span><span class="n">CenterCrop</span><span class="p">(</span><span class="mi">224</span><span class="p">),</span>
+</code></pre></div><h4 id="random-cutouterase">random cutout/erase</h4>
+<p><code>random cutout</code>把图片中随机抽中的矩形区域的像素值置为0，相当于裁剪掉。</p>
+<p><code>random erasing</code>用随机数或者数据集中像素的平均值替换原来的像素值。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Cutout</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>    
+    <span class="s2">&#34;&#34;&#34;Randomly mask out one or more patches from an image.
+</span><span class="s2">        Args:
+</span><span class="s2">            n_holes (int): Number of patches to cut out of each image.
+</span><span class="s2">            length (int): The length (in pixels) of each square patch.    
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_holes</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_holes</span> <span class="o">=</span> <span class="n">n_holes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>    
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>        
+        <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">        Args:
+</span><span class="s2">            img (Tensor): Tensor image of size (C, H, W).
+</span><span class="s2">        Returns:
+</span><span class="s2">            Tensor: Image with n_holes of dimension length x length cut out of it.
+</span><span class="s2">        &#34;&#34;&#34;</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_holes</span><span class="p">):</span>
+			<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>          
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+            <span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> 
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+            <span class="n">mask</span><span class="p">[</span><span class="n">y1</span><span class="p">:</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="n">x2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">img</span> <span class="o">*</span> <span class="n">mask</span>
+        <span class="k">return</span> <span class="n">img</span>
+</code></pre></div><p><strong>注意</strong>：这里实现的操作对象是<code>tensor</code>，所以用再<code>ToTensor()</code>方法之后。
+先只<code>cutout</code>掉一个<code>50×50</code>的，</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">Cutout</span><span class="p">(</span><span class="n">n_holes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+</code></pre></div><p>其实<code>torchvison</code>里有现成的函数：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">RandomErasing</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">),</span> <span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">),</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div><p><code>scale</code>是遮盖面积与原图面积的比例，<code>ratio</code>是矩形的长宽比，<code>value</code>是代替的值，<code>0</code>的话就算<code>cutout</code>，改成随机数或者平均值就是<code>erase</code>。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/FiLWlffctBlsQpAJ5dIu-bjHgrn9" alt="">
+准确率提升到<code>61.81</code>。
+打两个洞的效果一般，准确率最高<code>59.45</code>，可能是因为两个洞遮挡了太多关键信息。</p>
+<h4 id="mixup">mixup</h4>
+<p><code>Mixup training</code>，就是每次取出2张图片，然后将它们线性组合，得到新的图片，以此来作为新的训练样本，进行网络的训练，如下公式:
+$ \hat{x}=\lambda x_i+(1-\lambda)x_j$
+$ \hat{y}=\lambda y_i+(1-\lambda)y_j$</p>
+<p>其中</p>
+<ul>
+<li><code>λ</code>是从<code>Beta(α, α)</code>随机采样的数，在<code>[0,1]</code>之间</li>
+<li><code>x</code>代表图像数据，<code>y</code>代表标签，则得到的新的<code>xhat, yhat</code></li>
+<li>在训练过程中，仅使用<code>(xhat, yhat)</code></li>
+</ul>
+<p><code>Mixup</code>方法主要增强了训练样本之间的线性表达，增强网络的泛化能力，不过<code>mixup</code>方法需要较长的时间才能收敛得比较好。
+由于不知道<code>beta</code>函数得超参数应该怎么选择，本次实验中没有使用这个方法。</p>
+<h4 id="focal-loss">Focal loss</h4>
+<p><code>Focal loss</code>对于一些类别不均衡的实验很有效，因为它对较难分类的class的惩罚比较大。</p>
+<p><!-- raw HTML omitted --></p>
+<p>本实验将<code>CrossEntropyLoss</code>改为<code>FocalLoss(gamma=2)</code>后准确率降为<code>60.34</code>。</p>
+<p>Github上有<a href="https://github.com/clcarwin/focal_loss_pytorch/blob/master/focalloss.py">实现代码:</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
+
+<span class="k">class</span> <span class="nc">FocalLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">size_average</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FocalLoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">gamma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alpha</span><span class="p">,(</span><span class="nb">float</span><span class="p">,</span><span class="nb">int</span><span class="p">)):</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="n">alpha</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size_average</span> <span class="o">=</span> <span class="n">size_average</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># N,C,H,W =&gt; N,C,H*W</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>    <span class="c1"># N,C,H*W =&gt; N,H*W,C</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>   <span class="c1"># N,H*W,C =&gt; N*H*W,C</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">logpt</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">logpt</span> <span class="o">=</span> <span class="n">logpt</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">logpt</span> <span class="o">=</span> <span class="n">logpt</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">logpt</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">exp</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">type</span><span class="p">()</span><span class="o">!=</span><span class="nb">input</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">target</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">logpt</span> <span class="o">=</span> <span class="n">logpt</span> <span class="o">*</span> <span class="n">Variable</span><span class="p">(</span><span class="n">at</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">pt</span><span class="p">)</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">logpt</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_average</span><span class="p">:</span> <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</code></pre></div><h4 id="model-tweaks">Model Tweaks</h4>
+<p>其实就是对现成的模型做一些魔改，[1]中给出了ResNet的三种魔改版本，都比原始版本的ResNet有些许提升。
+<img src="https://qiniusave.feifeizaici.xyz/FgpU02omdPEvBKGzkFhA5GROpuDH" alt=""></p>
+<p>[4]给出了dual pooling、BNNeck的代码，都是在特征层和全连接层之间加一些花里胡哨的东西，很多东西一定程度上也是在碰运气，当然这也是建立在对经典模型的结构十分熟悉的基础上，这也是我现在欠缺的基础。</p>
+<h4 id="transfer-leaning">Transfer Leaning</h4>
+<p>其实前面一直都是在用<code>ImageNet</code>上预训练过的模型的基础上<code>fine tune</code>。大部分模型<code>torchvision</code>中都有，有些较为冷门的可以用<a href="https://github.com/Cadene/pretrained-models.pytorch"><code>pretrainedmodels</code></a>。</p>
+<p><code>fine tune</code>时也有很多调参的技巧，比如：</p>
+<ul>
+<li><code>freeze</code>某些层</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">unfreeze_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layer3</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">layer4</span><span class="p">]</span> 
+<span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">unfreeze_layers</span><span class="p">:</span> 
+	<span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span> 
+		<span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div><ul>
+<li>差分学习率，<code>Differential Learning Rates</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span> 
+	<span class="p">{</span><span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">layer4</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="s1">&#39;lr&#39;</span><span class="p">:</span> <span class="n">found_lr</span> <span class="o">/</span><span class="mi">3</span><span class="p">},</span>
+	<span class="p">{</span><span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">layer3</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="s1">&#39;lr&#39;</span><span class="p">:</span> <span class="n">found_lr</span> <span class="o">/</span><span class="mi">9</span><span class="p">},</span> <span class="p">],</span>
+	<span class="n">lr</span><span class="o">=</span><span class="n">found_lr</span><span class="p">)</span>
+</code></pre></div><h2 id="8inference">8.Inference</h2>
+<h3 id="81-单模型">8.1 单模型</h3>
+<p>我比较喜欢用<code>Jupyter Notebook</code>做最后的预测工作，因为可以比较直观的观察图表等信息。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">ResNet50</span><span class="p">,</span> <span class="n">Se_ResNet50</span><span class="p">,</span> <span class="n">ResNet152</span><span class="p">,</span> <span class="n">Se_ResNext50</span><span class="p">,</span> <span class="n">Modified_ResNet50</span><span class="p">,</span> <span class="n">SENet</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/test/upload.csv&#39;</span><span class="p">)</span>
+<span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;image_path&#39;</span><span class="p">])</span>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.505</span><span class="p">,</span> <span class="mf">0.505</span><span class="p">,</span> <span class="mf">0.505</span><span class="p">],</span> <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">])</span>
+<span class="p">])</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Se_ResNet50</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./checkpoints/se_resnet50/Se_ResNet50_9_61.52.pth&#39;</span><span class="p">))</span>
+<span class="c1"># model.load_state_dict(torch.load(&#39;./checkpoints/se_resnext50/Se_ResNext50_7_61.96.pth&#39;))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;./data/test&#39;</span><span class="p">,</span> <span class="n">fn</span><span class="p">))</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="p">())</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">image_path</span> <span class="o">==</span> <span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pred</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;upload.csv&#39;</span><span class="p">)</span>
+</code></pre></div><h3 id="82-ensemble">8.2 Ensemble</h3>
+<p>方法有很多，<code>Stacking</code>、<code>Bagging</code>等等，没有一一去实现。</p>
+<h2 id="9参考文献">9.参考文献</h2>
+<h3 id="paper">Paper</h3>
+<ul>
+<li><a href="https://arxiv.org/pdf/1812.01187.pdf">[1]Bag of Tricks for Image Classification with Convolutional Neural Networks
+</a></li>
+</ul>
+<h3 id="github-仓库">Github 仓库：</h3>
+<ul>
+<li><a href="https://github.com/chenyuntc/pytorch-book">[2]深度学习框架PyTorch：入门与实践</a></li>
+<li><a href="https://github.com/falloutdurham/beginners-pytorch-deep-learning">[3]beginners-pytorch-deep-learning
+</a></li>
+<li><a href="https://github.com/utkuozbulak/pytorch-custom-dataset-examples">[4]PyTorch Custom Dataset Examples
+</a></li>
+</ul>
+<h3 id="博客专栏">博客、专栏</h3>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/29024978">[5]PyTorch实战指南</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/93806755">[6]本科生晋升GM记录 &amp; kaggle比赛进阶技巧分享</a></li>
+<li><a href="https://blog.csdn.net/CVSvsvsvsvs/article/details/94149896">[7]pytorch学习 | 如何统计数据集的均值和标准差？</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI4MjA0NDgxNA==&amp;mid=2650722499&amp;idx=1&amp;sn=b489bb77ba12be14df197fdc77893b22&amp;chksm=f3958022c4e20934aee7516645a415a379275423b1805da63e7419766ad38460e1f8cd18fc6d&amp;mpshare=1&amp;scene=23&amp;srcid=0303HrF8UEJNThmdJNHWNSqd#rd">[8]图像分类任务中的tricks总结
+</a></li>
+</ul>
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

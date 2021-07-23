@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  DLG/iDLG Deep Leakage from Gradients and its Improvment - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/dlg-idlg/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/dlg-idlg/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/dlg-idlg/">
+    <title>
+  DLG/iDLG Deep Leakage from Gradients and its Improvment - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/dlg-idlg/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+<script type="text/javascript"
+        async
+        src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$'], ['\[\[','\]\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+});
+
+MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<style>
+code.has-jax {
+    font: inherit;
+    font-size: 100%;
+    background: inherit;
+    border: inherit;
+    color: #515151;
+}
+</style>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">DLG/iDLG Deep Leakage from Gradients and its Improvment</h1>
+      <h2 class="date">July 15, 2020</h2>
+
+      
+    </header>
+
+    <h2 id="motivation">Motivation</h2>
+<p>分布式机器学习可以让多个设备在本地用本地数据集进行训练，这样就可以一定程度上保证本地数据的安全性，但是传输梯度真的安全吗？文【1】认为，已知模型及其参数，如果能够得到loss函数在一对input/label上的梯度，那么就可以反过来得到这组训练数据。</p>
+<!-- raw HTML omitted -->
+<h2 id="method">Method</h2>
+<h3 id="assumptions">Assumptions</h3>
+<p>假设训练流程是这样的：</p>
+<ul>
+<li>在第$t$轮，每个节点$i$从它的数据集中选取一批$(\mathbf{x_{t, i}, y_{t, i}})$，然后计算梯度</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">\nabla W_{t, i}=\frac{\partial \ell\left(F\left(\mathbf{x}_{t, i}, W_{t}\right), \mathbf{y}_{t, i}\right)}{\partial W_{t}}
+</code></pre></div><ul>
+<li>将$N$个客户端的梯度取平均，用平均梯度来跟新模型参数</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">\nabla W_{t}=\frac{1}{N} \sum_{j}^{N} \nabla W_{t, j} ; \quad W_{t+1}=W_{t}-\eta \nabla W_{t}
+</code></pre></div><p>现在已知模型$F()$，公共参数$W_t$，和通过某种途径获得的客户端$k$的梯度$\nabla W_{t,k}$，文章提出的<code>DLG</code>算法可以恢复出$k$的本地数据。</p>
+<h3 id="dlg算法">DLG算法</h3>
+<ul>
+<li>
+<p>首先随机初始化一个<code>dummy input</code> $\mathbf{x}^\prime$ 和一个<code>lable</code> $\mathbf{y}^\prime$</p>
+</li>
+<li>
+<p>然后根据这个<code>dummy input</code>计算出<code>dummy gradient</code>：</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">  \nabla W&#39;=\frac{\partial \ell(F(\mathbf{x}^\prime ,W),\mathbf{y}^\prime)}{\partial W}
+</code></pre></div><ul>
+<li>最小化$\nabla W^\prime$和$\nabla W$的距离，并得到这个时候的$\mathbf{x}^\prime$和$\mathbf{y}^\prime$</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">  \mathbf{x}^{\prime *}, \mathbf{y}^{\prime *}=\underset{\mathbf{x}^{\prime}, \mathbf{y}^{\prime}}{\arg \min }\left\|\nabla W^{\prime}-\nabla W\right\|^{2}=\underset{\mathbf{x}^{\prime}, \mathbf{y}^{\prime}}{\arg \min }\left\|\frac{\partial \ell\left(F\left(\mathbf{x}^{\prime}, W\right), \mathbf{y}^{\prime}\right)}{\partial W}-\nabla W\right\|^{2}
+</code></pre></div><p>这里$||\nabla W^{\prime}-\nabla W||^{2}$需要定义成一个可导的函数，然后通过梯度下降的方法进行优化。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20200712165258755.png" alt="image-20200712165258755"></p>
+<p>DLG算法的核心思想是：<strong>随着<code>dummy gradient</code>和真实的<code>gradient</code>越来越接近，<code>dummy input</code>和原始样本也会越来越接近。</strong></p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20200712165319958.png" alt="image-20200712165319958"></p>
+<p><code>DLG</code>算法在<code>MNIST</code>、<code>CIFAR-100</code>、<code>LFW</code>三个数据集上的效果如下，可以看出，在小分辨率的图像中，<code>DLG</code>算法的效果很好。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20200712165704200.png" alt="image-20200712165704200"></p>
+<p><a href="https://github.com/mit-han-lab/dlg">GitHub</a>上这个GIF更加形象：</p>
+<!-- raw HTML omitted -->
+<h3 id="推广到batched-data">推广到Batched Data</h3>
+<p>当$N=1$的时候，<code>DLG</code>算法效果很好，但是当$N &gt; 1$的时候算法会收敛得特别慢。作者认为这是因为一组batchsize为$N$的样本有$N!$种排列，这使得优化器很难找到梯度下降的方向。于是作者将原算法中的</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">\begin{aligned}
+&amp;\mathbf{x}_{i+1}^{\prime} \leftarrow \mathbf{x}_{i}^{\prime}-\eta \nabla_{\mathbf{x}_{i}^{\prime}} \mathbb{D}_{i}\\
+&amp;\mathbf{y}_{i+1}^{\prime} \leftarrow \mathbf{y}_{i}^{\prime}-\eta \nabla_{\mathbf{y}^\prime}\mathbb{D}_{i}
+\end{aligned}
+</code></pre></div><p>改为：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">\begin{aligned}
+&amp;\mathbf{x}_{t+1}^{\prime i \bmod N} \leftarrow \mathbf{x}_{t}^{\prime i \bmod N}-\nabla_{{\mathbf{x}^{\prime}} _{i+1}^{\bmod N}}  \mathbb{D}\\
+&amp;\mathbf{y}_{t+1}^{\prime i \bmod N} \leftarrow \mathbf{y}_{t}^{\prime i \bmod N}-\nabla_{{\mathbf{y}^{\prime}} _{i+1}^{\bmod N}}  \mathbb{D}
+\end{aligned}
+</code></pre></div><p>这里的意思是对单个的训练样本进行更新，而不是对整个batch一起更新。（这不是显然的吗😂，一起更新谁知道梯度上哪个方向）</p>
+<p>可以看出，在$N=8$的一组数据上进行梯度恢复，依然效果拔群。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20200712172208356.png" alt="image-20200712172208356"></p>
+<p><strong>DLG算法最厉害的地方在于它对模型的收敛状态没有要求。也就是说，攻击可以在训练的任何时候发生。</strong></p>
+<h2 id="如何防御dlg攻击">如何防御DLG攻击</h2>
+<p>文章提出了一些防御<code>DLG</code>攻击的防御策略，大多都是平凡的：</p>
+<ul>
+<li>
+<p>对梯度加噪声：当噪声的幅度比较大时有效，但是会降低模型的性能</p>
+</li>
+<li>
+<p>降低计算精度：将32位tensor的精度降低到16位，然而并不能防御DLG攻击</p>
+</li>
+<li>
+<p>梯度压缩：将梯度中幅度较小的分量化为0，同样也是阈值较大时才会有效</p>
+</li>
+<li>
+<p>增大DLG优化计算时的难度</p>
+<ul>
+<li>增大batchsize</li>
+<li>提高图像分辨率</li>
+</ul>
+</li>
+<li>
+<p>其他加密策略，比如安全聚合协议</p>
+</li>
+</ul>
+<h2 id="pytorch实现">PyTorch实现</h2>
+<p>只需要20行代码</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">deep_leakage_from_gradients</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">origin_grad</span><span class="p">):</span> 
+	<span class="n">dummy_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">origin_data</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+  	<span class="n">dummy_label</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">dummy_label</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+  	<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">LBFGS</span><span class="p">([</span><span class="n">dummy_data</span><span class="p">,</span> <span class="n">dummy_label</span><span class="p">]</span> <span class="p">)</span>
+
+  	<span class="k">for</span> <span class="n">iters</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">300</span><span class="p">):</span>
+    	<span class="k">def</span> <span class="nf">closure</span><span class="p">():</span>
+      		<span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+      		<span class="n">dummy_pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">dummy_data</span><span class="p">)</span> 
+      		<span class="n">dummy_loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">dummy_pred</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">dummy_label</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span> 
+      		<span class="n">dummy_grad</span> <span class="o">=</span> <span class="n">grad</span><span class="p">(</span><span class="n">dummy_loss</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+      		<span class="n">grad_diff</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(((</span><span class="n">dummy_grad</span> <span class="o">-</span> <span class="n">origin_grad</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="k">for</span> <span class="n">dummy_g</span><span class="p">,</span> <span class="n">origin_g</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dummy_grad</span><span class="p">,</span> <span class="n">origin_grad</span><span class="p">))</span>
+      
+      		<span class="n">grad_diff</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+      		<span class="k">return</span> <span class="n">grad_diff</span>
+    
+    	<span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">closure</span><span class="p">)</span>
+    
+  	<span class="k">return</span>  <span class="n">dummy_data</span><span class="p">,</span> <span class="n">dummy_label</span>
+</code></pre></div><h2 id="对dlg算法的改进">对DLG算法的改进</h2>
+<p>论文【2】指出了DLG算法的不足之处：无法可靠地提取出真实的label</p>
+<p>在用神经网络做分类的时候，loss函数常选用交叉熵损失：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">\ell(\mathbf{x},c)=-\operatorname{log}\frac{e^{y_c}}{\sum_je^{y_j}}
+</code></pre></div><p>这里$\mathbf{x}$是输入的向量，$c$是真实的label，$y$是最后一个全连接层的输出（一般也叫做logits）</p>
+<p>然后计算梯度：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">\begin{aligned}
+g_{i}=\frac{\partial \ell(\mathbf{x}, c)}{\partial y_{i}} &amp;=-\frac{\partial \log e^{y_{c}}-\partial \log \Sigma_{j} e^{y_{j}}}{\partial y_{i}} \\
+&amp;=\left\{\begin{array}{c}
+-1+\frac{e^{y_{i}}}{\Sigma_{j} e^{y_{j}}}\in(-1,0), \quad \text { if } i=c \\
+\frac{e^{y_{i}}}{\Sigma_{j} e^{y_{j}}} \in(0,1), \quad \text { else }
+\end{array}\right.
+\end{aligned}
+</code></pre></div><p>但是，根据之前的假设，我们拥有的梯度是经过BP得到的$\nabla \mathbf{W}$。</p>
+<p>设网络共有$L$层，则最后一层参数的梯度可以写作：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">\begin{aligned}
+\nabla \mathbf{W}_{L}^{i}=\frac{\partial \ell(\mathbf{x}, c)}{\partial \mathbf{W}_{L}^{i}} &amp;=\frac{\partial \ell(\mathbf{x}, c)}{\partial y_{i}} \cdot \frac{\partial y_{i}}{\partial \mathbf{W}_{L}^{i}} \\
+&amp;=g_{i} \cdot \frac{\partial\left(\mathbf{W}_{L}^{i} \mathbf{a}_{L-1}+b_{L}^{i}\right)}{\partial \mathbf{W}_{L}^{i}} \\
+&amp;=g_{i} \cdot \mathbf{a}_{L-1}
+\end{aligned}
+</code></pre></div><p>这里$\mathbf{a}_{L-1}$是第$L-1$层经过激活函数后的向量，它的值和<code>logits</code>的分量是独立的。</p>
+<p>因此，可以通过寻找$\nabla \mathbf{W}_{L}$中符号“与众不同”的分量来确定真实的lable，写成公式的话如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback">\begin{aligned}
+&amp;c=i\\
+&amp;\text { s.t. } \quad \nabla \mathbf{W}_{L}^{i T} \cdot \nabla \mathbf{W}_{L}^{j} \leq 0, \quad \forall j \neq i
+\end{aligned}
+</code></pre></div><p>如果激活函数是非负函数，例如<code>ReLU</code>和<code>Sigmoid</code>，那么$\nabla \mathbf{W}_{L}^i$ 和$g_i$符号相同。</p>
+<p><strong>先确定<code>label</code>，再通过【1】中的算法来优化<code>dummy gradient</code>和<code>ground-truth gradient</code>的距离，这时的变量就只有<code>dummy input</code>这一个了。</strong></p>
+<p>整个算法流程如下：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20200712221407377.png" alt="image-20200712221407377"></p>
+<p><code>iDLG</code>和<code>DLG</code>的收敛速度对比如下，可以看出<code>iDLG</code>的收敛速度要快很多。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20200712221545889.png" alt="image-20200712221545889"></p>
+<p>论文【3】认为【1】的loss函数（欧式距离）和优化算法（<code> L-BFGS</code>）都不是最优的，之后用PSNR作为评价指标比较了它们方法的优越性。</p>
+<h2 id="参考文献">参考文献</h2>
+<p>【1】<a href="https://arxiv.org/pdf/1906.08935.pdf">Deep Leakage from Gradients</a></p>
+<p>【2】<a href="https://arxiv.org/pdf/2001.02610.pdf">iDLG: Improved Deep Leakage from Gradients</a></p>
+<p>【3】<a href="https://arxiv.org/pdf/2003.14053.pdf">Inverting Gradients - How easy is it to break privacy in federated learning?</a></p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>
