@@ -8,22 +8,16 @@
     <language>en</language>
     <lastBuildDate>Sat, 24 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>测试 MathJax 的渲染效果</title>
+      <title>利用 MathJax 让基于 Hugo 搭建的博客支持公式显示</title>
       <link>/posts/math/</link>
       <pubDate>Sat, 24 Jul 2021 13:18:55 +0800</pubDate>
       
       <guid>/posts/math/</guid>
-      <description>Hugo 本身是不支持 Latex 的渲染的，所以我早期的一些包含较多公式的文章无法显示。
+      <description>Hugo 本身是不支持 markdown 中 Latex 公式的渲染的，所以我早期的一些包含较多公式的文章无法显示。
 根据网上几个教程，用 MathJax 实现了这个功能。
 之前含有公式的文章都是在 Wordpress 上用 Katex 写的，迁移过来还需要一些额外的工作，之后有空再完成好了。
-注意 公式中表示换行的 \\ 都会被解析成 \，所以需要用 \\\\ 代替，暂时还没有找到代替方案。
-测试 $$ f(𝑥)=\sin(𝑥) $$
-$$ \dfrac{2}{4} = 0.5 \qquad \dfrac{2}{c + \dfrac{2}{d + \dfrac{2}{4}}} = a $$
-$$ \cfrac{2}{c + \cfrac{2}{d + \cfrac{2}{4}}} = a $$
-$$ \sqrt[3]{\frac{x^3+y^3}{2}} $$
-$$ dy/dx, \mathrm{d}y/\mathrm{d}x, \frac{dy}{dx}, \frac{\mathrm{d}y}{\mathrm{d}x}, \frac{\partial^2}{\partial x_1\partial x_2}y $$
-$$ \int_{-N}^{N} e^x dx $$
-$$ \oint_{(x,y)\in C} x^3, dx + 4y^2, dy $$</description>
+方法 在 themes/coder-portfolio/layouts/partials 路径下新建一个 mathjax.html 文件，内容如下：
+&amp;lt;script&amp;gt; MathJax = { tex: { inlineMath: [[&amp;#39;$&amp;#39;, &amp;#39;$&amp;#39;], [&amp;#39;\\(&amp;#39;, &amp;#39;\\)&amp;#39;]], displayMath: [[&amp;#39;$$&amp;#39;,&amp;#39;$$&amp;#39;], [&amp;#39;\\[&amp;#39;, &amp;#39;\\]&amp;#39;]], processEscapes: true, processEnvironments: true }, options: { skipHtmlTags: [&amp;#39;script&amp;#39;, &amp;#39;noscript&amp;#39;, &amp;#39;style&amp;#39;, &amp;#39;textarea&amp;#39;, &amp;#39;pre&amp;#39;] } }; window.addEventListener(&amp;#39;load&amp;#39;, (event) =&amp;gt; { document.querySelectorAll(&amp;#34;mjx-container&amp;#34;).forEach(function(x){ x.parentElement.classList += &amp;#39;has-jax&amp;#39;}) }); &amp;lt;/script&amp;gt; &amp;lt;script src=&amp;#34;https://polyfill.io/v3/polyfill.min.js?features=es6&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script type=&amp;#34;text/javascript&amp;#34; id=&amp;#34;MathJax-script&amp;#34; async src=&amp;#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; 然后在 themes/coder-portfolio/layouts/partials/headers.html 文件的最后加入这句代码：</description>
     </item>
     
     <item>
