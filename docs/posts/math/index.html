@@ -120,7 +120,7 @@ code.has-jax {
   <article>
     <header>
       <h1 class="title">测试 MathJax 的渲染效果</h1>
-      <h2 class="date">July 23, 2021</h2>
+      <h2 class="date">July 24, 2021</h2>
 
       
     </header>
@@ -128,19 +128,12 @@ code.has-jax {
     <p><code>Hugo</code> 本身是不支持 <code>Latex</code> 的渲染的，所以我早期的一些包含较多公式的文章无法显示。</p>
 <p>根据网上几个教程，用 <code>MathJax</code> 实现了这个功能。</p>
 <p>之前含有公式的文章都是在 <code>Wordpress</code> 上用 <code>Katex</code> 写的，迁移过来还需要一些额外的工作，之后有空再完成好了。</p>
-<p>主要参考了：</p>
-<ul>
-<li>
-<p><a href="https://note.qidong.name/2018/03/hugo-mathjax/">在Hugo中使用MathJax</a></p>
-</li>
-<li>
-<p><a href="https://geoffruddock.com/math-typesetting-in-hugo/">Render LaTeX math expressions in Hugo with MathJax 3</a></p>
-</li>
-<li>
-<p><a href="https://uinika.gitee.io/Zen/LaTex/">通用 LaTeX 数学公式语法手册</a></p>
-</li>
-</ul>
-<p>测试：</p>
+<h3 id="注意">注意</h3>
+<p>公式中表示换行的 <code>\\</code> 都会被解析成 <code>\</code>，所以需要用 <code>\\\\</code> 代替，暂时还没有找到代替方案。</p>
+<h3 id="测试">测试</h3>
+<p>$$
+f(𝑥)=\sin(𝑥)
+$$</p>
 <p>$$
 \dfrac{2}{4} = 0.5 \qquad \dfrac{2}{c + \dfrac{2}{d + \dfrac{2}{4}}} = a
 $$</p>
@@ -154,7 +147,7 @@ $$</p>
 dy/dx, \mathrm{d}y/\mathrm{d}x, \frac{dy}{dx}, \frac{\mathrm{d}y}{\mathrm{d}x}, \frac{\partial^2}{\partial x_1\partial x_2}y
 $$</p>
 <p>$$
-\textstyle \int_{-N}^{N} e^x dx
+\int_{-N}^{N} e^x dx
 $$</p>
 <p>$$
 \oint_{(x,y)\in C} x^3, dx + 4y^2, dy
@@ -172,34 +165,34 @@ $$</p>
 $$</p>
 <p>$$
 \begin{vmatrix}
-x &amp; y \<br>
+x &amp; y \\<br>
 z &amp; v
 \end{vmatrix}
 $$</p>
 <p>$$
 \begin{bmatrix}
-0 &amp; \cdots &amp; 0 \<br>
-\vdots &amp; \ddots &amp; \vdots \<br>
+0 &amp; \cdots &amp; 0 \\<br>
+\vdots &amp; \ddots &amp; \vdots \\<br>
 0 &amp; \cdots &amp; 0
 \end{bmatrix}
 $$</p>
 <p>$$
 \begin{cases}
-3x + 5y + z \<br>
-7x - 2y + 4z \<br>
+3x + 5y + z \\<br>
+7x - 2y + 4z \\<br>
 -6x + 3y + 2z
 \end{cases}
 $$</p>
-<p>$$</p>
-<p>f(n) =
+<p>$$
+f(n) =
 \begin{cases}
-n/2, &amp; \text{if }n\text{ is even} \<br>
+n/2, &amp; \text{if }n\text{ is even} \\<br>
 3n+1, &amp; \text{if }n\text{ is odd}
 \end{cases}
 $$</p>
 <p>$$
 \begin{align}
-f(x) &amp; = (a+b)^2\<br>
+f(x) &amp; = (a+b)^2\\<br>
 &amp; = a^2+2ab+b^2
 \end{align}
 $$</p>
@@ -210,8 +203,23 @@ $$</p>
 {\color{Blue}x^2}+{\color{Orange}2x}-{\color{LimeGreen}1}
 $$</p>
 <p>$$
-{\Huge abc 巨无霸 Huge}
+f(z)\cdot\text{Ind}_\Gamma(z) = \frac{1}{2\pi i} \int _{\Gamma} \frac{f(w)}{w - z},\mathrm{d}w
 $$</p>
+<p>$$
+f(z) = \frac{1}{2\pi i} \oint_\gamma \frac{f(\xi)}{\xi - z} d\xi.
+$$</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li>
+<p><a href="https://note.qidong.name/2018/03/hugo-mathjax/">在Hugo中使用MathJax</a></p>
+</li>
+<li>
+<p><a href="https://geoffruddock.com/math-typesetting-in-hugo/">Render LaTeX math expressions in Hugo with MathJax 3</a></p>
+</li>
+<li>
+<p><a href="https://uinika.gitee.io/Zen/LaTex/">通用 LaTeX 数学公式语法手册</a></p>
+</li>
+</ul>
 
   </article>
 

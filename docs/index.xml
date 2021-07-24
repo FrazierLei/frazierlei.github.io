@@ -6,26 +6,24 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 23 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 24 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>测试 MathJax 的渲染效果</title>
       <link>/posts/math/</link>
-      <pubDate>Fri, 23 Jul 2021 13:18:55 +0800</pubDate>
+      <pubDate>Sat, 24 Jul 2021 13:18:55 +0800</pubDate>
       
       <guid>/posts/math/</guid>
       <description>Hugo 本身是不支持 Latex 的渲染的，所以我早期的一些包含较多公式的文章无法显示。
 根据网上几个教程，用 MathJax 实现了这个功能。
 之前含有公式的文章都是在 Wordpress 上用 Katex 写的，迁移过来还需要一些额外的工作，之后有空再完成好了。
-主要参考了：
-  在Hugo中使用MathJax
-  Render LaTeX math expressions in Hugo with MathJax 3
-  通用 LaTeX 数学公式语法手册
-  测试：
+注意 公式中表示换行的 \\ 都会被解析成 \，所以需要用 \\\\ 代替，暂时还没有找到代替方案。
+测试 $$ f(𝑥)=\sin(𝑥) $$
 $$ \dfrac{2}{4} = 0.5 \qquad \dfrac{2}{c + \dfrac{2}{d + \dfrac{2}{4}}} = a $$
 $$ \cfrac{2}{c + \cfrac{2}{d + \cfrac{2}{4}}} = a $$
 $$ \sqrt[3]{\frac{x^3+y^3}{2}} $$
 $$ dy/dx, \mathrm{d}y/\mathrm{d}x, \frac{dy}{dx}, \frac{\mathrm{d}y}{\mathrm{d}x}, \frac{\partial^2}{\partial x_1\partial x_2}y $$
-$$ \textstyle \int_{-N}^{N} e^x dx $$</description>
+$$ \int_{-N}^{N} e^x dx $$
+$$ \oint_{(x,y)\in C} x^3, dx + 4y^2, dy $$</description>
     </item>
     
     <item>
