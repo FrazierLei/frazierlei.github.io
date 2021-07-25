@@ -6,7 +6,17 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 24 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 25 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PAT A-1055  The World&#39;s Richest</title>
+      <link>/posts/pata-1055/</link>
+      <pubDate>Sun, 25 Jul 2021 13:18:55 +0800</pubDate>
+      
+      <guid>/posts/pata-1055/</guid>
+      <description>题目链接
+#include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; struct Person{ string name; gg age, money; Person(string n, gg a, gg m):name(n), age(a), money(m){} }; int main(){ ios::sync_with_stdio(false); cin.tie(0); gg n, k, m, amin, amax, age, money; string name; bool flag; cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; k; vector&amp;lt;Person&amp;gt; p; for(gg i = 0; i &amp;lt; n; ++i){ cin &amp;gt;&amp;gt; name &amp;gt;&amp;gt; age &amp;gt;&amp;gt; money; p.push_back(Person(name, age, money)); } sort(p.begin(), p.end(), [](const Person &amp;amp;p1, const Person &amp;amp;p2){ return tie(p2.</description>
+    </item>
+    
     <item>
       <title>利用 MathJax 让基于 Hugo 搭建的博客支持公式显示</title>
       <link>/posts/math/</link>
@@ -16,8 +26,8 @@
       <description>Hugo 本身是不支持 markdown 中 Latex 公式的渲染的，所以我早期的一些包含较多公式的文章无法显示。
 根据网上几个教程，用 MathJax 实现了这个功能。
 之前含有公式的文章都是在 Wordpress 上用 Katex 写的，迁移过来还需要一些额外的工作，之后有空再完成好了。
-方法 在 themes/coder-portfolio/layouts/partials 路径下新建一个 mathjax.html 文件，内容如下：
-&amp;lt;script&amp;gt; MathJax = { tex: { inlineMath: [[&amp;#39;$&amp;#39;, &amp;#39;$&amp;#39;], [&amp;#39;\\(&amp;#39;, &amp;#39;\\)&amp;#39;]], displayMath: [[&amp;#39;$$&amp;#39;,&amp;#39;$$&amp;#39;], [&amp;#39;\\[&amp;#39;, &amp;#39;\\]&amp;#39;]], processEscapes: true, processEnvironments: true }, options: { skipHtmlTags: [&amp;#39;script&amp;#39;, &amp;#39;noscript&amp;#39;, &amp;#39;style&amp;#39;, &amp;#39;textarea&amp;#39;, &amp;#39;pre&amp;#39;] } }; window.addEventListener(&amp;#39;load&amp;#39;, (event) =&amp;gt; { document.querySelectorAll(&amp;#34;mjx-container&amp;#34;).forEach(function(x){ x.parentElement.classList += &amp;#39;has-jax&amp;#39;}) }); &amp;lt;/script&amp;gt; &amp;lt;script src=&amp;#34;https://polyfill.io/v3/polyfill.min.js?features=es6&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script type=&amp;#34;text/javascript&amp;#34; id=&amp;#34;MathJax-script&amp;#34; async src=&amp;#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; 然后在 themes/coder-portfolio/layouts/partials/headers.html 文件的最后加入这句代码：</description>
+方法 在 themes/theme-name/layouts/partials 路径下新建一个 mathjax.html 文件，内容如下：
+&amp;lt;script&amp;gt; MathJax = { tex: { inlineMath: [[&amp;#39;$&amp;#39;, &amp;#39;$&amp;#39;], [&amp;#39;\\(&amp;#39;, &amp;#39;\\)&amp;#39;]], displayMath: [[&amp;#39;$$&amp;#39;,&amp;#39;$$&amp;#39;], [&amp;#39;\\[&amp;#39;, &amp;#39;\\]&amp;#39;]], processEscapes: true, processEnvironments: true }, options: { skipHtmlTags: [&amp;#39;script&amp;#39;, &amp;#39;noscript&amp;#39;, &amp;#39;style&amp;#39;, &amp;#39;textarea&amp;#39;, &amp;#39;pre&amp;#39;] } }; window.addEventListener(&amp;#39;load&amp;#39;, (event) =&amp;gt; { document.querySelectorAll(&amp;#34;mjx-container&amp;#34;).forEach(function(x){ x.parentElement.classList += &amp;#39;has-jax&amp;#39;}) }); &amp;lt;/script&amp;gt; &amp;lt;script src=&amp;#34;https://polyfill.io/v3/polyfill.min.js?features=es6&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script type=&amp;#34;text/javascript&amp;#34; id=&amp;#34;MathJax-script&amp;#34; async src=&amp;#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; 然后在 themes/theme-name/layouts/partials/headers.html 文件的最后加入这句代码：</description>
     </item>
     
     <item>

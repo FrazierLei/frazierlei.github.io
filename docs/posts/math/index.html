@@ -115,7 +115,7 @@
 <p>根据网上几个教程，用 <code>MathJax</code> 实现了这个功能。</p>
 <p>之前含有公式的文章都是在 <code>Wordpress</code> 上用 <code>Katex</code> 写的，迁移过来还需要一些额外的工作，之后有空再完成好了。</p>
 <h2 id="方法">方法</h2>
-<p>在 <code>themes/coder-portfolio/layouts/partials</code> 路径下新建一个 <code>mathjax.html</code> 文件，内容如下：</p>
+<p>在 <code>themes/theme-name/layouts/partials</code> 路径下新建一个 <code>mathjax.html</code> 文件，内容如下：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
   <span class="nx">MathJax</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">tex</span><span class="o">:</span> <span class="p">{</span>
@@ -138,7 +138,7 @@
 <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://polyfill.io/v3/polyfill.min.js?features=es6&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text/javascript&#34;</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;MathJax-script&#34;</span> <span class="na">async</span>
   <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
-</code></pre></div><p>然后在 <code>themes/coder-portfolio/layouts/partials/headers.html</code> 文件的最后加入这句代码：</p>
+</code></pre></div><p>然后在 <code>themes/theme-name/layouts/partials/headers.html</code> 文件的最后加入这句代码：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html">{{ if .Params.mathjax }}{{ partial &#34;mathjax.html&#34; . }}{{ end }}
 </code></pre></div><p>意思是只有设定 <code>mathjax: true</code> 时才加载 <code>MathJax</code> 的诸多配置文件，这样可以节约大部分没有用到公式的博客的加载时间。</p>
 <h3 id="注意">注意</h3>
