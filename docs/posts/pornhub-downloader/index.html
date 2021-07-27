@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  PornHub Downloader v2 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/pornhub-downloader/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/pornhub-downloader/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/pornhub-downloader/">
+    <title>
+  PornHub Downloader v2 - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/pornhub-downloader/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">PornHub Downloader v2</h1>
+      <h2 class="date">July 27, 2021</h2>
+
+      
+    </header>
+
+    <p><strong>项目地址</strong>：https://github.com/FrazierLei/PornHub-Downloader</p>
+<p>基于 <code>Requests</code> 和 <code>FFmpeg</code>  的 PornHub 视频下载工具，支持多任务并行下载。</p>
+<p>用于练手的一个小脚本，一共 100 行出头的代码。</p>
+<p>初衷是看妹子，但是 coding 的过程中学到很多东西。</p>
+<h2 id="基于-selenium-的下载方法">基于 Selenium 的下载方法</h2>
+<p>一开始的版本，用到了 <code>Selenium</code>，参见 <a href="https://github.com/FrazierLei/PornHub-Downloader/tree/selenium">Selenium 分支</a></p>
+<h2 id="更简单无脑的方法">更简单无脑的方法</h2>
+<p>如果只是临时用一下，完全不用像这样大费周章，可以用 IDM 这样现成的插件，或者更厉害的 CoCoCut。</p>
+<p><!-- raw HTML omitted --></p>
+<p>具体使用方法可以参考：<a href="https://feifeizaici.xyz/posts/cococut/">在线视频抓取神器：COCOCUT——可见皆可得</a></p>
+<h2 id="为什么要下载下来">为什么要下载下来？</h2>
+<p>因为如果只在线看，收藏夹里的作品经常会莫名其妙失踪，比如：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/hongkongdoll.png" alt="hongkongdoll"></p>
+<h2 id="环境需求">环境需求</h2>
+<p>这些依赖在 MacOS 和 Linux 下安装非常方便，基本都是一行代码就安装好了，Windows 下会稍微麻烦一点，不过也就多废几分钟功夫。</p>
+<ul>
+<li>Python 3.6+</li>
+<li>requests: 用于下载视频</li>
+<li>bs4: 用于解析 HTML</li>
+<li>FFmpeg 和 ffmpy3: 用于下载并合并视频片段</li>
+<li>Node.js : 用于运行那一小段 JS 代码</li>
+<li>代理软件，我用的是 <a href="https://github.com/yichengchen/clashX/releases">ClashX</a></li>
+</ul>
+<p>脚本中设置了代理软件用到的通信端口：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&#34;http_proxy&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;http://127.0.0.1:7890&#34;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&#34;https_proxy&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;http://127.0.0.1:7890&#34;</span> 
+</code></pre></div><p>也可以在执行 Python 脚本的终端中进行设置：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">export</span> <span class="nv">http_proxy</span><span class="o">=</span>http://127.0.0.1:7890
+<span class="nb">export</span> <span class="nv">https_proxy</span><span class="o">=</span>http://127.0.0.1:7890
+</code></pre></div><p>二者的效果是一样的。</p>
+<h2 id="原理">原理</h2>
+<p>P站视频的信息包含在视频页面 HTML 中定义的一个 <code>flashvars</code> 开头的变量中：</p>
+<p><!-- raw HTML omitted --></p>
+<p>下载链接包含在这个 <code>videoUrl</code>中：</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/videoUrl.png" alt=""></p>
+<p>如果不利用 <code>Selenium</code>，无法得到真实的 mp4 文件的下载地址，但是可以得到包含众多 ts 格式的视频片段地址的 m3u8 文件。这时我们只需要用 <code>FFmpeg</code> 把这些 ts 文件下载下来，并合并为 mp4 文件即可。</p>
+<h2 id="使用方法">使用方法</h2>
+<ol>
+<li>
+<p>在环境中安装包括 <code>FFmpeg</code> 在内的众多依赖</p>
+</li>
+<li>
+<p>运行脚本</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">$ python pornhub_downloader.py <span class="s1">&#39;https://cn.pornhub.com/view_video.php?viewkey=xxxxxxxxxx&#39;</span> -s <span class="s1">&#39;./学习资料&#39;</span> -n <span class="m">2</span>
+</code></pre></div><ul>
+<li>url: 指定你感兴趣的学习资料页面或者指定 model 的主页</li>
+<li>-s: 视频保存的路径，若省略，则在当前路径下的 Download 文件夹（若不存在则自动新建）</li>
+<li>-n: 同时下载的进程数，默认为1</li>
+</ul>
+</li>
+</ol>
+<h2 id="运行效果">运行效果</h2>
+<p>支持断点续传，如果连接断开，重新运行即可。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/run2.png" alt=""></p>
+<h2 id="todo">TODO</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 去掉对 <code>Selenium</code> 的依赖</li>
+<li><input checked="" disabled="" type="checkbox"> 支持多任务并行下载</li>
+<li><input disabled="" type="checkbox"> GUI</li>
+</ul>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>
