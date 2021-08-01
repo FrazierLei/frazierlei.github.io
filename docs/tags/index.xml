@@ -2,35 +2,35 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on 霏霏</title>
-    <link>https://www.feifeizaici.xyz/tags/</link>
+    <link>https://feifeizaici.xyz/tags/</link>
     <description>Recent content in Tags on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 23 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://www.feifeizaici.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>七牛云</title>
-      <link>https://www.feifeizaici.xyz/tags/%E4%B8%83%E7%89%9B%E4%BA%91/</link>
+      <link>https://feifeizaici.xyz/tags/%E4%B8%83%E7%89%9B%E4%BA%91/</link>
       <pubDate>Fri, 23 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>https://www.feifeizaici.xyz/tags/%E4%B8%83%E7%89%9B%E4%BA%91/</guid>
+      <guid>https://feifeizaici.xyz/tags/%E4%B8%83%E7%89%9B%E4%BA%91/</guid>
       <description></description>
     </item>
     
     <item>
       <title>jupyter</title>
-      <link>https://www.feifeizaici.xyz/tags/jupyter/</link>
+      <link>https://feifeizaici.xyz/tags/jupyter/</link>
       <pubDate>Thu, 22 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>https://www.feifeizaici.xyz/tags/jupyter/</guid>
+      <guid>https://feifeizaici.xyz/tags/jupyter/</guid>
       <description></description>
     </item>
     
     <item>
       <title>web-crawling</title>
-      <link>https://www.feifeizaici.xyz/tags/web-crawling/</link>
+      <link>https://feifeizaici.xyz/tags/web-crawling/</link>
       <pubDate>Thu, 17 Jun 2021 15:00:00 +0800</pubDate>
       
-      <guid>https://www.feifeizaici.xyz/tags/web-crawling/</guid>
+      <guid>https://feifeizaici.xyz/tags/web-crawling/</guid>
       <description></description>
     </item>
     

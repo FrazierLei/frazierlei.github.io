@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 霏霏</title>
-    <link>https://www.feifeizaici.xyz/categories/</link>
+    <link>https://feifeizaici.xyz/categories/</link>
     <description>Recent content in Categories on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://www.feifeizaici.xyz/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 01 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>algorithms</title>
-      <link>https://www.feifeizaici.xyz/categories/algorithms/</link>
+      <link>https://feifeizaici.xyz/categories/algorithms/</link>
       <pubDate>Sun, 01 Aug 2021 13:18:55 +0800</pubDate>
       
-      <guid>https://www.feifeizaici.xyz/categories/algorithms/</guid>
+      <guid>https://feifeizaici.xyz/categories/algorithms/</guid>
       <description></description>
     </item>
     
