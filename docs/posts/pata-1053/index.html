@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  PAT A-1053  Path of Equal Weight - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/posts/pata-1053/">
+    <meta property="og:image" content="images/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="/posts/pata-1053/">
+    <meta name="twitter:image" content="images/tn.png">
+
+    <base href="../../posts/pata-1053/">
+    <title>
+  PAT A-1053  Path of Equal Weight - 霏霏
+</title>
+
+    <link rel="canonical" href="../../posts/pata-1053/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="霏霏">
+      <link href="../../index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">PAT A-1053  Path of Equal Weight</h1>
+      <h2 class="date">July 31, 2021</h2>
+
+      
+    </header>
+
+    <p><a href="https://pintia.cn/problem-sets/994805342720868352/problems/994805424153280512">题目链接</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">gg</span> <span class="o">=</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">;</span>
+<span class="n">gg</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">gg</span><span class="o">&gt;&gt;</span> <span class="n">tree</span><span class="p">(</span><span class="mi">1005</span><span class="p">),</span> <span class="n">ans</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">gg</span><span class="o">&gt;</span> <span class="n">weights</span><span class="p">(</span><span class="mi">1005</span><span class="p">),</span> <span class="n">sum</span><span class="p">(</span><span class="mi">1005</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">father</span><span class="p">(</span><span class="mi">1005</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">gg</span> <span class="n">root</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">tree</span><span class="p">[</span><span class="n">root</span><span class="p">].</span><span class="n">empty</span><span class="p">()</span> <span class="n">and</span> <span class="n">sum</span><span class="p">[</span><span class="n">root</span><span class="p">]</span> <span class="o">==</span> <span class="n">k</span><span class="p">){</span>
+        <span class="n">gg</span> <span class="n">r</span> <span class="o">=</span> <span class="n">root</span><span class="p">;</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="n">gg</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">r</span><span class="p">]);</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">father</span><span class="p">[</span><span class="n">r</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">father</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="n">ans</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">tree</span><span class="p">[</span><span class="n">root</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">sum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sum</span><span class="p">[</span><span class="n">root</span><span class="p">]</span> <span class="o">+</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span> <span class="o">&gt;&gt;</span> <span class="n">m</span> <span class="o">&gt;&gt;</span> <span class="n">k</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">sum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">father</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">m</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sum</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">m</span><span class="o">--</span><span class="p">){</span>
+        <span class="n">gg</span> <span class="n">num</span><span class="p">,</span> <span class="n">id1</span><span class="p">,</span> <span class="n">id2</span><span class="p">;</span>
+        <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">id1</span> <span class="o">&gt;&gt;</span> <span class="n">num</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">num</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">id2</span><span class="p">;</span>
+            <span class="n">tree</span><span class="p">[</span><span class="n">id1</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">id2</span><span class="p">);</span>
+            <span class="n">father</span><span class="p">[</span><span class="n">id2</span><span class="p">]</span> <span class="o">=</span> <span class="n">id1</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">sort</span><span class="p">(</span><span class="n">tree</span><span class="p">[</span><span class="n">id1</span><span class="p">].</span><span class="n">begin</span><span class="p">(),</span> <span class="n">tree</span><span class="p">[</span><span class="n">id1</span><span class="p">].</span><span class="n">end</span><span class="p">(),</span> <span class="p">[](</span><span class="n">gg</span> <span class="n">a</span><span class="p">,</span> <span class="n">gg</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="n">weights</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">weights</span><span class="p">[</span><span class="n">b</span><span class="p">];});</span>
+    <span class="p">}</span>
+
+    <span class="n">dfs</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ans</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">j</span> <span class="o">=</span> <span class="n">ans</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">rbegin</span><span class="p">();</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">ans</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">rend</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">ans</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">rbegin</span><span class="p">()</span> <span class="o">?</span> <span class="s">&#34;&#34;</span> <span class="o">:</span> <span class="s">&#34; &#34;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">j</span><span class="p">;</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">ans</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">?</span> <span class="s">&#34;&#34;</span> <span class="o">:</span> <span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>我的想法比较简单，找到满足条件的 path 以后通过递归将路径中的节点保存在一个 vector 中，最后用反向迭代器遍历一边即可。</p>
+<p>有一个测试点一直过不去，睡觉前想到应该是因为没有考虑到只有一个根结点，且根结点的权重正好就是目标值的情况。补上以后就通过了。</p>
+<p><a href="https://github.com/richenyunqi/CCF-CSP-and-PAT-solution/blob/master/PAT/Advanced%20Level/1053.%20Path%20of%20Equal%20Weight.md">书作者的解答</a>明显比我简洁得多，运行时间和内存占用也少得多。</p>
+<p>答案中每次遍历完一个节点的子节点以后，用 pop_back 将 vector 最后一个值弹出去，这样 path 中保存的内容可以继续使用。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">gg</span> <span class="o">=</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">;</span>
+<span class="k">const</span> <span class="n">gg</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">105</span><span class="p">;</span>
+<span class="n">gg</span> <span class="n">ni</span><span class="p">,</span> <span class="n">mi</span><span class="p">,</span> <span class="n">si</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">gg</span><span class="o">&gt;</span> <span class="n">w</span><span class="p">(</span><span class="n">MAX</span><span class="p">),</span> <span class="n">path</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">gg</span><span class="o">&gt;&gt;</span> <span class="n">tree</span><span class="p">(</span><span class="n">MAX</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">gg</span> <span class="n">v</span><span class="p">,</span> <span class="n">gg</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// v表示当前结点，s表示当前路径权重值和
+</span><span class="c1"></span>    <span class="n">s</span> <span class="o">+=</span> <span class="n">w</span><span class="p">[</span><span class="n">v</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">&gt;</span> <span class="n">si</span> <span class="n">or</span> <span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="n">si</span> <span class="n">and</span> <span class="n">not</span> <span class="n">tree</span><span class="p">[</span><span class="n">v</span><span class="p">].</span><span class="n">empty</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">==</span> <span class="n">si</span> <span class="n">and</span> <span class="n">tree</span><span class="p">[</span><span class="n">v</span><span class="p">].</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">gg</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">path</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">path</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34; &#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">path</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">v</span><span class="p">]);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">tree</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">path</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">ni</span> <span class="o">&gt;&gt;</span> <span class="n">mi</span> <span class="o">&gt;&gt;</span> <span class="n">si</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ni</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">mi</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">gg</span> <span class="n">id</span><span class="p">,</span> <span class="n">ki</span><span class="p">,</span> <span class="n">ai</span><span class="p">;</span>
+        <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">id</span> <span class="o">&gt;&gt;</span> <span class="n">ki</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">ki</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">ai</span><span class="p">;</span>
+            <span class="n">tree</span><span class="p">[</span><span class="n">id</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">ai</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">sort</span><span class="p">(</span><span class="n">tree</span><span class="p">[</span><span class="n">id</span><span class="p">].</span><span class="n">begin</span><span class="p">(),</span> <span class="n">tree</span><span class="p">[</span><span class="n">id</span><span class="p">].</span><span class="n">end</span><span class="p">(),</span>
+             <span class="p">[](</span><span class="n">gg</span> <span class="n">a</span><span class="p">,</span> <span class="n">gg</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">w</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">w</span><span class="p">[</span><span class="n">b</span><span class="p">];</span> <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="n">dfs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>
