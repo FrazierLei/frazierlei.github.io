@@ -2,27 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>algorithms on 霏霏</title>
-    <link>/categories/algorithms/</link>
+    <link>https://www.feifeizaici.xyz/categories/algorithms/</link>
     <description>Recent content in algorithms on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 31 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 31 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://www.feifeizaici.xyz/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>PAT A-1053  Path of Equal Weight</title>
-      <link>/posts/pata-1053/</link>
+      <link>https://www.feifeizaici.xyz/posts/pata-1053/</link>
       <pubDate>Sat, 31 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/pata-1053/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/pata-1053/</guid>
       <description>题目链接
 #include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; gg n, m, k; vector&amp;lt;vector&amp;lt;gg&amp;gt;&amp;gt; tree(1005), ans; vector&amp;lt;gg&amp;gt; weights(1005), sum(1005, 0), father(1005); void dfs(gg root){ if (tree[root].empty() and sum[root] == k){ gg r = root; vector&amp;lt;gg&amp;gt; v; do { v.push_back(weights[r]); r = father[r]; } while (father[r] != -1); v.push_back(weights[0]); ans.push_back(v); } for (gg i : tree[root]) { sum[i] += sum[root] + weights[i]; dfs(i); } } int main(){ ios::sync_with_stdio(false); cin.tie(0); cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; m &amp;gt;&amp;gt; k; for (gg i = 0; i &amp;lt; n; ++i) cin &amp;gt;&amp;gt; weights[i]; sum[0] = weights[0]; father[0] = -1; if (n == 1 and m == 0){ cout &amp;lt;&amp;lt; sum[0]; return 0; } while (m--){ gg num, id1, id2; cin &amp;gt;&amp;gt; id1 &amp;gt;&amp;gt; num; while (num--) { cin &amp;gt;&amp;gt; id2; tree[id1].</description>
     </item>
     
     <item>
       <title>PAT A-1055  The World&#39;s Richest</title>
-      <link>/posts/pata-1055/</link>
+      <link>https://www.feifeizaici.xyz/posts/pata-1055/</link>
       <pubDate>Sun, 25 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/pata-1055/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/pata-1055/</guid>
       <description>题目链接
 #include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; struct Person{ string name; gg age, money; Person(string n, gg a, gg m):name(n), age(a), money(m){} }; int main(){ ios::sync_with_stdio(false); cin.tie(0); gg n, k, m, amin, amax, age, money; string name; bool flag; cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; k; vector&amp;lt;Person&amp;gt; p; for(gg i = 0; i &amp;lt; n; ++i){ cin &amp;gt;&amp;gt; name &amp;gt;&amp;gt; age &amp;gt;&amp;gt; money; p.push_back(Person(name, age, money)); } sort(p.begin(), p.end(), [](const Person &amp;amp;p1, const Person &amp;amp;p2){ return tie(p2.</description>
     </item>

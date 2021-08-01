@@ -2,27 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>霏霏</title>
-    <link>/</link>
+    <link>https://www.feifeizaici.xyz/</link>
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 31 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 31 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://www.feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>PAT A-1053  Path of Equal Weight</title>
-      <link>/posts/pata-1053/</link>
+      <link>https://www.feifeizaici.xyz/posts/pata-1053/</link>
       <pubDate>Sat, 31 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/pata-1053/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/pata-1053/</guid>
       <description>题目链接
 #include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; gg n, m, k; vector&amp;lt;vector&amp;lt;gg&amp;gt;&amp;gt; tree(1005), ans; vector&amp;lt;gg&amp;gt; weights(1005), sum(1005, 0), father(1005); void dfs(gg root){ if (tree[root].empty() and sum[root] == k){ gg r = root; vector&amp;lt;gg&amp;gt; v; do { v.push_back(weights[r]); r = father[r]; } while (father[r] != -1); v.push_back(weights[0]); ans.push_back(v); } for (gg i : tree[root]) { sum[i] += sum[root] + weights[i]; dfs(i); } } int main(){ ios::sync_with_stdio(false); cin.tie(0); cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; m &amp;gt;&amp;gt; k; for (gg i = 0; i &amp;lt; n; ++i) cin &amp;gt;&amp;gt; weights[i]; sum[0] = weights[0]; father[0] = -1; if (n == 1 and m == 0){ cout &amp;lt;&amp;lt; sum[0]; return 0; } while (m--){ gg num, id1, id2; cin &amp;gt;&amp;gt; id1 &amp;gt;&amp;gt; num; while (num--) { cin &amp;gt;&amp;gt; id2; tree[id1].</description>
     </item>
     
     <item>
       <title>PornHub Downloader v2</title>
-      <link>/posts/pornhub-downloader/</link>
+      <link>https://www.feifeizaici.xyz/posts/pornhub-downloader/</link>
       <pubDate>Tue, 27 Jul 2021 15:00:00 +0800</pubDate>
       
-      <guid>/posts/pornhub-downloader/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/pornhub-downloader/</guid>
       <description>项目地址：https://github.com/FrazierLei/PornHub-Downloader
 基于 Requests 和 FFmpeg 的 PornHub 视频下载工具，支持多任务并行下载。
 用于练手的一个小脚本，一共 100 行出头的代码。
@@ -39,20 +39,20 @@ export http_proxy=http://127.0.0.1:7890 export https_proxy=http://127.0.0.1:7890
     
     <item>
       <title>PAT A-1055  The World&#39;s Richest</title>
-      <link>/posts/pata-1055/</link>
+      <link>https://www.feifeizaici.xyz/posts/pata-1055/</link>
       <pubDate>Sun, 25 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/pata-1055/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/pata-1055/</guid>
       <description>题目链接
 #include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; struct Person{ string name; gg age, money; Person(string n, gg a, gg m):name(n), age(a), money(m){} }; int main(){ ios::sync_with_stdio(false); cin.tie(0); gg n, k, m, amin, amax, age, money; string name; bool flag; cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; k; vector&amp;lt;Person&amp;gt; p; for(gg i = 0; i &amp;lt; n; ++i){ cin &amp;gt;&amp;gt; name &amp;gt;&amp;gt; age &amp;gt;&amp;gt; money; p.push_back(Person(name, age, money)); } sort(p.begin(), p.end(), [](const Person &amp;amp;p1, const Person &amp;amp;p2){ return tie(p2.</description>
     </item>
     
     <item>
       <title>利用 MathJax 让基于 Hugo 搭建的博客支持公式显示</title>
-      <link>/posts/math/</link>
+      <link>https://www.feifeizaici.xyz/posts/math/</link>
       <pubDate>Sat, 24 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/math/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/math/</guid>
       <description>Hugo 本身是不支持 markdown 中 Latex 公式的渲染的，所以我早期的一些包含较多公式的文章无法显示。
 根据网上几个教程，用 MathJax 实现了这个功能。
 之前含有公式的文章都是在 Wordpress 上用 Katex 写的，迁移过来还需要一些额外的工作，之后有空再完成好了。
@@ -62,10 +62,10 @@ export http_proxy=http://127.0.0.1:7890 export https_proxy=http://127.0.0.1:7890
     
     <item>
       <title>解决 Chrome 无法打开博客中的图片（七牛云图床）</title>
-      <link>/posts/chrome-qiniu/</link>
+      <link>https://www.feifeizaici.xyz/posts/chrome-qiniu/</link>
       <pubDate>Fri, 23 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/chrome-qiniu/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/chrome-qiniu/</guid>
       <description>把博客迁移到 Hugo 上以后，用 Chrome 打开，无法加载出来图片，而用 Firefox、Safari、手机的浏览器都可以看到图片。打开 Console
 把图片的 url 手动复制到浏览器中依然无法打开，需要把 https 换成 http 才行。这是因为 Chrome 浏览器不再允许 https 页面加载 http 内容了，之前的网站本身就只支持 http，所以不会遇到这个问题。
 打开七牛云的控制台中的域名管理，现在需要把协议升级到支持 HTTPS
@@ -81,10 +81,10 @@ export http_proxy=http://127.0.0.1:7890 export https_proxy=http://127.0.0.1:7890
     
     <item>
       <title>用 SSH 远程访问 Jupyter Lab 并用 Kite 实现自动补全</title>
-      <link>/posts/ssh-jupyterlab/</link>
+      <link>https://www.feifeizaici.xyz/posts/ssh-jupyterlab/</link>
       <pubDate>Thu, 22 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>/posts/ssh-jupyterlab/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/ssh-jupyterlab/</guid>
       <description>要跑深度学习代码，只用本地电脑肯定是不够用的，必然需要远程使用服务器的计算资源。我观察到实验室很多人用的是 PyCharm , 但是我觉得PyCharm 用着挺费劲的。呆呆象师兄用的是 VScode，我比较习惯用 Jupyter Notebook 。但是Jupyter Notebook有着各种各样的问题，于是有了他的加强版—— Jupyter Lab。
 安装 Jupyter Lab 如果之前安装过 Jupyter Notebook 或者使用的是 Anaconda 的话，环境中很可能还保留着旧版本的 Jupyter Lab，所以要先安装最新版的 Jupyter Lab。
 pip install jupyterlab --upgrade 如果遇到类似 ERROR: Cannot uninstall &#39;terminado&#39;. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. 这样的报错信息，可以执行下方命令，然后重新 pip 安装 Jupyter Lab。
@@ -93,10 +93,10 @@ pip install terminado --ignore-installed 我看到有的教程写的要安装 np
     
     <item>
       <title>在线视频抓取神器：CoCoCut——可见皆可得</title>
-      <link>/posts/cococut/</link>
+      <link>https://www.feifeizaici.xyz/posts/cococut/</link>
       <pubDate>Thu, 17 Jun 2021 15:00:00 +0800</pubDate>
       
-      <guid>/posts/cococut/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/cococut/</guid>
       <description>今天上午见证了杜兰特 49+17+10 的死神表现，就想着把全场录像保存下来。上次这样做还是14年还在上高中时候的事情了，当时有一场火箭对阵开拓者的季后赛，豪哥打得贼牛逼，我从不知道哪个地方找到高清录像，存下来看了好几遍。
 上周脑袋一热花25块钱开了一个腾讯NBA会员，这也就省去了一些找资源的时间，这次就直接下载腾讯视频上的英文原声录像。
 下载完我也就自己看，一不传播，二不盈利，何况我还开了会员。
@@ -118,10 +118,10 @@ CoCoCut 使用介绍 嗅探视频地址 这个功能和 IDM 的插件类似，�
     
     <item>
       <title>白色背景图片与透明背景图片的相互转化</title>
-      <link>/posts/transparent-image/</link>
+      <link>https://www.feifeizaici.xyz/posts/transparent-image/</link>
       <pubDate>Thu, 13 May 2021 15:00:00 +0800</pubDate>
       
-      <guid>/posts/transparent-image/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/transparent-image/</guid>
       <description>前几天在 中用从 Statmuse 上获取到的球员头像作为数据，训练了一个生成模型，生成出了一些没有见过的球员的头像。
 PIL 支持的标准模式一共有7种：
 这些收集到的图片用 PIL 打开以后，它们的 mode 全部都是 P。P 模式的图片每个像素点的值是一个 0 到 255之间 的整数。
@@ -131,10 +131,10 @@ elif self.mode in (&amp;#34;L&amp;#34;, &amp;#34;RGB&amp;#34;, &amp;#34;P&amp;#3
     
     <item>
       <title>【JS逆向】获取「魔鬼蓝天」西瓜视频全部视频链接</title>
-      <link>/posts/lantian28/</link>
+      <link>https://www.feifeizaici.xyz/posts/lantian28/</link>
       <pubDate>Thu, 07 Jan 2021 15:00:00 +0800</pubDate>
       
-      <guid>/posts/lantian28/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/lantian28/</guid>
       <description>9月份开始弃坑王者以后，就一直没有看关于游戏的视频。10月底时候在B站看到几个关于红警的视频，但是都是打的战役或者魔改版本，不如真人对战有意思。偶然在推荐区看到了「蓝天28」这个up主的视频，完全打破了我对红警这个游戏的认识。各种花式套路，什么路径偷、拉基地躲炸弹、一个三级多功能步兵车灭一个国家、锅盖藏尤里。谷歌搜了一下「红警蓝天」，在知乎的一个回答里了解到，这个蓝天28是魔鬼战队的蓝天，他是很多法国战术的发明人，也当过红警历史第一人——月亮3的陪练。除了1v1和混战，蓝天最拿手的强项其实是是2v2，他曾经在一个2v2比赛中大比分战胜月亮3所在的队伍。
 红警是我小时候玩的第一款“大型游戏”，当时是院里小伙伴拷给我的。我玩的版本是尤里的复仇，蓝天玩的是原版红警2。当时我全靠自己打人机时候摸索出了一些套路，比如选法国时候，工程师占敌人一个房子，然后在敌人家里造巨炮。再比如选韩国的时候，黑鹰战机手动操作绕个圈子去炸基地。看来自己还是有一点点游戏天赋的，要不然去年也不能把程咬金打到国服。
 10月份刚开始看蓝天的视频的时候，他在B站不过1万多个粉丝，两个多月过去已经涨到5万多了。而且每个月都有几百个人充电，还有老板动不动就几万几万地充电。也难怪，有实力、套路多、一口逗人的川普，想不火都难。可惜的是蓝天每天在B站只发2-3个视频，但是每天在西瓜视频都会发4个或者更多的视频，原因是头条财大气粗，西瓜视频给的收益多一点。弄得我这个从来不看西瓜视频的人都去注册了一个账号。
@@ -156,10 +156,10 @@ import requests # 初始化 session sess = requests.Session() sess.headers.updat
     
     <item>
       <title>用 StyleGAN2 生成 Statmuse 风格的人物头像</title>
-      <link>/posts/statmuse/</link>
+      <link>https://www.feifeizaici.xyz/posts/statmuse/</link>
       <pubDate>Thu, 07 Jan 2021 15:00:00 +0800</pubDate>
       
-      <guid>/posts/statmuse/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/statmuse/</guid>
       <description>Statmuse 发了个推特，让我们看看世界上最大的运动员头像集。那这个最大的头像集有多少呢，其实也没多少只看 NBA 的球员，有407张，加上其他几个没听说过的联赛，一共是1127张。
 获取训练数据 之前在 中爬取头像的时候用的是 Selenium，不仅慢，而且容易断，一断就得重新爬。这次用 Requests。
 上次是按照球队和赛季遍历所有头像，于是一些「流浪汉」就有很多张图片，比如我们的豪哥。可以看出，除了发型和球衣有些变化，人物肖像中最重要的脸部特征是没有变的。这就相当于收集到了重复的数据。于是这次只收集每个球员最新的头像。
@@ -174,10 +174,10 @@ import os, re, requests from bs4 import BeautifulSoup from urllib.request import
     
     <item>
       <title>2020浙大信息化年度数据账单中的code参数分析</title>
-      <link>/posts/zju-code/</link>
+      <link>https://www.feifeizaici.xyz/posts/zju-code/</link>
       <pubDate>Mon, 04 Jan 2021 15:00:00 +0800</pubDate>
       
-      <guid>/posts/zju-code/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/zju-code/</guid>
       <description>从去年年末开始，各大APP就开始给用户推送他们的「年度报告」。很快啊，朋友圈就被网易云、QQ音乐、B站的年度报告刷屏了。说起来还挺矛盾的，人们一边为自己的信息泄露而焦虑着，一边又享受着别人分析自己数据。今天吃完板烧鸡腿堡出来在群里看到好多人在讨论浙大出的这个信息化年度数据账单，然而并没有什么有价值的数据。
 下午摸鱼的时候稍微分析了一下接口，不复杂，但是因为想当然浪费了很多时间。
 网址：
@@ -196,10 +196,10 @@ https://it2020.zju.edu.cn/ 一个小坑：访问https://it2020.zju.edu.cn/会跳
     
     <item>
       <title>如何白嫖O&#39;Reilly 的电子书</title>
-      <link>/posts/oreilly/</link>
+      <link>https://www.feifeizaici.xyz/posts/oreilly/</link>
       <pubDate>Sun, 27 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/oreilly/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/oreilly/</guid>
       <description>O&amp;rsquo;Reilly的书有口皆碑！我不信有那个程序员的书架上没有基本O&amp;rsquo;Reilly的动物书。
 比如这本
 或者这本：
@@ -220,10 +220,10 @@ Selenium保存网页为mhtml方法
     
     <item>
       <title>【爬虫实战】如何用爬虫来找女朋友</title>
-      <link>/posts/cc98-girlfriend/</link>
+      <link>https://www.feifeizaici.xyz/posts/cc98-girlfriend/</link>
       <pubDate>Thu, 24 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/cc98-girlfriend/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/cc98-girlfriend/</guid>
       <description>最近在回顾之前在98上发的旧帖子，觉得有些还挺好玩的，改一改发到这里好了。
 昨天有一个很久没联系的朋友突然戳我 大丈夫不为五斗米折腰，但是可以为板烧鸡腿堡，所以我就帮他写了 这个功能应该怎么实现呢？其实无非就是隔一段时间查看一下新帖中有没有征人的贴就好了。
 在「查看新帖」页面打开开发者工具，可以找到这样一个API：
@@ -240,10 +240,10 @@ md_content = content.replace(&amp;#39;\n&amp;#39;, &amp;#39;&amp;lt;br&amp;gt;&a
     
     <item>
       <title>Requestium = Requests &#43; Selenium</title>
-      <link>/posts/requestium/</link>
+      <link>https://www.feifeizaici.xyz/posts/requestium/</link>
       <pubDate>Tue, 22 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/requestium/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/requestium/</guid>
       <description>这个框架是我在知乎「Python有哪些常见的、好用的爬虫框架？」的高赞答案中看到的，试着用了一下，还挺好玩。
 下面的内容主要来自Requestsium的GitHub上的介绍：https://github.com/tryolabs/requestium，少量是我自己的测试代码。
 定位 Requestium是集Requests和Selenium于一体的WEB自动化工具。Requestium可以看作是在Requests为主体的基础上增加了Selenium的部分功能，如果你需要一个以Selenium为主体，增加部分Requests功能的Python库，可以去看一下 另一个叫做Selenium-Requests的库。
@@ -260,10 +260,10 @@ s.driver.find_element_by_xpath(&amp;#34;//input[@class=&amp;#39;user_name&amp;#3
     
     <item>
       <title>【JS逆向】模拟登录浙大通行证</title>
-      <link>/posts/zjuam-login/</link>
+      <link>https://www.feifeizaici.xyz/posts/zjuam-login/</link>
       <pubDate>Sat, 19 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/zjuam-login/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/zjuam-login/</guid>
       <description>这么多年一直都在用Chrome，但是Chrome的有各种各样的问题，准备以后逐渐向Firefox转移，这次抓包用的是Firefox。
 网址：
 https://zjuam.zju.edu.cn/cas/login 猜测zjuam中的am可能是authentication mainpage的意思。
@@ -293,10 +293,10 @@ PC端登录 抓包 账号密码都输入123456，找到登录对应的请求：
     
     <item>
       <title>【爬虫实战】如何下载PornHub上的学习资料</title>
-      <link>/posts/pornhub-download/</link>
+      <link>https://www.feifeizaici.xyz/posts/pornhub-download/</link>
       <pubDate>Tue, 15 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/pornhub-download/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/pornhub-download/</guid>
       <description>众所周知，P站（PxxxHub）是一个综合性视频网站，包罗万象，经常有小伙伴会在上面上传自己喜欢的学习资料。但是因为某些原因，很多资料被下架了。这就教给我们一个道理，重要的学习资料应该「下载」，而不仅仅「收藏」。下面我以李永乐老师的视频为例，讨论一下如何下载P站上的学习资料。
 定位加密 可以看出，视频的地址media_1是由一系列字符串拼接而成的，然后再赋给flashvars_212700282[&#39;mediaDefinitions&#39;][1][&#39;videoUrl&#39;]
 在控制台里看一下这个变量，果不其然，不同分辨率的视频地址都包含在内。
@@ -306,10 +306,10 @@ PC端登录 抓包 账号密码都输入123456，找到登录对应的请求：
     
     <item>
       <title>【爬虫实战】获取最新一期青年大学习的结束图</title>
-      <link>/posts/qingniandaxuexi/</link>
+      <link>https://www.feifeizaici.xyz/posts/qingniandaxuexi/</link>
       <pubDate>Mon, 14 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/qingniandaxuexi/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/qingniandaxuexi/</guid>
       <description>今天是认真看论文的霏霏，奖励自己摸一会儿鱼。其实有时候闲下来看一点和实验室无关的东西还挺放松的，就和打球、玩游戏没有什么区别。之前写的东西吧，虽然大部分没什么技术含量，也没什么实际用处，但是我感觉还挺好玩的。其实Python本来就挺好玩的，因为比较简单，对新手也比较友好。对我来说，至少不会像C一样，让我想起大一那会儿被黑压压的控制台支配的恐惧。很多时候，稍微写那么几行代码，就能完成一个小任务，及时的反馈也能让人有一些成就感。
 原理 打开青年大学习的首页，网址：
 http://news.cyol.com/node_67071.htm 进入最近一期视频，打开开发者工具，可以看到请求列表中包含了我们想要的结束图：
@@ -321,10 +321,10 @@ http://h5.cyol.com/special/daxuexi/lfvuyhztrd/images/end.jpg 那么现在思路�
     
     <item>
       <title>利用百度AI Platform进行简单验证码的识别</title>
-      <link>/posts/baidu-captcha/</link>
+      <link>https://www.feifeizaici.xyz/posts/baidu-captcha/</link>
       <pubDate>Sat, 12 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/baidu-captcha/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/baidu-captcha/</guid>
       <description>百度AI平台提供了一系列免费的识别API，包括文字识别、身份证识别、公式识别等功能，免去了我们在本地训练模型的繁琐流程。这次我们用其中的「通用文字识别（标准版）」API来进行验证码的识别。
 网址：
 https://cloud.baidu.com/doc/OCR/index.html 安装Python SDK pip install git+https://github.com/Baidu-AIP/python-sdk.git@master 定义一个简单的检测器类 from aip import AipOcr class Image2Text: def __init__(self): &amp;#34;&amp;#34;&amp;#34; 初始化检测器对象。APP_ID, API_KEY, SECRET_KEY 登录后在控制台获取 &amp;#34;&amp;#34;&amp;#34; self.APP_ID = &amp;#39;&amp;#39; self.API_KEY = &amp;#39;&amp;#39; self.SECRET_KEY = &amp;#39;&amp;#39; self.aipOcr = AipOcr(self.APP_ID, self.API_KEY, self.SECRET_KEY) def detect(self, file_path): with open(file_path, &amp;#39;rb&amp;#39;) as f: r = self.aipOcr.basicGeneral(f.read()) try: return r[&amp;#39;words_result&amp;#39;][0][&amp;#39;words&amp;#39;]	except: return r detector = Image2Text() 获取简单验证码 我们选取浙江大学教务网的验证码作为识别的目标：
@@ -335,10 +335,10 @@ import requests from PIL import Image def get_zju_captcha(): img = requests.</de
     
     <item>
       <title>【爬虫实战】如何把抓取到的数据储存下来</title>
-      <link>/posts/store-data/</link>
+      <link>https://www.feifeizaici.xyz/posts/store-data/</link>
       <pubDate>Sun, 06 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/store-data/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/store-data/</guid>
       <description>如果只是把爬虫程序抓取到的数据用print打印在命令行中或者保存在内存中，那么如果下次还要获取这些数据，就得把这个程序重新跑一遍。浪费时间是其次的，如果网页结构发生了变化，或者API失效了，那么你肯定会后悔当初没有把抓到的数据保存在本地。
 下午时候在98看到这么一个帖子，试了一下不是很复杂，当作例子讲解一下。
 了解网站结构 网址：http://nappserv.app.yuchai.com/weixin-pages/stations/filter
@@ -355,10 +355,10 @@ import requests from bs4 import BeautifulSoup provinces = [&amp;#39;云南省&am
     
     <item>
       <title>【JS逆向】破解第三方Bilibili视频下载加密策略（2）</title>
-      <link>/posts/bilibili-download-2/</link>
+      <link>https://www.feifeizaici.xyz/posts/bilibili-download-2/</link>
       <pubDate>Fri, 04 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/bilibili-download-2/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/bilibili-download-2/</guid>
       <description>之前写过一篇，这篇写的是另一个网站功能类似的网站。这次的网站和上次那个相比，免费API只能生成清晰度为360P的视频，但是加密策略还挺好玩的，所以还是整理出来发一下。
 网址：
 aHR0cHM6Ly9hcGkuc3BhcGkuY24= 两次POST请求 在Network标签页中查看请求，可以看到有连续的两次POST请求
@@ -381,10 +381,10 @@ hex2bin是将十六进制字符串转换为二进制字符的函数，也很好�
     
     <item>
       <title>【JS逆向】破解B站登录加密策略</title>
-      <link>/posts/bilibili-login/</link>
+      <link>https://www.feifeizaici.xyz/posts/bilibili-login/</link>
       <pubDate>Thu, 03 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/bilibili-login/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/bilibili-login/</guid>
       <description>昨天还立flag说今天不摸鱼了，结果又摸了半天，稍微总结一下。
 GitHub上有一个叫做「哔哩哔哩-API收集整理」的仓库：https://github.com/SocialSisterYi/bilibili-API-collect
 是之前破解第三方B站视频下载方式的时候明一发给我的，当时没有看的很仔细，今天又找出来看了看里面的文档，解决了很多之前的疑惑。
@@ -401,10 +401,10 @@ GitHub上有一个叫做「哔哩哔哩-API收集整理」的仓库：https://gi
     
     <item>
       <title>【JS逆向】破解第三方Bilibili视频下载加密策略</title>
-      <link>/posts/bilibili-download/</link>
+      <link>https://www.feifeizaici.xyz/posts/bilibili-download/</link>
       <pubDate>Thu, 03 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/bilibili-download/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/bilibili-download/</guid>
       <description>最近一段时间老板管的比较松，就跟着咸鱼大佬的公众号自学了一些JS逆向的知识，再加上自己的摸索得比较勤快，感觉还是有一些进步的，这篇文章算是一点点学以致用吧。
 目标网站：aHR0cHM6Ly94YmVpYmVpeC5jb20vYXBpL2JpbGliaWxpLw==
 （看到最后的==，你应该知道这是什么编码了吧😆）
@@ -422,10 +422,10 @@ const CryptoJS = require(&amp;#34;crypto.js&amp;#34;); 代码实现 首先定义
     
     <item>
       <title>【JS逆向】破解知乎登录加密策略</title>
-      <link>/posts/zhihu-login/</link>
+      <link>https://www.feifeizaici.xyz/posts/zhihu-login/</link>
       <pubDate>Wed, 02 Dec 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/zhihu-login/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/zhihu-login/</guid>
       <description>如果礼拜天那场球赛不算的话，应该是本周最后一次摸鱼🥺。
 为什么需要登录 原因很简单，登录以后可以获得更多的权限，比如发帖、收藏等功能，此外有些内容只有登录以后才能访问。
 如何用Python模拟登录 一般地，用Python模拟登录就是用Requests库对目标网站的登录API发起一个POST请求，请求中要包含网站需要的所有数据。
@@ -461,10 +461,10 @@ const CryptoJS = require(&amp;#34;crypto.js&amp;#34;); 代码实现 首先定义
     
     <item>
       <title>CC98抽卡机</title>
-      <link>/posts/cc98-card/</link>
+      <link>https://www.feifeizaici.xyz/posts/cc98-card/</link>
       <pubDate>Fri, 27 Nov 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/cc98-card/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/cc98-card/</guid>
       <description>抽卡机是我第一个独立完成的小项目，它对我意义非凡。
 抽卡？什么是抽卡？ CC98 抽卡是由CC98和 NexusHD 共同推出的一款抽卡小游戏。卡牌内容包括 CC98、NexusHD，以及浙江大学相关的各种人事物，不同的卡片具有不同的等级，同时也具有不同的价值和抽取几率。
 等级介绍  Mystery是对98、NHD有杰出贡献的四位用户 SSR是98站务组和技术组正式成员、荣誉站长、创始人逗逼形象和NHD维护开发员、管理员 SR是98正式版主和全站贵宾、拥有大于等于3个VIP（包括协会退休成员）或威望超过98或帖数超过10w的98用户，NHD总版主和发布员 R是98实习版主、认证用户、版面贵宾、98运营管理团队成员和帖数大于等于10000或威望大于等于15的用户 N是其他普通用户。  等级分布    等级 N R SR SSR Mystery     比例 53.49% 30.00% 15.00% 1.50% 0.01%   最低数量 0 0 1 0 0    为什么需要抽卡机，手动抽不好吗 原因也简单，懒呗。如果要手动抽完每个月从N站兑换来的100万财富值（现在缩水到80万了），就算不每次都全部点开，也得十几二十分钟，费时费力费鼠标。之前有人用按键精灵来抽卡，也算是一种解放劳动力的方案。今年十月份的时候我自学了一些爬虫的基础知识，就想着能不能学以致用，写一个能够完成自动抽卡的Python程序。
@@ -483,10 +483,10 @@ import requests from bs4 import BeautifulSoup # 获取CSRF验证 r = requests.</
     
     <item>
       <title>在macOS上用sshfs远程访问linux服务器的文件</title>
-      <link>/posts/mac-sshfs/</link>
+      <link>https://www.feifeizaici.xyz/posts/mac-sshfs/</link>
       <pubDate>Mon, 12 Oct 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/mac-sshfs/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/mac-sshfs/</guid>
       <description>之前用windows的时候，用的是zzq师兄推荐的samba，换成mac以后不知为为什么怎么都连不上
 问了一下zt师兄，他说可以用sshfs，就试了一下，很快就成功了。
 安装sshfs 需要先安装fuse brew install Caskroom/cask/osxfuse 然后安装sshfs brew install sshfs 然后就可以挂载了 sshfs -C -o reconnect user@hostname:remote_dir local_dir 例如：
@@ -495,10 +495,10 @@ sshfs -C -o reconnect leizongfei@10.212.43.26:/home/leizongfei/code /Users/leizo
     
     <item>
       <title>程咬金攻略</title>
-      <link>/posts/chengyaojin/</link>
+      <link>https://www.feifeizaici.xyz/posts/chengyaojin/</link>
       <pubDate>Mon, 17 Aug 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/chengyaojin/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/chengyaojin/</guid>
       <description>分享一些本人对程咬金玩法的思考和经验，会不断调整玩法和更新攻略。
 作者：霏霏
 安卓微信区ID：魔鬼筋肉人$\gamma$
@@ -530,19 +530,19 @@ PS：现在看来，干扰套路只适用于低分段（排位30🌟以下，巅
     
     <item>
       <title>安装mmdetection踩的坑</title>
-      <link>/posts/mmdetection/</link>
+      <link>https://www.feifeizaici.xyz/posts/mmdetection/</link>
       <pubDate>Thu, 13 Aug 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/mmdetection/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/mmdetection/</guid>
       <description>&lt;p&gt;主要参考官方的&lt;a href=&#34;https://github.com/open-mmlab/mmdetection/blob/master/docs/install.md&#34;&gt;安装指南&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>DLG/iDLG Deep Leakage from Gradients and its Improvment</title>
-      <link>/posts/dlg-idlg/</link>
+      <link>https://www.feifeizaici.xyz/posts/dlg-idlg/</link>
       <pubDate>Wed, 15 Jul 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/dlg-idlg/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/dlg-idlg/</guid>
       <description>Motivation 分布式机器学习可以让多个设备在本地用本地数据集进行训练，这样就可以一定程度上保证本地数据的安全性，但是传输梯度真的安全吗？文【1】认为，已知模型及其参数，如果能够得到loss函数在一对input/label上的梯度，那么就可以反过来得到这组训练数据。
 Method Assumptions 假设训练流程是这样的：
  在第$t$轮，每个节点$i$从它的数据集中选取一批$(\mathbf{x_{t, i}, y_{t, i}})$，然后计算梯度  \nabla W_{t, i}=\frac{\partial \ell\left(F\left(\mathbf{x}_{t, i}, W_{t}\right), \mathbf{y}_{t, i}\right)}{\partial W_{t}}  将$N$个客户端的梯度取平均，用平均梯度来跟新模型参数  \nabla W_{t}=\frac{1}{N} \sum_{j}^{N} \nabla W_{t, j} ; \quad W_{t+1}=W_{t}-\eta \nabla W_{t} 现在已知模型$F()$，公共参数$W_t$，和通过某种途径获得的客户端$k$的梯度$\nabla W_{t,k}$，文章提出的DLG算法可以恢复出$k$的本地数据。
@@ -553,10 +553,10 @@ DLG算法   首先随机初始化一个dummy input $\mathbf{x}^\prime$ 和一个
     
     <item>
       <title>macOS中typora图片自动上传配置方法</title>
-      <link>/posts/mac-typora/</link>
+      <link>https://www.feifeizaici.xyz/posts/mac-typora/</link>
       <pubDate>Sun, 05 Jul 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/mac-typora/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/mac-typora/</guid>
       <description>之前一直用windows的时候，师兄教给我在typora中自动将图片上传到图床中的方法，换成macOS以后就得靠自己探索了。
 macOS版的typora支持的图床挺多的，比如iPic这种付费，这里贫穷的我选择免费的uPic。
 在uPic中的设置 下载地址
@@ -568,20 +568,20 @@ macOS版的typora支持的图床挺多的，比如iPic这种付费，这里贫�
     
     <item>
       <title>用PyTorch做分类任务的一个Baseline和若干Tricks</title>
-      <link>/posts/pytorch-baseline/</link>
+      <link>https://www.feifeizaici.xyz/posts/pytorch-baseline/</link>
       <pubDate>Thu, 02 Jul 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/pytorch-baseline/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/pytorch-baseline/</guid>
       <description>&lt;p&gt;从12月做Kaggle的比赛起，才算正儿八经开始跑程序了，查了挺多的资料，但是大部分想法都没有机会实践，写这个全当作整理，方便以后查看。
 例子就用这个&lt;a href=&#34;https://www.flyai.com/d/ChestXray02&#34;&gt;肺炎识别的比赛&lt;/a&gt;。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Linux 命令行中通过代理进行下载</title>
-      <link>/posts/terminal-proxy/</link>
+      <link>https://www.feifeizaici.xyz/posts/terminal-proxy/</link>
       <pubDate>Sat, 06 Jun 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/terminal-proxy/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/terminal-proxy/</guid>
       <description>用的代理工具为clash。现在我的几台设备上windows和macos都用的是clash了，很方便。
 在用户目录下创建 clash 文件夹
 mkdir &amp;amp;&amp;amp; cd clash 在GitHub上下载对应版本的二进制文件，解压并重命名为 clash
@@ -594,10 +594,10 @@ chmod +x clash 启动 Clash，同时启动 HTTP 代理和 Socks5 代理。
     
     <item>
       <title>【JS逆向】DeepL翻译和有道翻译</title>
-      <link>/posts/youdao-deepl/</link>
+      <link>https://www.feifeizaici.xyz/posts/youdao-deepl/</link>
       <pubDate>Wed, 13 May 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/youdao-deepl/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/youdao-deepl/</guid>
       <description>现在有很多翻译软件能够同时提供多个网站的翻译结果，比如非常好用的copytranslator：
 其实它们也是调用了这些翻译网站的API，下面选择DeepL翻译和有道翻译来尝试破解。
 DeepL翻译 网址：https://www.deepl.com/translator
@@ -610,10 +610,10 @@ import time import random import requests def deepl_translator(sentence): senten
     
     <item>
       <title>【爬虫实战】爬两次</title>
-      <link>/posts/crawl-twice/</link>
+      <link>https://www.feifeizaici.xyz/posts/crawl-twice/</link>
       <pubDate>Wed, 13 May 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/crawl-twice/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/crawl-twice/</guid>
       <description>定义 「爬两次」这个词是我自己随便编的，意思就是要对相同的API发送两次请求。学过小学奥数的人应该知道「算两次」，就是用不同的两种方法来计算同一个东西，因为结果必然是一样的，所以可以得到两个式子间一些关系。「爬两次」和「算两次」没什么关系，扯这么多是因为我闲的蛋疼。
 问题 这个问题是下午在闲鱼大佬的爬虫交流群里看到的：
 网站：
@@ -629,10 +629,10 @@ import requests s = requests.session() headers = { &amp;#39;User-Agent&amp;#39;:
     
     <item>
       <title>集中自适应的学习率算法</title>
-      <link>/posts/adaptive-lr/</link>
+      <link>https://www.feifeizaici.xyz/posts/adaptive-lr/</link>
       <pubDate>Sun, 02 Feb 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/adaptive-lr/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/adaptive-lr/</guid>
       <description>因为众所不知的原因，这一周都浑浑噩噩的，可以说什么也没干，希望下周状态好一点，锻炼锻炼。 随便写写，当作一个简单的笔记，不涉及数学，头疼。
 1. SGD v.s. Ada. 目前应用最广泛的优化器还是SGD/SGDM和Adam，SGD强在它最终收敛的效果，而一系列自适应算法强在可以在训练初期快速收敛。下面这个图可以说明这种情况 2.常见的自适应学习率算法 2.1 AdaGrad AdaGrad的想法是具有较大偏导的参数应该有一个较大的学习率，于是用每一个参数的所有梯度的历史平方值得和的平方根来缩放。
 2.2 RMSProp RMSProp是在AdaGrad的基础上改动的，思路是丢弃遥远过去的历史，让最近几次梯度的权重大一些。
@@ -643,10 +643,10 @@ bias_correction1 = 1 - beta1 ** state[&amp;#39;step&amp;#39;] bias_correction2 =
     
     <item>
       <title>用SSH远程使用Jupyter</title>
-      <link>/posts/ssh-jupyter/</link>
+      <link>https://www.feifeizaici.xyz/posts/ssh-jupyter/</link>
       <pubDate>Sat, 01 Feb 2020 15:00:00 +0800</pubDate>
       
-      <guid>/posts/ssh-jupyter/</guid>
+      <guid>https://www.feifeizaici.xyz/posts/ssh-jupyter/</guid>
       <description>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。
 1.在Linux命令行中 conda install ipykernel source activate 环境名称 python -m ipykernel install --user --name 环境名称 --display-name &amp;#34;Python (环境名称)&amp;#34; jupyter notebook --no-browser --port=8080 2.在Windows命令行中 ssh -N -L 8080:localhost:8080 usr@ip 端口默认是22，需要修改： 然后将Linux命令行中的地址复制到浏览器中即可： </description>
     </item>
