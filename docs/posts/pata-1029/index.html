@@ -111,7 +111,7 @@
     </header>
 
     <p><a href="https://pintia.cn/problem-sets/994805342720868352/problems/994805466364755968">题目链接</a></p>
-<p>最简单的方法肯定是将两个数组合并，然后排序，最后输出中位数。这样的时间复杂度是 $O\left((m+n)\log(m+n)\right)$</p>
+<p>最简单的思路肯定是将两个数组合并，然后排序，最后输出中位数。这样的时间复杂度是 $O\left((m+n)\log(m+n)\right)$</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
 </span><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 <span class="k">using</span> <span class="n">gg</span> <span class="o">=</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">;</span>
@@ -133,7 +133,38 @@
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20210801193529771.png" alt="image-20210801193529771"></p>
-<p>如果要求时间复杂度为 $O(\log(m+n))$ 的话，就不能借助排序了，这里有一个很通俗易懂的算法解释：</p>
+<p>如果要求时间复杂度为 $O(m+n)$ 的话，就不能借助排序了，原书答案用的是 <code>two pointers</code> 的方法。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">gg</span> <span class="o">=</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">gg</span> <span class="n">ni</span><span class="p">;</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">ni</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">gg</span><span class="o">&gt;</span> <span class="n">s1</span><span class="p">(</span><span class="n">ni</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span><span class="o">&amp;</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">s1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">ni</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">gg</span><span class="o">&gt;</span> <span class="n">s2</span><span class="p">(</span><span class="n">ni</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span><span class="o">&amp;</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">s2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">gg</span> <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">s1</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="n">s2</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ans</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">gg</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">gg</span> <span class="n">a</span> <span class="o">=</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s1</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">?</span> <span class="n">s1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">:</span> <span class="n">INT_MAX</span><span class="p">,</span>
+           <span class="n">b</span> <span class="o">=</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">s2</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">?</span> <span class="n">s2</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">:</span> <span class="n">INT_MAX</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">ans</span> <span class="o">=</span> <span class="n">s1</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">ans</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ans</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>如果要求时间复杂度为 $O(\log(m+n))$，可以用类似二分查找的思想，这里有一个很通俗易懂的算法解释：</p>
 <p><a href="https://blog.csdn.net/bjweimengshu/article/details/98477014">漫画：如何找到两个数组的中位数？（修订版）</a></p>
 <p>我的实现：</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
