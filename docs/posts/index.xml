@@ -22,19 +22,6 @@ void replace_string(string &amp;amp;s, const string &amp;amp;oldVal, const strin
     </item>
     
     <item>
-      <title></title>
-      <link>https://feifeizaici.xyz/posts/draft/</link>
-      <pubDate>Sun, 01 Aug 2021 13:18:55 +0800</pubDate>
-      
-      <guid>https://feifeizaici.xyz/posts/draft/</guid>
-      <description>今天报名了PAT，还有一个月多一点点。
-之前上过信电的算法课和计院的数据结构基础，但是写过的代码非常少，我现在练链表怎么实现都不会了。
-两周左右时间速刷了一遍《算法详解》的1-14章，做了其中一半左右的题目，很多知识点只是留了一个印象。
-前10章看的比较快，一天一章，后面数据结构2-3天一章。
-一周时间刷一下《C++ Primer》和《剑指offer》</description>
-    </item>
-    
-    <item>
       <title>PAT A-1029 Median</title>
       <link>https://feifeizaici.xyz/posts/pata-1029/</link>
       <pubDate>Sun, 01 Aug 2021 13:18:55 +0800</pubDate>
