@@ -6,7 +6,34 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 03 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>C&#43;&#43;实现Python的str.replace()</title>
+      <link>https://feifeizaici.xyz/posts/c&#43;&#43;_replace/</link>
+      <pubDate>Tue, 03 Aug 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/c&#43;&#43;_replace/</guid>
+      <description>（其实是《C++ Primer》的习题 9.44）
+在 Python 中，我们可以用 str 对象的 replace 函数快速达到字符串替换的目的，例如：
+C++ 中虽然 string 对象也有名为 replace 的成员函数，但是接口和效果都与 Python 中不同。
+// 删除s中范围range内的自负，替换为args指定的字符。range或者是一个下标一个长度，或者是一对指向s的迭代器。返回一个指向s的引用 s.replace(range, args) 如果要实现类似 Python 中 replace 的功能，我一开始是这样写的：
+void replace_string(string &amp;amp;s, const string &amp;amp;oldVal, const string &amp;amp;newVal){ while (s.find(oldVal) != string::npos){ int pos = s.find(oldVal); s.replace(pos, oldVal.size(), newVal); } } 其实可以在 while 的条件语句中对 pos 进行赋值，然后再判断，省的执行两次 find，同时更新开始查找的下标也可以节省一些时间。
+void replace_string(string &amp;amp;s, const string &amp;amp;oldVal, const string &amp;amp;newVal){ int pos = 0 while ((pos = s.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://feifeizaici.xyz/posts/draft/</link>
+      <pubDate>Sun, 01 Aug 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/draft/</guid>
+      <description>今天报名了PAT，还有一个月多一点点。
+之前上过信电的算法课和计院的数据结构基础，但是写过的代码非常少，我现在练链表怎么实现都不会了。
+两周左右时间速刷了一遍《算法详解》的1-14章，做了其中一半左右的题目，很多知识点只是留了一个印象。
+前10章看的比较快，一天一章，后面数据结构2-3天一章。
+一周时间刷一下《C++ Primer》和《剑指offer》</description>
+    </item>
+    
     <item>
       <title>PAT A-1029 Median</title>
       <link>https://feifeizaici.xyz/posts/pata-1029/</link>
