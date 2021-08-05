@@ -6,7 +6,19 @@
     <description>Recent content in algorithms on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 01 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PATA-1077 Kuchiguse</title>
+      <link>https://feifeizaici.xyz/posts/pata-1077/</link>
+      <pubDate>Thu, 05 Aug 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/pata-1077/</guid>
+      <description>题目链接
+本质是求若干个字符串的公共最长后缀，可以通过反转转化成求最长前缀的问题。
+在 leetcode 上看到了这个精炼的解答——排序、比较首尾两个字符串。
+#include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; int main(){ ios::sync_with_stdio(false); cin.tie(0); gg n; cin &amp;gt;&amp;gt; n; cin.get(); string s; vector&amp;lt;string&amp;gt; v; while (n--){ getline(cin, s); reverse(s.begin(), s.end()); v.push_back(s); } sort(v.begin(), v.end()); string a = v.front(), b = v.back(), c; gg i; for (i = 0; a[i] == b[i] and (i &amp;lt; min(a.size(), b.size())); ++i); if (i == 0) cout &amp;lt;&amp;lt; &amp;#34;nai&amp;#34;; else{ c = a.</description>
+    </item>
+    
     <item>
       <title>PAT A-1029 Median</title>
       <link>https://feifeizaici.xyz/posts/pata-1029/</link>
