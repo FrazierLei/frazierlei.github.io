@@ -6,9 +6,29 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 05 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>PATA-1077 Kuchiguse</title>
+      <title>PAT 排名问题</title>
+      <link>https://feifeizaici.xyz/posts/rank/</link>
+      <pubDate>Sat, 07 Aug 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/rank/</guid>
+      <description>同样成绩的要有同样的排名。
+代码模板 vector&amp;lt;gg&amp;gt; grade = {98, 97, 93, 93, 87, 84, 84, 84, 80}; vector&amp;lt;gg&amp;gt; rank(grade.size()); for (gg i = 0, r = 1; i &amp;lt; grade.size(); ++i){ if (i == 0 or grade[i] != grade[i - 1]) r = i + 1; rank[i] = r; } PATA-1025 我用了map，没有定义函数，比答案稍微麻烦一点，但是不容易错。
+#include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; struct Student{ string id; gg grade; Student(string i, gg g):id(i), grade(g){} }; int main(){ ios::sync_with_stdio(false); cin.</description>
+    </item>
+    
+    <item>
+      <title>cout 格式化输出</title>
+      <link>https://feifeizaici.xyz/posts/cout/</link>
+      <pubDate>Fri, 06 Aug 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/cout/</guid>
+      <description>在整值型高位补0使其位数为m cout &amp;lt;&amp;lt; setfill(&amp;#39;0&amp;#39;); cout &amp;lt;&amp;lt; setw(4) &amp;lt;&amp;lt; 666 &amp;lt;&amp;lt; &amp;#34;\n&amp;#34;&amp;lt;&amp;lt; setw(5) &amp;lt;&amp;lt; 666; /* 输出： 0666 00666 */ 保留m位有效数字/小数 double i = 3.1415926; cout &amp;lt;&amp;lt; setprecision(2) &amp;lt;&amp;lt; i &amp;lt;&amp;lt; endl; cout &amp;lt;&amp;lt; setprecision(2) &amp;lt;&amp;lt; fixed &amp;lt;&amp;lt; i; /* 输出 3.1 3.14 */ </description>
+    </item>
+    
+    <item>
+      <title>PAT A-1077 Kuchiguse</title>
       <link>https://feifeizaici.xyz/posts/pata-1077/</link>
       <pubDate>Thu, 05 Aug 2021 13:18:55 +0800</pubDate>
       
