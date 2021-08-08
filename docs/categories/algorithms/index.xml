@@ -8,7 +8,7 @@
     <language>en</language>
     <lastBuildDate>Thu, 05 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>PAT A-1077 Kuchiguse</title>
+      <title>PAT A-1077 Kuchiguse（最长公共后缀）</title>
       <link>https://feifeizaici.xyz/posts/pata-1077/</link>
       <pubDate>Thu, 05 Aug 2021 13:18:55 +0800</pubDate>
       
@@ -20,7 +20,7 @@
     </item>
     
     <item>
-      <title>PAT A-1029 Median</title>
+      <title>PAT A-1029 Median（求两个数组合并后的中位数）</title>
       <link>https://feifeizaici.xyz/posts/pata-1029/</link>
       <pubDate>Sun, 01 Aug 2021 13:18:55 +0800</pubDate>
       
@@ -31,7 +31,7 @@
     </item>
     
     <item>
-      <title>PAT A-1053  Path of Equal Weight</title>
+      <title>PAT A-1053  Path of Equal Weight（DFS 遍历）</title>
       <link>https://feifeizaici.xyz/posts/pata-1053/</link>
       <pubDate>Sat, 31 Jul 2021 13:18:55 +0800</pubDate>
       
@@ -41,7 +41,7 @@
     </item>
     
     <item>
-      <title>PAT A-1055  The World&#39;s Richest</title>
+      <title>PAT A-1055  The World&#39;s Richest（vector &#43; sort）</title>
       <link>https://feifeizaici.xyz/posts/pata-1055/</link>
       <pubDate>Sun, 25 Jul 2021 13:18:55 +0800</pubDate>
       
