@@ -19,7 +19,19 @@
     </item>
     
     <item>
-      <title>PAT 排名问题</title>
+      <title>PAT 链表题目模板</title>
+      <link>https://feifeizaici.xyz/posts/linkedlist-template/</link>
+      <pubDate>Sun, 08 Aug 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/linkedlist-template/</guid>
+      <description>模板 用静态链表储存数据。输入一般为如下模式：
+00100 5 // 首地址，长度 99999 -7 87654 节点地址，变量值，下一个节点的地址 23854 -15 00000 87654 15 -1 00000 -15 99999 00100 21 23854 先用一个 vector&amp;lt;array&amp;lt;gg, 2&amp;gt;&amp;gt; 储存读取进来的数据。
+vector&amp;lt;array&amp;lt;gg, 2&amp;gt;&amp;gt; input(gg(1e5), {-1, -1}); for (gg i = 0; i &amp;lt; n; ++i){ gg address, value, next; cin &amp;gt;&amp;gt; address &amp;gt;&amp;gt; value &amp;gt;&amp;gt; next; input[address] = {value, next}; } 然后定义一个 vector 按顺序储存每一个节点的地址。
+vector&amp;lt;gg&amp;gt; lst; while (start != -1) { lst.push_back(start); start = input[start][1]; } 遍历输出时最后一个节点要另外拿出来单独处理。</description>
+    </item>
+    
+    <item>
+      <title>PAT A-1025/1080（排名问题）</title>
       <link>https://feifeizaici.xyz/posts/rank/</link>
       <pubDate>Sat, 07 Aug 2021 13:18:55 +0800</pubDate>
       
