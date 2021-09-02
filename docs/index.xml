@@ -6,7 +6,21 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 08 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 12 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PAT A-1093 Count PAT&#39;s（容易超时）</title>
+      <link>https://feifeizaici.xyz/posts/pata-1093/</link>
+      <pubDate>Thu, 12 Aug 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/pata-1093/</guid>
+      <description>本来很简单，但是调了半天。。。
+我的思路是遇到A就记录一下当前A前面的P的个数，然后遇到T就对这个vector求和累加。
+然后就超时了：
+#include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; int main(){ ios::sync_with_stdio(false); cin.tie(0); string s; cin &amp;gt;&amp;gt; s; gg p = 0, ans = 0; vector&amp;lt;gg&amp;gt; v; for (char c : s){ if (c == &amp;#39;P&amp;#39;) ++p; else if (c == &amp;#39;A&amp;#39;) v.push_back(p); else ans += accumulate(v.begin(), v.end(), 0); } cout &amp;lt;&amp;lt; (ans % 1000000007); return 0; } 既然前三个测试点过了，后两个超时，那说明算法是正确的，只是需要优化一下。
+把每次求和得到的值记录下来，下次从下一个元素开始算起即可。
+#include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; int main(){ ios::sync_with_stdio(false); cin.</description>
+    </item>
+    
     <item>
       <title>PAT A-1046 Shortest Distance（容易超时）</title>
       <link>https://feifeizaici.xyz/posts/pata-1046/</link>
@@ -16,18 +30,6 @@
       <description>题目链接
 本来觉得5分钟就能过，但是最后一个测试点过不去，超时。
 #include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; int main(){ ios::sync_with_stdio(false); cin.tie(0); gg n, k; cin &amp;gt;&amp;gt; n; vector&amp;lt;gg&amp;gt; v(n); for (gg &amp;amp;i : v) cin &amp;gt;&amp;gt; i; gg sum = accumulate(v.begin(), v.end(), 0); cin &amp;gt;&amp;gt; k; while (k--){ gg i, j, d1, d2; cin &amp;gt;&amp;gt; i &amp;gt;&amp;gt; j; if (i &amp;gt; j) swap(i, j); d1 = accumulate(v.begin() + i - 1, v.begin() + j - 1, 0); d2 = sum - d1; cout &amp;lt;&amp;lt; min(d1, d2) &amp;lt;&amp;lt; &amp;#34;\n&amp;#34;; } return 0; } 容易发现其实做了很多重复的运算，答案如下：</description>
-    </item>
-    
-    <item>
-      <title>PAT 链表题目模板</title>
-      <link>https://feifeizaici.xyz/posts/linkedlist-template/</link>
-      <pubDate>Sun, 08 Aug 2021 13:18:55 +0800</pubDate>
-      
-      <guid>https://feifeizaici.xyz/posts/linkedlist-template/</guid>
-      <description>模板 用静态链表储存数据。输入一般为如下模式：
-00100 5 // 首地址，长度 99999 -7 87654 节点地址，变量值，下一个节点的地址 23854 -15 00000 87654 15 -1 00000 -15 99999 00100 21 23854 先用一个 vector&amp;lt;array&amp;lt;gg, 2&amp;gt;&amp;gt; 储存读取进来的数据。
-vector&amp;lt;array&amp;lt;gg, 2&amp;gt;&amp;gt; input(gg(1e5), {-1, -1}); for (gg i = 0; i &amp;lt; n; ++i){ gg address, value, next; cin &amp;gt;&amp;gt; address &amp;gt;&amp;gt; value &amp;gt;&amp;gt; next; input[address] = {value, next}; } 然后定义一个 vector 按顺序储存每一个节点的地址。
-vector&amp;lt;gg&amp;gt; lst; while (start != -1) { lst.push_back(start); start = input[start][1]; } 遍历输出时最后一个节点要另外拿出来单独处理。</description>
     </item>
     
     <item>
@@ -42,15 +44,6 @@ vector&amp;lt;gg&amp;gt; lst; while (start != -1) { lst.push_back(start); start 
     </item>
     
     <item>
-      <title>cout 格式化输出</title>
-      <link>https://feifeizaici.xyz/posts/cout/</link>
-      <pubDate>Fri, 06 Aug 2021 13:18:55 +0800</pubDate>
-      
-      <guid>https://feifeizaici.xyz/posts/cout/</guid>
-      <description>在整值型高位补0使其位数为m cout &amp;lt;&amp;lt; setfill(&amp;#39;0&amp;#39;); cout &amp;lt;&amp;lt; setw(4) &amp;lt;&amp;lt; 666 &amp;lt;&amp;lt; &amp;#34;\n&amp;#34;&amp;lt;&amp;lt; setw(5) &amp;lt;&amp;lt; 666; /* 输出： 0666 00666 */ 保留m位有效数字/小数 double i = 3.1415926; cout &amp;lt;&amp;lt; setprecision(2) &amp;lt;&amp;lt; i &amp;lt;&amp;lt; endl; cout &amp;lt;&amp;lt; setprecision(2) &amp;lt;&amp;lt; fixed &amp;lt;&amp;lt; i; /* 输出 3.1 3.14 */ </description>
-    </item>
-    
-    <item>
       <title>PAT A-1077 Kuchiguse（最长公共后缀）</title>
       <link>https://feifeizaici.xyz/posts/pata-1077/</link>
       <pubDate>Thu, 05 Aug 2021 13:18:55 +0800</pubDate>
@@ -60,20 +53,6 @@ vector&amp;lt;gg&amp;gt; lst; while (start != -1) { lst.push_back(start); start 
 本质是求若干个字符串的公共最长后缀，可以通过反转转化成求最长前缀的问题。
 在 leetcode 上看到了这个精炼的解答——排序、比较首尾两个字符串。
 #include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; int main(){ ios::sync_with_stdio(false); cin.tie(0); gg n; cin &amp;gt;&amp;gt; n; cin.get(); string s; vector&amp;lt;string&amp;gt; v; while (n--){ getline(cin, s); reverse(s.begin(), s.end()); v.push_back(s); } sort(v.begin(), v.end()); string a = v.front(), b = v.back(), c; gg i; for (i = 0; a[i] == b[i] and (i &amp;lt; min(a.size(), b.size())); ++i); if (i == 0) cout &amp;lt;&amp;lt; &amp;#34;nai&amp;#34;; else{ c = a.</description>
-    </item>
-    
-    <item>
-      <title>C&#43;&#43;实现Python的str.replace()</title>
-      <link>https://feifeizaici.xyz/posts/c&#43;&#43;_replace/</link>
-      <pubDate>Tue, 03 Aug 2021 13:18:55 +0800</pubDate>
-      
-      <guid>https://feifeizaici.xyz/posts/c&#43;&#43;_replace/</guid>
-      <description>（其实是《C++ Primer》的习题 9.44）
-在 Python 中，我们可以用 str 对象的 replace 函数快速达到字符串替换的目的，例如：
-C++ 中虽然 string 对象也有名为 replace 的成员函数，但是接口和效果都与 Python 中不同。
-// 删除s中范围range内的自负，替换为args指定的字符。range或者是一个下标一个长度，或者是一对指向s的迭代器。返回一个指向s的引用 s.replace(range, args) 如果要实现类似 Python 中 replace 的功能，我一开始是这样写的：
-void replace_string(string &amp;amp;s, const string &amp;amp;oldVal, const string &amp;amp;newVal){ while (s.find(oldVal) != string::npos){ int pos = s.find(oldVal); s.replace(pos, oldVal.size(), newVal); } } 其实可以在 while 的条件语句中对 pos 进行赋值，然后再判断，省的执行两次 find，同时更新开始查找的下标也可以节省一些时间。
-void replace_string(string &amp;amp;s, const string &amp;amp;oldVal, const string &amp;amp;newVal){ int pos = 0 while ((pos = s.</description>
     </item>
     
     <item>
@@ -115,16 +94,6 @@ void replace_string(string &amp;amp;s, const string &amp;amp;oldVal, const strin
  Python 3.6+ requests: 用于下载视频 bs4: 用于解析 HTML FFmpeg 和 ffmpy3: 用于下载并合并视频片段 Node.js : 用于运行那一小段 JS 代码 代理软件，我用的是 ClashX  脚本中设置了代理软件用到的通信端口：
 os.environ[&amp;#34;http_proxy&amp;#34;] = &amp;#34;http://127.0.0.1:7890&amp;#34; os.environ[&amp;#34;https_proxy&amp;#34;] = &amp;#34;http://127.0.0.1:7890&amp;#34; 也可以在执行 Python 脚本的终端中进行设置：
 export http_proxy=http://127.0.0.1:7890 export https_proxy=http://127.0.0.1:7890 二者的效果是一样的。</description>
-    </item>
-    
-    <item>
-      <title>PAT A-1055  The World&#39;s Richest（vector &#43; sort）</title>
-      <link>https://feifeizaici.xyz/posts/pata-1055/</link>
-      <pubDate>Sun, 25 Jul 2021 13:18:55 +0800</pubDate>
-      
-      <guid>https://feifeizaici.xyz/posts/pata-1055/</guid>
-      <description>题目链接
-#include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; struct Person{ string name; gg age, money; Person(string n, gg a, gg m):name(n), age(a), money(m){} }; int main(){ ios::sync_with_stdio(false); cin.tie(0); gg n, k, m, amin, amax, age, money; string name; bool flag; cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; k; vector&amp;lt;Person&amp;gt; p; for(gg i = 0; i &amp;lt; n; ++i){ cin &amp;gt;&amp;gt; name &amp;gt;&amp;gt; age &amp;gt;&amp;gt; money; p.push_back(Person(name, age, money)); } sort(p.begin(), p.end(), [](const Person &amp;amp;p1, const Person &amp;amp;p2){ return tie(p2.</description>
     </item>
     
     <item>
@@ -372,6 +341,42 @@ PC端登录 抓包 账号密码都输入123456，找到登录对应的请求：
     </item>
     
     <item>
+      <title>程咬金攻略</title>
+      <link>https://feifeizaici.xyz/posts/chengyaojin/</link>
+      <pubDate>Thu, 17 Dec 2020 15:00:00 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/chengyaojin/</guid>
+      <description>分享一些本人对程咬金玩法的思考和经验，会不断调整玩法和更新攻略。
+17年入坑，18年潜心钻研程咬金攻略，19年一整年都是安卓微信区和安卓QQ区的浙江省第一程咬金。
+安卓微信区ID：魔鬼筋肉人$\gamma$
+安卓QQ区ID：玉泉时空
+更新日期：2020.9.30
+19年11月上过国服，战力最高打到过9898。 20年9月打到10000+战力，最终与国服失之交臂，含恨退游hhhh。
+皮肤 程咬金有5个皮肤，数量和质量在坦克里都还不错。皮肤增加的120点血量对一级对拼还挺重要的。 手感的话，我的个人排名如下： $$ 活力突击&amp;gt;华尔街大亨&amp;gt;星际陆战队&amp;gt;爱与正义\approx 原皮&amp;gt; 功夫厨神 $$
+功夫厨神平A手感很差，哑铃皮太贵，大亨皮限时出售，所以星际陆战队是一个性价比比较不错的选择。另外偶尔用爱与正义恶心一下对面也是不错的，比如越塔杀完以后，在塔下跳个突围尬舞。有诗为证：
+ 绿色背心小裤衩，爱心斧子两边插。金黄胡子翘啊翘，粉红嘴巴么么哒。
+ 出装铭文技能 一个人玩透一个英雄的必要条件是能够灵活地调整出装和铭文，而不是照搬别人的。
+铭文 这是两套我常带的铭文，第一套更肉一点，适合对线前期强势的英雄：
+ 10狩猎，10鹰眼，7宿命，3祸源 10狩猎，10鹰眼，3红月，3宿命，4祸源  狩猎为了移速，追人和跑路都有用，鹰眼是为了清兵快一点，还可以抢二级。红色铭文稍微有些变化，我也看过一些主播的铭文，有挺多人带5红月5祸源的，应该也是为了卡一级16.6的攻速阈值。被誉为程咬金科学家的南宁时空尝试过宿命、祸源、异变、红月，最后基本带的是狩猎百穿。
+出装 程咬金的核心装备只有三件：韧性鞋 冰心 不死鸟，其他的根据对线的人和具体场景灵活应对。
+我的出装通常是这样的：
+Tips：
+ 尽量在十分钟内出完不死鸟，否则很难在这个关键时间节点在团战中发挥出自己的作用。 S20法师迎来了一定程度的加强，比如小乔出完法穿鞋、回响、帽子，就可以秒掉没有出魔抗的残血金金了。所以火甲可以改成只出小火甲，或者直接出完冰心就出不死鸟。 如果对面法师真的很猛，出魔女吧。 火甲不是必出的，可以换成别的防御装或者输出装。  召唤师技能 一个原则：打得过而且能杀就带干扰；打得过但是杀不了就到惩戒；打不过就带治疗或者弱化吧吧。至于打得过打不过需要很多经验，这个后面具体说。
+PS：现在看来，干扰套路只适用于低分段（排位30🌟以下，巅峰赛1600分以下），到了稍微高一点的分段，大家都知道你带干扰是想干什么，所以开始收起来带惩戒或者弱化吧。干扰就让辅助带好了。
+技能连招 只有一个很简单的连招：跳+A+转，这里的转可以取消平A的前摇。如果对方是有位移的英雄就跳+转，短时间打出最高输出。
+虽然程咬金的位移很长，但是在面对有位移的英雄时，不管是追击还是逃跑，都不要优先使用位移，这样就能掌握主动权。
+程咬金帮助队伍获胜的三个方法  中后期不停地带线，为队友提供视野，从而得到开龙和推塔的机会 团战切脆皮，即使切不死也要打乱阵型，让他们首尾不能相顾。 在线上，通过单杀来获取线上优势  这里第一点是最简单的，能够带好线，并且保证自己这路没崩就是合格的程咬金了。第二点就需要一些操作了，如何接近脆皮，如何控制血量，如何全身而退，都是需要操作的。第三点是最难的，这需要很精细的操作，对敌方英雄的认识，知道谁打得过，谁打不过，打得过如何杀，打不过如何保证不死而且经济不落后太多。
+如何带线？ 二三点后面会详细讲解，这里简单说一下第一点。清兵的时候站在三个兵中间，可以提高清兵效率，清兵速度快了，就有更多时间来做别的事情。这也是为什么我喜欢出火甲。**如果是顺风局或者均势局，一定要保证自己家有一路兵线是有优势的。**这样不仅可以提供视野，还可以为队友推塔和拿龙争取时间和空间。这个时候带线要带容易带的那一路，如何判断带哪一路呢？根据以下几点：
+ 塔。如果自家这路一塔还在，对面这路一塔已破，那么这路比较容易带。 对线的英雄。如果是老夫子、暗信、猪八戒，这种程咬金遇到以后单挑没有优势的，就换一路带。 可能来抓你的英雄。如果对面有多个抓边能力很强的英雄，例如张良、鬼谷子，而且队友并没有给你提供足够的视野，那就不要带的太深，否则被抓后4打5会比较不利。  **如果是逆风局，也要去带线，同样要去带容易带出去的那一路，但是根据对方抓边的情况选择继续深入带，还是回去帮队友守塔。**逆风局程咬金装备难以成型，很脆，容易被抓，如果被抓崩了就会被举报，就不能继续玩了。所以为了下局还能继续快乐地玩耍，觉得没有翻盘点的局就保一下KDA吧。
+后期如果自己家有一路高地塔被推掉了，那么要优先带这路难带的兵线，防止被对面偷掉水晶。
+四一分推是最简单，也最适合程咬金的战术。告诉队友让他们不要单独行动，抱团推进（通常是推中或者打龙），然后在程咬金清完一路线以后一起发起进攻。
+重要的时间节点 程咬金强势期有两个，一个是一级对线大部分边路的时候，二是冰心不死鸟刚出来，而对面破甲或者制裁还没有出来的时候，利用好强势期打出些优势吧。
+对线细节 一般对线物理输出的边路（射手，大部分战士、坦克），出门买一个220块的布甲，然后再预购一个，最好能一边打兵一边打对面英雄，如果不行就强行抢二级。消耗到可以杀了就开干扰越塔拿个一血。
+下面我会详细描述对线常见英雄的方法，没有提到的说明太好打了，不需要浪费口舌。
+常见边路 马超 王者30星以下基本没有会玩的马超，除非是炸鱼。遇到不是很厉害的，很容易就打爆他了，但是打爆高分段会玩的马超是不现实的，甚至很多时候打不过他。那么怎么限制马超呢？首先马超的输出基本都靠捡到枪以后的强化普攻，所以改出布甲鞋，然后用冰心+不详的组合来让他A不出来。</description>
+    </item>
+    
+    <item>
       <title>【爬虫实战】如何下载PornHub上的学习资料</title>
       <link>https://feifeizaici.xyz/posts/pornhub-download/</link>
       <pubDate>Tue, 15 Dec 2020 15:00:00 +0800</pubDate>
@@ -571,41 +576,6 @@ import requests from bs4 import BeautifulSoup # 获取CSRF验证 r = requests.</
 问了一下zt师兄，他说可以用sshfs，就试了一下，很快就成功了。
 安装sshfs 需要先安装fuse brew install Caskroom/cask/osxfuse 然后安装sshfs brew install sshfs 然后就可以挂载了 sshfs -C -o reconnect user@hostname:remote_dir local_dir 例如：
 sshfs -C -o reconnect leizongfei@10.212.43.26:/home/leizongfei/code /Users/leizongfei/code/codeshare # 需要输入密码 leizongfei@10.212.43.26&amp;#39;s password: 取消挂载 sudo diskutil umount force /Users/leizongfei/code/codeshare 装的太慢咋办——让命令行走代理 export all_proxy=socks5://127.0.0.1:7891 注意要把clash设置为全局模式，为了方便一点可以在~/.zshrc里设一个alias</description>
-    </item>
-    
-    <item>
-      <title>程咬金攻略</title>
-      <link>https://feifeizaici.xyz/posts/chengyaojin/</link>
-      <pubDate>Mon, 17 Aug 2020 15:00:00 +0800</pubDate>
-      
-      <guid>https://feifeizaici.xyz/posts/chengyaojin/</guid>
-      <description>分享一些本人对程咬金玩法的思考和经验，会不断调整玩法和更新攻略。
-作者：霏霏
-安卓微信区ID：魔鬼筋肉人$\gamma$
-更新日期：2020.8.17
-19年11月短暂地上过国服，战力最高打到过9898。 皮肤 程咬金有5个皮肤，数量和质量在坦克里都还不错。皮肤增加的120点血量对一级对拼还挺重要的。 手感的话，我的个人排名如下： $$ 活力突击&amp;gt;华尔街大亨&amp;gt;星际陆战队&amp;gt;爱与正义\approx 原皮&amp;gt; 功夫厨神 $$
-功夫厨神平A手感很差，哑铃皮太贵，大亨皮限时出售，所以星际陆战队是一个性价比比较不错的选择。另外偶尔用爱与正义恶心一下对面也是不错的，比如越塔杀完以后，在塔下跳个突围尬舞。有诗为证：
- 绿色背心小裤衩，爱心斧子两边插。金黄胡子翘啊翘，粉红嘴巴么么哒。
- 出装铭文技能 一个人玩透一个英雄的必要条件是能够灵活地调整出装和铭文，而不是照搬别人的。
-铭文 这是两套我常带的铭文，第一套更肉一点，适合对线前期强势的英雄：
- 10狩猎，10鹰眼，7宿命，3祸源 10狩猎，10鹰眼，3红月，3宿命，4祸源  狩猎为了移速，追人和跑路都有用，鹰眼是为了清兵快一点，还可以抢二级。红色铭文稍微有些变化，我也看过一些主播的铭文，有挺多人带5红月5祸源的，应该也是为了卡一级16.6的攻速阈值。被誉为程咬金科学家的南宁时空尝试过宿命、祸源、异变、红月，最后基本带的是狩猎百穿。
-出装 程咬金的核心装备只有三件：韧性鞋 冰心 不死鸟，其他的根据对线的人和具体场景灵活应对。
-我的出装通常是这样的：
-Tips：
- 尽量在十分钟内出完不死鸟，否则很难在这个关键时间节点在团战中发挥出自己的作用。 S20法师迎来了一定程度的加强，比如小乔出完法穿鞋、回响、帽子，就可以秒掉没有出魔抗的残血金金了。所以火甲可以改成只出小火甲，或者直接出完冰心就出不死鸟。 如果对面法师真的很猛，出魔女吧。 火甲不是必出的，可以换成别的防御装或者输出装。  召唤师技能 一个原则：打得过而且能杀就带干扰；打得过但是杀不了就到惩戒；打不过就带治疗或者弱化吧吧。至于打得过打不过需要很多经验，这个后面具体说。
-PS：现在看来，干扰套路只适用于低分段（排位30🌟以下，巅峰赛1600分以下），到了稍微高一点的分段，大家都知道你带干扰是想干什么，所以开始收起来带惩戒或者弱化吧。干扰就让辅助带好了。
-技能连招 只有一个很简单的连招：跳+A+转，这里的转可以取消平A的前摇。如果对方是有位移的英雄就跳+转，短时间打出最高输出。
-虽然程咬金的位移很长，但是在面对有位移的英雄时，不管是追击还是逃跑，都不要优先使用位移，这样就能掌握主动权。
-程咬金帮助队伍获胜的三个方法  中后期不停地带线，为队友提供视野，从而得到开龙和推塔的机会 团战切脆皮，即使切不死也要打乱阵型，让他们首尾不能相顾。 在线上，通过单杀来获取线上优势  这里第一点是最简单的，能够带好线，并且保证自己这路没崩就是合格的程咬金了。第二点就需要一些操作了，如何接近脆皮，如何控制血量，如何全身而退，都是需要操作的。第三点是最难的，这需要很精细的操作，对敌方英雄的认识，知道谁打得过，谁打不过，打得过如何杀，打不过如何保证不死而且经济不落后太多。
-如何带线？ 二三点后面会详细讲解，这里简单说一下第一点。清兵的时候站在三个兵中间，可以提高清兵效率，清兵速度快了，就有更多时间来做别的事情。这也是为什么我喜欢出火甲。**如果是顺风局或者均势局，一定要保证自己家有一路兵线是有优势的。**这样不仅可以提供视野，还可以为队友推塔和拿龙争取时间和空间。这个时候带线要带容易带的那一路，如何判断带哪一路呢？根据以下几点：
- 塔。如果自家这路一塔还在，对面这路一塔已破，那么这路比较容易带。 对线的英雄。如果是老夫子、暗信、猪八戒，这种程咬金遇到以后单挑没有优势的，就换一路带。 可能来抓你的英雄。如果对面有多个抓边能力很强的英雄，例如张良、鬼谷子，而且队友并没有给你提供足够的视野，那就不要带的太深，否则被抓后4打5会比较不利。  **如果是逆风局，也要去带线，同样要去带容易带出去的那一路，但是根据对方抓边的情况选择继续深入带，还是回去帮队友守塔。**逆风局程咬金装备难以成型，很脆，容易被抓，如果被抓崩了就会被举报，就不能继续玩了。所以为了下局还能继续快乐地玩耍，觉得没有翻盘点的局就保一下KDA吧。
-后期如果自己家有一路高地塔被推掉了，那么要优先带这路难带的兵线，防止被对面偷掉水晶。
-四一分推是最简单，也最适合程咬金的战术。告诉队友让他们不要单独行动，抱团推进（通常是推中或者打龙），然后在程咬金清完一路线以后一起发起进攻。
-重要的时间节点 程咬金强势期有两个，一个是一级对线大部分边路的时候，二是冰心不死鸟刚出来，而对面破甲或者制裁还没有出来的时候，利用好强势期打出些优势吧。
-对线细节 一般对线物理输出的边路（射手，大部分战士、坦克），出门买一个220块的布甲，然后再预购一个，最好能一边打兵一边打对面英雄，如果不行就强行抢二级。消耗到可以杀了就开干扰越塔拿个一血。
-下面我会详细描述对线常见英雄的方法，没有提到的说明太好打了，不需要浪费口舌。
-常见边路 马超 王者30星以下基本没有会玩的马超，除非是炸鱼。遇到不是很厉害的，很容易就打爆他了，但是打爆高分段会玩的马超是不现实的，甚至很多时候打不过他。那么怎么限制马超呢？首先马超的输出基本都靠捡到枪以后的强化普攻，所以改出布甲鞋，然后用冰心+不详的组合来让他A不出来。
-扩展阅读：遇到马超总是被吃分？掌握好这几点反制马超其实很简单!</description>
     </item>
     
     <item>
