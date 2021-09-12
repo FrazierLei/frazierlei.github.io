@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="https://feifeizaici.xyz">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  2021年秋季PAT甲级考试复盘 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://feifeizaici.xyz/posts/pat-2021-autumn/">
+    <meta property="og:image" content="https://feifeizaici.xyzimages/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="https://feifeizaici.xyz/posts/pat-2021-autumn/">
+    <meta name="twitter:image" content="https://feifeizaici.xyzimages/tn.png">
+
+    <base href="https://feifeizaici.xyz/posts/pat-2021-autumn/">
+    <title>
+  2021年秋季PAT甲级考试复盘 - 霏霏
+</title>
+
+    <link rel="canonical" href="https://feifeizaici.xyz/posts/pat-2021-autumn/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="https://feifeizaici.xyz/index.xml" type="application/rss+xml" title="霏霏">
+      <link href="https://feifeizaici.xyz/index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://feifeizaici.xyz/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://feifeizaici.xyz/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">2021年秋季PAT甲级考试复盘</h1>
+      <h2 class="date">September 12, 2021</h2>
+    </header>
+
+    <p>7月底时候我买了日沉云起的《算法详解》但是一直没怎么看，8月初的时候那个人状态特别差，于是想找一个短期的目标去努力一下，于是花256报了PAT，准备了一个月的时间。昨天题目比较简单，挺多人都满分了。我考了97，后三题都很快AC了，但是第一题有两个测试点一直没过去，今天听别人讨论才想到。虽然这个成绩对我没有任何用，但是这段时间还是学到一些东西的，在算法和C++两个领域都勉强算入门了吧。</p>
+<p>本科时候上过信电的算法课和计院的数据结构基础，但是写过的代码非常少，我现在连链表怎么实现都忘了。</p>
+<hr>
+<ol start="0">
+<li>我报的是紫金港的线下考试，去了机房发现电脑的DEV-C++不能 <code>#include &lt;bits/stdc++.h&gt;</code>，但是还好常用头文件的名字我还记得，所以也没受影响。</li>
+<li>第一题上来就是一大推文字描述，我就跳过了，做完后三题还有接近两个小时，但是硬是没想出来“即使没有合理的测试数据，也要分配一块内存”这个简单的道理。</li>
+<li>第二题是根据一个数组的排列顺序，输出另一个相关联的数组的下标索引，比较简单。</li>
+<li>第三题是简单的DFS，递归的策略题目里已经给好了。</li>
+<li>第四题考察用中序遍历和最小堆这一特性进行建树，然后输出中序遍历，前几年考过一次几乎一模一样的题目，可以说也是送分题了。</li>
+<li>对面那个妹子真好看，晚了半个小时进考场，一会儿就全做完交卷走了，真羡慕。</li>
+</ol>
+<p>2019 年以后 PAT 的真题的解答：https://github.com/FrazierLei/PAT-A</p>
+
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "frazierlei" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>

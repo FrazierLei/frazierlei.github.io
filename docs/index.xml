@@ -6,7 +6,18 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 12 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Sep 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2021年秋季PAT甲级考试复盘</title>
+      <link>https://feifeizaici.xyz/posts/pat-2021-autumn/</link>
+      <pubDate>Sun, 12 Sep 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/pat-2021-autumn/</guid>
+      <description>7月底时候我买了日沉云起的《算法详解》但是一直没怎么看，8月初的时候那个人状态特别差，于是想找一个短期的目标去努力一下，于是花256报了PAT，准备了一个月的时间。昨天题目比较简单，挺多人都满分了。我考了97，后三题都很快AC了，但是第一题有两个测试点一直没过去，今天听别人讨论才想到。虽然这个成绩对我没有任何用，但是这段时间还是学到一些东西的，在算法和C++两个领域都勉强算入门了吧。
+本科时候上过信电的算法课和计院的数据结构基础，但是写过的代码非常少，我现在连链表怎么实现都忘了。
+ 我报的是紫金港的线下考试，去了机房发现电脑的DEV-C++不能 #include &amp;lt;bits/stdc++.h&amp;gt;，但是还好常用头文件的名字我还记得，所以也没受影响。 第一题上来就是一大推文字描述，我就跳过了，做完后三题还有接近两个小时，但是硬是没想出来“即使没有合理的测试数据，也要分配一块内存”这个简单的道理。 第二题是根据一个数组的排列顺序，输出另一个相关联的数组的下标索引，比较简单。 第三题是简单的DFS，递归的策略题目里已经给好了。 第四题考察用中序遍历和最小堆这一特性进行建树，然后输出中序遍历，前几年考过一次几乎一模一样的题目，可以说也是送分题了。 对面那个妹子真好看，晚了半个小时进考场，一会儿就全做完交卷走了，真羡慕。  2019 年以后 PAT 的真题的解答：https://github.com/FrazierLei/PAT-A</description>
+    </item>
+    
     <item>
       <title>PAT A-1093 Count PAT&#39;s（容易超时）</title>
       <link>https://feifeizaici.xyz/posts/pata-1093/</link>
