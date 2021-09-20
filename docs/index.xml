@@ -6,7 +6,18 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 12 Sep 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 20 Sep 2021 12:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>批量检测B站UP主视频投币状态</title>
+      <link>https://feifeizaici.xyz/posts/bili-coin/</link>
+      <pubDate>Mon, 20 Sep 2021 12:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/bili-coin/</guid>
+      <description>我19年时候才注册的B站，目的是给岳掌门投币，两年多过去了，基本每个视频都投过了但是难免有几条漏网之鱼，一个一个打开看有点费时间，所以写了一个简单的脚本来自动化完成。
+之前写过一篇【JS逆向】破解第三方BILIBILI视频下载加密策略，当时是看到Jack大佬的宝藏B站UP主，视频弹幕尽收囊中才开始研究B站的
+获取全部视频的URL # 获取「傲视在俗世上」的作品列表 import warnings warnings.filterwarnings(&amp;#39;ignore&amp;#39;) import requests import json import math space_url = &amp;#39;https://space.bilibili.com/8981370&amp;#39; search_url = &amp;#39;https://api.bilibili.com/x/space/arc/search&amp;#39; mid = space_url.split(&amp;#39;/&amp;#39;)[-1] sess = requests.Session() # 获取视频个数 ps = 1 pn = 1 params = {&amp;#39;mid&amp;#39;: mid, &amp;#39;ps&amp;#39;: ps, &amp;#39;tid&amp;#39;: 0, &amp;#39;pn&amp;#39;: pn} resp = sess.get(url=search_url, params=params) info = resp.json() video_count = info[&amp;#39;data&amp;#39;][&amp;#39;page&amp;#39;][&amp;#39;count&amp;#39;] ps = 10 page = math.ceil(video_count/ps) videos = {} for pn in range(1, page + 1): params = {&amp;#39;mid&amp;#39;: mid, &amp;#39;ps&amp;#39;: ps, &amp;#39;tid&amp;#39;: 0, &amp;#39;pn&amp;#39;: pn} resp = sess.</description>
+    </item>
+    
     <item>
       <title>2021年秋季PAT甲级考试复盘</title>
       <link>https://feifeizaici.xyz/posts/pat-2021-autumn/</link>
