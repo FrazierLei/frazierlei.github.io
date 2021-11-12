@@ -6,7 +6,24 @@
     <description>Recent content in Posts on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 08 Oct 2021 20:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 12 Nov 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用代理ip和动态UA实现简单的反爬</title>
+      <link>https://feifeizaici.xyz/posts/ua-ip/</link>
+      <pubDate>Fri, 12 Nov 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/ua-ip/</guid>
+      <description>最近因为众所不知的原因需要小爬一下JD，数据量也不大，但是遇到了反爬，简单记录一下解决方法。
+代理IP 如果用同一个IP短时间内对一个网站的API发送多个请求，很容易就会被发现并且ban掉，这个时候就需要使用代理，常见的代理方法有这么几种：
+  从网络上收集一些免费代理IP，然后建立成一个代理池，每次随机取出一个IP进行请求。
+  购买付费的API，对这个API发送请求时，得到的响应是代理IP和端口，其实和1是类似的。
+  购买付费的隧道代理，隧道代理会对请求进行动态转发，效果更好，当然价格也更贵。
+  如果用 Python 的 Requests 库写爬虫时需要用到代理，只需要给请求加上一个 proxies 参数即可。
+import requests proxies = { &amp;#39;http&amp;#39;: &amp;#39;http://10.10.1.10:3128&amp;#39;, &amp;#39;https&amp;#39;: &amp;#39;http://10.10.1.10:1080&amp;#39;, } requests.get(&amp;#39;http://example.org&amp;#39;, proxies=proxies) 动态UA 这部分有点搞笑，最开始我把UA写死成另一家利益无关的公司的爬虫名，然后这个UA就被JDban掉了😂
+网上找了一个可以自动生成各式各样假数据的库——faker，当然这里用到的只有假UA这一个功能。
+from faker import Faker fake = Faker() Faker.seed(0) for _ in range(5): # 生成5个随机UA print(fake.user_agent()) </description>
+    </item>
+    
     <item>
       <title>C&#43;&#43;中用sort函数对类对象自定义排序</title>
       <link>https://feifeizaici.xyz/posts/c&#43;&#43;_sort/</link>
