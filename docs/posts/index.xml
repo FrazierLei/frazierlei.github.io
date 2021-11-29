@@ -6,7 +6,19 @@
     <description>Recent content in Posts on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 12 Nov 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 Nov 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用优先队列（堆）解决 TopK 问题</title>
+      <link>https://feifeizaici.xyz/posts/topk/</link>
+      <pubDate>Mon, 29 Nov 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/topk/</guid>
+      <description>Leetcode 上有很多 TopK 类型的题目，相比用排序来解题，优先队列的优点在于不需要对整个数组进行排序，只需要数组的一部分保持堆的结构即可，这样边显著降低了复杂度。
+最小K个数 直观的想法是建立一个小顶堆，然后每次 pop 出最小的元素，但是这样需要把全部元素入堆，其实还是相当于把全部元素进行了排序，时间复杂度为 $\mathrm{O}(n\text{log}n)$。
+更合理的方法是建立一个 K 个元素组成大顶堆，然后持续更新这个堆，使得这个堆始终是当前遍历到的所有数字中最小的 K 个数。
+vector&amp;lt;int&amp;gt; smallestK(vector&amp;lt;int&amp;gt;&amp;amp; arr, int k) { if (k == 0) return {}; priority_queue&amp;lt;int&amp;gt; pq; // 大顶堆  for (int i = 0; i &amp;lt; k; ++i) pq.push(arr[i]); for (int i = k; i &amp;lt; arr.size(); ++i) { if (pq.top() &amp;gt; arr[i]) { pq.pop(); pq.push(arr[i]); } } vector&amp;lt;int&amp;gt; ans; while (not pq.empty()) { ans.push_back(pq.top()); pq.pop(); } return ans; } 如果要定义一个元素类型为int的小顶堆，代码如下：</description>
+    </item>
+    
     <item>
       <title>用代理ip和动态UA实现简单的反爬</title>
       <link>https://feifeizaici.xyz/posts/ua-ip/</link>
