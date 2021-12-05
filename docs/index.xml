@@ -6,7 +6,23 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 29 Nov 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 05 Dec 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用ddddocr实现简单的验证码反爬</title>
+      <link>https://feifeizaici.xyz/posts/ddddocr/</link>
+      <pubDate>Sun, 05 Dec 2021 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.xyz/posts/ddddocr/</guid>
+      <description>这次的网站是一年前搞过的一个网站，分别多日，再次相见时，它已多了一层验证码。
+加密的逻辑没有变，这部分在旧文中已经写得很详细了，快进到验证码。
+肉眼识别验证码 一般来说，包含验证码的这个请求的响应中也包含了一条 cookie，这条 cookie 让服务器知道当前页面要解析的内容和这条验证码是对应的。
+import requests from PIL import Image import re sess = requests.Session() resp = sess.get(&amp;#39;https://xbeibeix.com/api/bilibili/code.php&amp;#39;) with open(&amp;#39;captcha.png&amp;#39;, &amp;#39;wb&amp;#39;) as f: f.write(resp.content) img = Image.open(&amp;#34;./captcha.png&amp;#34;) 将这个验证码保存在本地以后，通过人眼OCR，我们识别出了“YRBH”这个字符串。
+data = { &amp;#34;bilibiliurl2123533&amp;#34;: &amp;#34;https://www.bilibili.com/video/BV1nb4y1t7XZ&amp;#34;, &amp;#34;zengqiang&amp;#34;: &amp;#34;true&amp;#34;, &amp;#34;code&amp;#34;: &amp;#34;YRBH&amp;#34; } resp = sess.post(&amp;#34;https://xbeibeix.com/api/bilibili/&amp;#34;, data=data) hahaha = re.search(&amp;#34;hahaha = &amp;#39;(.*?)&amp;#39;;&amp;#34;, resp.text).group(1) url = get_js_function(&amp;#39;bilibili.js&amp;#39;, &amp;#39;decrypt&amp;#39;, hahaha) print(url) get_js_function 函数用于执行 bilibili.js 文件中的 decrypt 函数，这部分在之前的文章中也提到过了。
+自动识别验证码 肉眼识别自然不是长久之策，我们需要一个自动化工具。
+ddddocr(带带弟弟OCR)是一个开源验证码识别工具，使用方法也非常简单：
+import ddddocr ocr = ddddocr.</description>
+    </item>
+    
     <item>
       <title>用优先队列（堆）解决 TopK 问题</title>
       <link>https://feifeizaici.xyz/posts/topk/</link>

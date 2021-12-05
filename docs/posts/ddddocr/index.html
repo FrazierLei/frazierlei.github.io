@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="https://feifeizaici.xyz">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  用ddddocr实现简单的验证码反爬 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://feifeizaici.xyz/posts/ddddocr/">
+    <meta property="og:image" content="https://feifeizaici.xyzimages/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="https://feifeizaici.xyz/posts/ddddocr/">
+    <meta name="twitter:image" content="https://feifeizaici.xyzimages/tn.png">
+
+    <base href="https://feifeizaici.xyz/posts/ddddocr/">
+    <title>
+  用ddddocr实现简单的验证码反爬 - 霏霏
+</title>
+
+    <link rel="canonical" href="https://feifeizaici.xyz/posts/ddddocr/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="https://feifeizaici.xyz/index.xml" type="application/rss+xml" title="霏霏">
+      <link href="https://feifeizaici.xyz/index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://feifeizaici.xyz/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://feifeizaici.xyz/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+
+
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">用ddddocr实现简单的验证码反爬</h1>
+      <h2 class="date">December 5, 2021</h2>
+    </header>
+
+    <p>这次的网站是一年前搞过的一个<a href="https://feifeizaici.xyz/posts/bilibili-download/">网站</a>，分别多日，再次相见时，它已多了一层验证码。</p>
+<p>加密的逻辑没有变，这部分在旧文中已经写得很详细了，快进到验证码。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20211205205746928.png" alt=""></p>
+<h2 id="肉眼识别验证码">肉眼识别验证码</h2>
+<p>一般来说，包含验证码的这个请求的响应中也包含了一条 cookie，这条 cookie 让服务器知道当前页面要解析的内容和这条验证码是对应的。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://xbeibeix.com/api/bilibili/code.php&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;captcha.png&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&#34;./captcha.png&#34;</span><span class="p">)</span>
+</code></pre></div><p>将这个验证码保存在本地以后，通过人眼OCR，我们识别出了“YRBH”这个字符串。</p>
+<p><img src="https://qiniusave.feifeizaici.xyz/uPic/image-20211205210517120.png" alt=""></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&#34;bilibiliurl2123533&#34;</span><span class="p">:</span> <span class="s2">&#34;https://www.bilibili.com/video/BV1nb4y1t7XZ&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;zengqiang&#34;</span><span class="p">:</span> <span class="s2">&#34;true&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;code&#34;</span><span class="p">:</span> <span class="s2">&#34;YRBH&#34;</span>
+<span class="p">}</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&#34;https://xbeibeix.com/api/bilibili/&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">hahaha</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&#34;hahaha = &#39;(.*?)&#39;;&#34;</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">get_js_function</span><span class="p">(</span><span class="s1">&#39;bilibili.js&#39;</span><span class="p">,</span> <span class="s1">&#39;decrypt&#39;</span><span class="p">,</span> <span class="n">hahaha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</code></pre></div><p><code>get_js_function</code> 函数用于执行 <code>bilibili.js</code> 文件中的 <code>decrypt</code> 函数，这部分在之前的文章中也提到过了。</p>
+<h2 id="自动识别验证码">自动识别验证码</h2>
+<p>肉眼识别自然不是长久之策，我们需要一个自动化工具。</p>
+<p>ddddocr(带带弟弟OCR)是一个开源验证码识别工具，使用方法也非常简单：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">ddddocr</span>
+
+<span class="n">ocr</span> <span class="o">=</span> <span class="n">ddddocr</span><span class="o">.</span><span class="n">DdddOcr</span><span class="p">()</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;test.png&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">img_bytes</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">classification</span><span class="p">(</span><span class="n">img_bytes</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</code></pre></div><p>需要注意的是，这里 <code>classification</code> 函数接受的是一个的 bytes 格式的图片。</p>
+<p>在这次的任务中，验证码API返回的信息本身就是 bytes 格式的，我们也就不需要把它保存在本地，直接调用函数即可。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">ddddocr</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://xbeibeix.com/api/bilibili/code.php&#39;</span><span class="p">)</span>
+<span class="n">captcha</span> <span class="o">=</span> <span class="n">ocr</span><span class="o">.</span><span class="n">classification</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">captcha</span><span class="p">)</span>
+</code></pre></div>
+  </article>
+
+  <br/>
+
+  
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "frazierlei" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2021    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>
