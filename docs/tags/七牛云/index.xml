@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>七牛云 on 霏霏</title>
-    <link>https://feifeizaici.xyz/tags/%E4%B8%83%E7%89%9B%E4%BA%91/</link>
+    <link>https://feifeizaici.fun/tags/%E4%B8%83%E7%89%9B%E4%BA%91/</link>
     <description>Recent content in 七牛云 on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 23 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/tags/%E4%B8%83%E7%89%9B%E4%BA%91/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.fun/tags/%E4%B8%83%E7%89%9B%E4%BA%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>解决 Chrome 无法打开博客中的图片（七牛云图床）</title>
-      <link>https://feifeizaici.xyz/posts/chrome-qiniu/</link>
+      <link>https://feifeizaici.fun/posts/chrome-qiniu/</link>
       <pubDate>Fri, 23 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>https://feifeizaici.xyz/posts/chrome-qiniu/</guid>
+      <guid>https://feifeizaici.fun/posts/chrome-qiniu/</guid>
       <description>把博客迁移到 Hugo 上以后，用 Chrome 打开，无法加载出来图片，而用 Firefox、Safari、手机的浏览器都可以看到图片。打开 Console
 把图片的 url 手动复制到浏览器中依然无法打开，需要把 https 换成 http 才行。这是因为 Chrome 浏览器不再允许 https 页面加载 http 内容了，之前的网站本身就只支持 http，所以不会遇到这个问题。
 打开七牛云的控制台中的域名管理，现在需要把协议升级到支持 HTTPS

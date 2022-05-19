@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>algorithms on 霏霏</title>
-    <link>https://feifeizaici.xyz/categories/algorithms/</link>
+    <link>https://feifeizaici.fun/categories/algorithms/</link>
     <description>Recent content in algorithms on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 05 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 Aug 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.fun/categories/algorithms/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>PAT A-1077 Kuchiguse（最长公共后缀）</title>
-      <link>https://feifeizaici.xyz/posts/pata-1077/</link>
+      <link>https://feifeizaici.fun/posts/pata-1077/</link>
       <pubDate>Thu, 05 Aug 2021 13:18:55 +0800</pubDate>
       
-      <guid>https://feifeizaici.xyz/posts/pata-1077/</guid>
+      <guid>https://feifeizaici.fun/posts/pata-1077/</guid>
       <description>题目链接
 本质是求若干个字符串的公共最长后缀，可以通过反转转化成求最长前缀的问题。
 在 leetcode 上看到了这个精炼的解答——排序、比较首尾两个字符串。
@@ -21,10 +21,10 @@
     
     <item>
       <title>PAT A-1029 Median（求两个数组合并后的中位数）</title>
-      <link>https://feifeizaici.xyz/posts/pata-1029/</link>
+      <link>https://feifeizaici.fun/posts/pata-1029/</link>
       <pubDate>Sun, 01 Aug 2021 13:18:55 +0800</pubDate>
       
-      <guid>https://feifeizaici.xyz/posts/pata-1029/</guid>
+      <guid>https://feifeizaici.fun/posts/pata-1029/</guid>
       <description>题目链接
 最简单的思路肯定是将两个数组合并，然后排序，最后输出中位数。这样的时间复杂度是 $O\left((m+n)\log(m+n)\right)$
 #include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; int main(){ ios::sync_with_stdio(false); cin.tie(0); gg n, m; cin &amp;gt;&amp;gt; n; vector&amp;lt;gg&amp;gt; v(n); for (gg i = 0; i &amp;lt; n; ++i) cin &amp;gt;&amp;gt; v[i]; cin &amp;gt;&amp;gt; m; v.resize(n + m); for (gg i = 0; i &amp;lt; m; ++i) cin &amp;gt;&amp;gt; v[n + i]; sort(v.begin(), v.end()); cout &amp;lt;&amp;lt; v[(n + m - 1)/2]; return 0; } 如果要求时间复杂度为 $O(m+n)$ 的话，就不能借助排序了，原书答案用的是 two pointers 的方法。</description>
@@ -32,10 +32,10 @@
     
     <item>
       <title>PAT A-1053  Path of Equal Weight（DFS 遍历）</title>
-      <link>https://feifeizaici.xyz/posts/pata-1053/</link>
+      <link>https://feifeizaici.fun/posts/pata-1053/</link>
       <pubDate>Sat, 31 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>https://feifeizaici.xyz/posts/pata-1053/</guid>
+      <guid>https://feifeizaici.fun/posts/pata-1053/</guid>
       <description>题目链接
 #include &amp;lt;bits/stdc++.h&amp;gt;using namespace std; using gg = long long; gg n, m, k; vector&amp;lt;vector&amp;lt;gg&amp;gt;&amp;gt; tree(1005), ans; vector&amp;lt;gg&amp;gt; weights(1005), sum(1005, 0), father(1005); void dfs(gg root){ if (tree[root].empty() and sum[root] == k){ gg r = root; vector&amp;lt;gg&amp;gt; v; do { v.push_back(weights[r]); r = father[r]; } while (father[r] != -1); v.push_back(weights[0]); ans.push_back(v); } for (gg i : tree[root]) { sum[i] += sum[root] + weights[i]; dfs(i); } } int main(){ ios::sync_with_stdio(false); cin.tie(0); cin &amp;gt;&amp;gt; n &amp;gt;&amp;gt; m &amp;gt;&amp;gt; k; for (gg i = 0; i &amp;lt; n; ++i) cin &amp;gt;&amp;gt; weights[i]; sum[0] = weights[0]; father[0] = -1; if (n == 1 and m == 0){ cout &amp;lt;&amp;lt; sum[0]; return 0; } while (m--){ gg num, id1, id2; cin &amp;gt;&amp;gt; id1 &amp;gt;&amp;gt; num; while (num--) { cin &amp;gt;&amp;gt; id2; tree[id1].</description>
     </item>

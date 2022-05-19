@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>jupyter on 霏霏</title>
-    <link>https://feifeizaici.xyz/tags/jupyter/</link>
+    <link>https://feifeizaici.fun/tags/jupyter/</link>
     <description>Recent content in jupyter on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 22 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.xyz/tags/jupyter/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 22 Jul 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.fun/tags/jupyter/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>用 SSH 远程访问 Jupyter Lab 并用 Kite 实现自动补全</title>
-      <link>https://feifeizaici.xyz/posts/ssh-jupyterlab/</link>
+      <link>https://feifeizaici.fun/posts/ssh-jupyterlab/</link>
       <pubDate>Thu, 22 Jul 2021 13:18:55 +0800</pubDate>
       
-      <guid>https://feifeizaici.xyz/posts/ssh-jupyterlab/</guid>
+      <guid>https://feifeizaici.fun/posts/ssh-jupyterlab/</guid>
       <description>要跑深度学习代码，只用本地电脑肯定是不够用的，必然需要远程使用服务器的计算资源。我观察到实验室很多人用的是 PyCharm , 但是我觉得PyCharm 用着挺费劲的。呆呆象师兄用的是 VScode，我比较习惯用 Jupyter Notebook 。但是Jupyter Notebook有着各种各样的问题，于是有了他的加强版—— Jupyter Lab。
 安装 Jupyter Lab 如果之前安装过 Jupyter Notebook 或者使用的是 Anaconda 的话，环境中很可能还保留着旧版本的 Jupyter Lab，所以要先安装最新版的 Jupyter Lab。
 pip install jupyterlab --upgrade 如果遇到类似 ERROR: Cannot uninstall &#39;terminado&#39;. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall. 这样的报错信息，可以执行下方命令，然后重新 pip 安装 Jupyter Lab。
