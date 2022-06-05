@@ -800,15 +800,31 @@ bias_correction1 = 1 - beta1 ** state[&amp;#39;step&amp;#39;] bias_correction2 =
     
     <item>
       <title>Leetcode 字典序排数</title>
-      <link>https://feifeizaici.fun/posts/draft%E7%9A%84%E5%89%AF%E6%9C%AC/</link>
+      <link>https://feifeizaici.fun/posts/leetcode-dictionary-sort/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://feifeizaici.fun/posts/draft%E7%9A%84%E5%89%AF%E6%9C%AC/</guid>
+      <guid>https://feifeizaici.fun/posts/leetcode-dictionary-sort/</guid>
       <description>原题
 题干要求时间复杂度为 $\mathrm{O}(n)$，提前否定了最容易想到的蛮力法——先初始化再排序。
 不过还是试验一下蛮力法的运行时间。
 蛮力法 代码：
 class Solution { public: vector&amp;lt;int&amp;gt; lexicalOrder(int n) { vector&amp;lt;int&amp;gt; v(n); iota(v.begin(), v.end(), 1); sort(v.begin(), v.end(), [](const int a, const int b) { return to_string(a) &amp;lt; to_string(b); }); return v; } }; </description>
+    </item>
+    
+    <item>
+      <title>在Mac上使用Clion远程开发Linux C&#43;&#43;</title>
+      <link>https://feifeizaici.fun/posts/mac-clion-linux-cpp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://feifeizaici.fun/posts/mac-clion-linux-cpp/</guid>
+      <description>马上要开始秋招提前批了，因为老板不让去实习，所以计划用6月时间系统学习一下网络编程。
+因为众所不知的原因，我在实验室服务器的账号全部被封了，所以只能用自己买的云服务器进行开发。
+Linux 系统版本为 Ubuntu 20.04。
+安装 C++ 依赖 安装 gcc、g++、make、gdb sudo apt install gcc sudo apt install g++ sudo apt install make sudo apt install gdb 这里的版本不太重要，使用默认安装的版本即可。
+安装 cmake 使用 apt 安装得到的 cmake 版本为 3.16，而CLion 需要 3.21 或者更高版本的 cmake，因此我们需要手动安装 3.21+ 的cmake。
+  首先卸载已有 cmake
+sudo apt remove cmake   在官网下载指定版本的 cmake 源码（wget 太慢了，我本地下载然后用 SFTP 传上去都更快一点）
+tar -zxvf cmake-3.21.0.tar.gz cd cmake-3.21.0 ./configure make -j8 sudo make install 整个流程大概需要10分钟。</description>
     </item>
     
   </channel>
