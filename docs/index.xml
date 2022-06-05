@@ -6,7 +6,36 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 05 Dec 2021 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.fun/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Jun 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://feifeizaici.fun/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在Mac上使用Clion远程开发Linux C&#43;&#43;</title>
+      <link>https://feifeizaici.fun/posts/mac-clion-linux-cpp/</link>
+      <pubDate>Mon, 06 Jun 2022 00:00:00 +0800</pubDate>
+      
+      <guid>https://feifeizaici.fun/posts/mac-clion-linux-cpp/</guid>
+      <description>马上要开始秋招提前批了，因为老板不让去实习，所以计划用6月时间系统学习一下网络编程。
+因为众所不知的原因，我在实验室服务器的账号全部被封了，所以只能用自己买的云服务器进行开发。
+Linux 系统版本为 Ubuntu 20.04。
+安装 C++ 依赖 安装 gcc、g++、make、gdb sudo apt install gcc sudo apt install g++ sudo apt install make sudo apt install gdb 这里的版本不太重要，使用默认安装的版本即可。
+安装 cmake 使用 apt 安装得到的 cmake 版本为 3.16，而CLion 需要 3.21 或者更高版本的 cmake，因此我们需要手动安装 3.21+ 的cmake。
+  首先卸载已有 cmake
+sudo apt remove cmake   在官网下载指定版本的 cmake 源码（wget 太慢了，我本地下载然后用 SFTP 传上去都更快一点）
+tar -zxvf cmake-3.21.0.tar.gz cd cmake-3.21.0 ./configure make -j8 sudo make install 整个流程大概需要10分钟。</description>
+    </item>
+    
+    <item>
+      <title>Leetcode 字典序排数</title>
+      <link>https://feifeizaici.fun/posts/leetcode-dictionary-sort/</link>
+      <pubDate>Wed, 02 Mar 2022 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.fun/posts/leetcode-dictionary-sort/</guid>
+      <description>原题
+题干要求时间复杂度为 $\mathrm{O}(n)$，提前否定了最容易想到的蛮力法——先初始化再排序。
+不过还是试验一下蛮力法的运行时间。
+蛮力法 代码：
+class Solution { public: vector&amp;lt;int&amp;gt; lexicalOrder(int n) { vector&amp;lt;int&amp;gt; v(n); iota(v.begin(), v.end(), 1); sort(v.begin(), v.end(), [](const int a, const int b) { return to_string(a) &amp;lt; to_string(b); }); return v; } }; </description>
+    </item>
+    
     <item>
       <title>用ddddocr实现简单的验证码反爬</title>
       <link>https://feifeizaici.fun/posts/ddddocr/</link>
@@ -796,35 +825,6 @@ bias_correction1 = 1 - beta1 ** state[&amp;#39;step&amp;#39;] bias_correction2 =
       <guid>https://feifeizaici.fun/posts/ssh-jupyter/</guid>
       <description>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。
 1.在Linux命令行中 conda install ipykernel source activate 环境名称 python -m ipykernel install --user --name 环境名称 --display-name &amp;#34;Python (环境名称)&amp;#34; jupyter notebook --no-browser --port=8080 2.在Windows命令行中 ssh -N -L 8080:localhost:8080 usr@ip 端口默认是22，需要修改： 然后将Linux命令行中的地址复制到浏览器中即可： </description>
-    </item>
-    
-    <item>
-      <title>Leetcode 字典序排数</title>
-      <link>https://feifeizaici.fun/posts/leetcode-dictionary-sort/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://feifeizaici.fun/posts/leetcode-dictionary-sort/</guid>
-      <description>原题
-题干要求时间复杂度为 $\mathrm{O}(n)$，提前否定了最容易想到的蛮力法——先初始化再排序。
-不过还是试验一下蛮力法的运行时间。
-蛮力法 代码：
-class Solution { public: vector&amp;lt;int&amp;gt; lexicalOrder(int n) { vector&amp;lt;int&amp;gt; v(n); iota(v.begin(), v.end(), 1); sort(v.begin(), v.end(), [](const int a, const int b) { return to_string(a) &amp;lt; to_string(b); }); return v; } }; </description>
-    </item>
-    
-    <item>
-      <title>在Mac上使用Clion远程开发Linux C&#43;&#43;</title>
-      <link>https://feifeizaici.fun/posts/mac-clion-linux-cpp/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://feifeizaici.fun/posts/mac-clion-linux-cpp/</guid>
-      <description>马上要开始秋招提前批了，因为老板不让去实习，所以计划用6月时间系统学习一下网络编程。
-因为众所不知的原因，我在实验室服务器的账号全部被封了，所以只能用自己买的云服务器进行开发。
-Linux 系统版本为 Ubuntu 20.04。
-安装 C++ 依赖 安装 gcc、g++、make、gdb sudo apt install gcc sudo apt install g++ sudo apt install make sudo apt install gdb 这里的版本不太重要，使用默认安装的版本即可。
-安装 cmake 使用 apt 安装得到的 cmake 版本为 3.16，而CLion 需要 3.21 或者更高版本的 cmake，因此我们需要手动安装 3.21+ 的cmake。
-  首先卸载已有 cmake
-sudo apt remove cmake   在官网下载指定版本的 cmake 源码（wget 太慢了，我本地下载然后用 SFTP 传上去都更快一点）
-tar -zxvf cmake-3.21.0.tar.gz cd cmake-3.21.0 ./configure make -j8 sudo make install 整个流程大概需要10分钟。</description>
     </item>
     
   </channel>
