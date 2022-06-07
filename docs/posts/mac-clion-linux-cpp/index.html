@@ -111,15 +111,14 @@
     </header>
 
     <p>马上要开始秋招提前批了，因为老板不让去实习，所以计划用6月时间系统学习一下网络编程。</p>
-<p>因为众所不知的原因，我在实验室服务器的账号全部被封了，所以只能用自己买的云服务器进行开发。</p>
 <p>Linux 系统版本为 Ubuntu 20.04。</p>
 <h2 id="安装-c-依赖">安装 C++ 依赖</h2>
 <h3 id="安装-gccgmakegdb">安装 gcc、g++、make、gdb</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">sudo apt install gcc
-sudo apt install g++
-sudo apt install make
-sudo apt install gdb
-</code></pre></div><p>这里的版本不太重要，使用默认安装的版本即可。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">sudo apt install gcc  <span class="c1"># 9.4.0</span>
+sudo apt install g++  <span class="c1"># 9.4.0</span>
+sudo apt install make  <span class="c1"># 4.2.1</span>
+sudo apt install gdb  <span class="c1"># 9.2</span>
+</code></pre></div><p>因为没有特殊需求，这里使用默认安装的版本即可。</p>
 <h3 id="安装-cmake">安装 cmake</h3>
 <p>使用 apt 安装得到的 cmake 版本为 3.16，而CLion 需要 3.21 或者更高版本的 cmake，因此我们需要手动安装 3.21+ 的cmake。</p>
 <ul>
