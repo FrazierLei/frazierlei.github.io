@@ -13,13 +13,12 @@
       <pubDate>Mon, 06 Jun 2022 00:00:00 +0800</pubDate>
       
       <guid>https://feifeizaici.fun/posts/mac-clion-linux-cpp/</guid>
-      <description>马上要开始秋招提前批了，因为老板不让去实习，所以计划用6月时间系统学习一下网络编程。
-Linux 系统版本为 Ubuntu 20.04。
+      <description>6月系统学习一下网络编程，实验室服务器用不了，在去年租的腾讯云服务器上鼓捣，Linux 系统版本为 Ubuntu 20.04。
 安装 C++ 依赖 安装 gcc、g++、make、gdb sudo apt install gcc # 9.4.0 sudo apt install g++ # 9.4.0 sudo apt install make # 4.2.1 sudo apt install gdb # 9.2 因为没有特殊需求，这里使用默认安装的版本即可。
 安装 cmake 使用 apt 安装得到的 cmake 版本为 3.16，而CLion 需要 3.21 或者更高版本的 cmake，因此我们需要手动安装 3.21+ 的cmake。
   首先卸载已有 cmake
 sudo apt remove cmake   在官网下载指定版本的 cmake 源码（wget 太慢了，我本地下载然后用 SFTP 传上去都更快一点）
-tar -zxvf cmake-3.21.0.tar.gz cd cmake-3.21.0 .</description>
+tar -zxvf cmake-3.21.0.tar.gz cd cmake-3.21.0 ./configure make -j8 sudo make install 整个流程大概需要10分钟。</description>
     </item>
     
     <item>
