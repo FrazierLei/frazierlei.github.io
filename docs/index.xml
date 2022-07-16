@@ -6,7 +6,31 @@
     <description>Recent content on 霏霏</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 06 Jun 2022 00:00:00 +0800</lastBuildDate><atom:link href="https://feifeizaici.fun/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Jul 2022 13:18:55 +0800</lastBuildDate><atom:link href="https://feifeizaici.fun/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>几道关于最大/最小矩阵的算法题</title>
+      <link>https://feifeizaici.fun/posts/rect-algorithms/</link>
+      <pubDate>Sat, 16 Jul 2022 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.fun/posts/rect-algorithms/</guid>
+      <description>平面内矩形的个数 昨天超参数一面的算法题，想了 10 分钟左右才想出来这个解法
+// Q: 给定一个 元素为二维点 的列表，求这些点可以构成多少个矩形。 // 条件: // - x &amp;gt;= 0, y &amp;gt;= 0, x 和 y 都为 int 类型 // - 矩形的边平行于 x轴 或 y轴 // - 列表长度不定，点在列表中无序，且可能重复 // 例子: // [(0,0), (0,1), (2,0), (2,2), (2,1), (1,2), (0,2), (1,0), (1,1)] 可构成 9 个符合条件的矩形 // 思路：将最初的二阶矩阵形式的图，转化为类似邻接表的形式，然后对于每两行，计算具有相同的横坐标的点的个数，这 n 个点可以组成 $C^2_n$ 个矩形
+int countRectangle(const vector&amp;lt;Point&amp;gt;&amp;amp; points) { map&amp;lt;int, unordered_set&amp;lt;int&amp;gt;&amp;gt; mp; for (auto&amp;amp; p : points) { mp[p.x].emplace(p.y); } int ans = 0; for (auto i = mp.</description>
+    </item>
+    
+    <item>
+      <title>如何使用 C&#43;&#43; STL 中的 set 和 unordered_set 储存自定义类型的对象</title>
+      <link>https://feifeizaici.fun/posts/custom-set/</link>
+      <pubDate>Sat, 16 Jul 2022 13:18:55 +0800</pubDate>
+      
+      <guid>https://feifeizaici.fun/posts/custom-set/</guid>
+      <description>set set 的类模板是：
+template&amp;lt; class Key, class Compare = std::less&amp;lt;Key&amp;gt;, class Allocator = std::allocator&amp;lt;Key&amp;gt; &amp;gt; class set; 如果想在 set 中储存一个自定义类 A 的对象，那么就要让 A 的对象是可以比较的，方法有很多：
+  在类的定义中重载小于运算符，注意 const 不能省略！
+struct Person { string id, name; int age; Person(string i, string n, int a) : id(i), name(n), age(a) {} bool operator&amp;lt;(const Person&amp;amp; p) const { return id &amp;lt; p.id; } };   在类外重载小于运算符
+bool operator&amp;lt;(const Person&amp;amp; p1, const Person&amp;amp; p2) { return p1.</description>
+    </item>
+    
     <item>
       <title>在Mac上使用Clion远程开发Linux C&#43;&#43;</title>
       <link>https://feifeizaici.fun/posts/mac-clion-linux-cpp/</link>
@@ -823,30 +847,6 @@ bias_correction1 = 1 - beta1 ** state[&amp;#39;step&amp;#39;] bias_correction2 =
       <guid>https://feifeizaici.fun/posts/ssh-jupyter/</guid>
       <description>租好服务器以后，如何远程编辑服务器上的文件呢？由于店家表示“所有的机器除了我们转发的端口之外，不会再有其他端口可以用”。我没法用RDP，也不能用samba把文件夹挂载到我本地。于是就只能用Juyter编辑代码了。
 1.在Linux命令行中 conda install ipykernel source activate 环境名称 python -m ipykernel install --user --name 环境名称 --display-name &amp;#34;Python (环境名称)&amp;#34; jupyter notebook --no-browser --port=8080 2.在Windows命令行中 ssh -N -L 8080:localhost:8080 usr@ip 端口默认是22，需要修改： 然后将Linux命令行中的地址复制到浏览器中即可： </description>
-    </item>
-    
-    <item>
-      <title>几道关于最大/最小矩阵的算法题</title>
-      <link>https://feifeizaici.fun/posts/rect-algorithms/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://feifeizaici.fun/posts/rect-algorithms/</guid>
-      <description>平面内矩形的个数 昨天超参数一面的算法题，想了 10 分钟左右才想出来这个解法
-// Q: 给定一个 元素为二维点 的列表，求这些点可以构成多少个矩形。 // 条件: // - x &amp;gt;= 0, y &amp;gt;= 0, x 和 y 都为 int 类型 // - 矩形的边平行于 x轴 或 y轴 // - 列表长度不定，点在列表中无序，且可能重复 // 例子: // [(0,0), (0,1), (2,0), (2,2), (2,1), (1,2), (0,2), (1,0), (1,1)] 可构成 9 个符合条件的矩形 // 思路：将最初的二阶矩阵形式的图，转化为类似邻接表的形式，然后对于每两行，计算具有相同的横坐标的点的个数，这 n 个点可以组成 $C^2_n$ 个矩形
-int countRectangle(const vector&amp;lt;Point&amp;gt;&amp;amp; points) { map&amp;lt;int, unordered_set&amp;lt;int&amp;gt;&amp;gt; mp; for (auto&amp;amp; p : points) { mp[p.x].emplace(p.y); } int ans = 0; for (auto i = mp.</description>
-    </item>
-    
-    <item>
-      <title>如何使用 C&#43;&#43; STL 中的 set 和 unordered_set 储存自定义类型的对象</title>
-      <link>https://feifeizaici.fun/posts/custom-set/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://feifeizaici.fun/posts/custom-set/</guid>
-      <description>set set 的类模板是：
-template&amp;lt; class Key, class Compare = std::less&amp;lt;Key&amp;gt;, class Allocator = std::allocator&amp;lt;Key&amp;gt; &amp;gt; class set; 如果想在 set 中储存一个自定义类 A 的对象，那么就要让 A 的对象是可以比较的，方法有很多：
-  在类的定义中重载小于运算符，注意 const 不能省略！
-struct Person { string id, name; int age; Person(string i, string n, int a) : id(i), name(n), age(a) {} bool operator&amp;lt;(const Person&amp;amp; p) const { return id &amp;lt; p.id; } };   在类外重载小于运算符
-bool operator&amp;lt;(const Person&amp;amp; p1, const Person&amp;amp; p2) { return p1.</description>
     </item>
     
   </channel>
