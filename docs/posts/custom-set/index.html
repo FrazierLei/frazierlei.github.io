@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Feifei">
+    <meta name="description" content="https://feifeizaici.fun">
+    <meta name="keywords" content="blog, murmur">
+
+    <meta property="og:site_name" content="霏霏">
+    <meta property="og:title" content="
+  如何使用 C&#43;&#43; STL 中的 set 和 unordered_set 储存自定义类型的对象 - 霏霏
+">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://feifeizaici.fun/posts/custom-set/">
+    <meta property="og:image" content="https://feifeizaici.funimages/tn.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="https://feifeizaici.fun/posts/custom-set/">
+    <meta name="twitter:image" content="https://feifeizaici.funimages/tn.png">
+
+    <base href="https://feifeizaici.fun/posts/custom-set/">
+    <title>
+  如何使用 C&#43;&#43; STL 中的 set 和 unordered_set 储存自定义类型的对象 - 霏霏
+</title>
+
+    <link rel="canonical" href="https://feifeizaici.fun/posts/custom-set/">
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700">
+    <link rel="stylesheet" href="../../css/normalize.min.css">
+    <link rel="stylesheet" href="../../css/style.min.css">
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../../images/favicon-16x16.png" sizes="16x16">
+
+    
+      <link rel="alternate" href="https://feifeizaici.fun/index.xml" type="application/rss+xml" title="霏霏">
+      <link href="https://feifeizaici.fun/index.xml" rel="feed" type="application/rss+xml" title="霏霏" />
+    
+
+    <meta name="generator" content="Hugo 0.86.0" />
+  </head>
+
+  <body class="">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="../../">霏霏</a>
+    <input type="checkbox" id="menu-control"/>
+    <label class="menu-mobile  float-right " for="menu-control">
+      <span class="btn-mobile  float-right ">&#9776;</span>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://feifeizaici.fun/posts">Blog</a>
+            </li>
+          
+            <li class="navigation-item  align-center ">
+              <a class="navigation-link" href="https://feifeizaici.fun/about">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    </label>
+  </section>
+</nav>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+
+
+      <div class="content">
+        
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">如何使用 C&#43;&#43; STL 中的 set 和 unordered_set 储存自定义类型的对象</h1>
+      <h2 class="date">January 1, 0001</h2>
+    </header>
+
+    <h2 id="set">set</h2>
+<p>set 的类模板是：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="k">template</span><span class="o">&lt;</span>
+    <span class="k">class</span> <span class="nc">Key</span><span class="p">,</span>
+    <span class="k">class</span> <span class="nc">Compare</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">less</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="k">class</span> <span class="nc">Allocator</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">allocator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="k">class</span> <span class="nc">set</span><span class="p">;</span>
+</code></pre></div><p>如果想在 set 中储存一个自定义类 A 的对象，那么就要让 A 的对象是可以比较的，方法有很多：</p>
+<ol>
+<li>
+<p>在类的定义中重载小于运算符，注意 const 不能省略！</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="k">struct</span> <span class="nc">Person</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+    <span class="n">Person</span><span class="p">(</span><span class="n">string</span> <span class="n">i</span><span class="p">,</span> <span class="n">string</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">a</span><span class="p">)</span> <span class="o">:</span> <span class="n">id</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">name</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">age</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">id</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></li>
+<li>
+<p>在类外重载小于运算符</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">p1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">p2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">p1</span><span class="p">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="n">p2</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></li>
+<li>
+<p>实现一个「重载了 operator() 运算符」的类或者使用 lambda 表达式</p>
+<p>在初始化 set 时指定第二个 cmp 参数，注意不是函数对象而是类名：</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">p1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">p2</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">p1</span><span class="p">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="n">p2</span><span class="p">.</span><span class="n">id</span><span class="p">;</span> <span class="p">};</span>
+<span class="n">set</span><span class="o">&lt;</span><span class="n">Person</span><span class="p">,</span> <span class="k">decltype</span><span class="p">(</span><span class="n">cmp</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">st</span><span class="p">;</span>
+</code></pre></div><h2 id="unordered_set">unordered_set</h2>
+<p>unordered_set 的类模板是：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="k">template</span><span class="o">&lt;</span>
+    <span class="k">class</span> <span class="nc">Key</span><span class="p">,</span>
+    <span class="k">class</span> <span class="nc">Hash</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">hash</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="k">class</span> <span class="nc">KeyEqual</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">equal_to</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">&gt;</span><span class="p">,</span>
+    <span class="k">class</span> <span class="nc">Allocator</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">allocator</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="k">class</span> <span class="nc">unordered_set</span><span class="p">;</span>
+</code></pre></div><p>因此需要定义 hash 函数， 如果想要使用 equal_to 函数，则需要重载 <code>operator==</code>，或者弃用equal_to 函数，转而自定义 cmp 函数</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">p1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">p2</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">p1</span><span class="p">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="n">p2</span><span class="p">.</span><span class="n">id</span><span class="p">;</span> <span class="p">};</span>
+<span class="k">auto</span> <span class="n">myHash</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">p1</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hash</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">()(</span><span class="n">p1</span><span class="p">.</span><span class="n">id</span><span class="p">);</span> <span class="p">};</span>
+<span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">Person</span><span class="p">,</span> <span class="k">decltype</span><span class="p">(</span><span class="n">myHash</span><span class="p">),</span> <span class="k">decltype</span><span class="p">(</span><span class="n">cmp</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">us</span><span class="p">;</span>
+</code></pre></div>
+  </article>
+
+  <br/>
+
+  
+  
+</section>
+
+      </div>
+      
+        <footer class="footer">
+  <section class="container">
+    
+      <div class="sns-shares sp-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+    
+      <p>Hello, world.</p>
+    
+     © 2022    ·  Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/naro143/hugo-coder-portfolio">CoderPortfolio</a>. 
+
+  </section>
+</footer>
+<div class="fixed-bar">
+  <section class="container">
+    
+      <p id="privateTriggerText">霏霏在哪<a id="privateTrigger">Click!</a></p>
+    
+    
+      <div class="sns-shares pc-sns-shares">
+        
+        
+        
+        
+        
+      </div>
+    
+  </section>
+</div>
+
+      
+    </main>
+
+    
+
+  <script src="../../js/app.js"></script>
+  
+  <script>
+  (function($) {
+    $(function() {
+      $('#privateTrigger').on('click', function() {
+        $('.private').slideToggle();
+        $('#privateTriggerText').text("霏霏在此");
+      });
+    });
+   })(jQuery);
+  </script>
+  
+  </body>
+</html>
